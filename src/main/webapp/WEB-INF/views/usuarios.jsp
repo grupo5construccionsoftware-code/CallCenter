@@ -56,6 +56,7 @@
           </a>
         </div>
       </form:form>
+      <c:if test="${mostrarTabla}">
       <div class="table-wrap">
         <table>
           <thead>
@@ -82,6 +83,7 @@
           </tbody>
         </table>
       </div>
+      </c:if>
     </article>
   </section>
 </div>

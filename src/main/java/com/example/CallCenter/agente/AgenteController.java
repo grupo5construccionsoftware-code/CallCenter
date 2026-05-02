@@ -25,13 +25,14 @@ public class AgenteController {
         List<Agente> agentes = agenteService.listarAgentes();
         model.addAttribute("agentes", agentes);
         model.addAttribute("agente", new Agente());
+        model.addAttribute("mostrarTabla", true);
         return "usuarios";
     }
 
     @PostMapping("/crear")
     public String crearAgente(@ModelAttribute("agente") Agente agente) {
         agenteService.crearAgente(agente);
-        return "redirect:/agente/list";
+        return "redirect:/usuarios";
     }
 
     @GetMapping("/editar")
