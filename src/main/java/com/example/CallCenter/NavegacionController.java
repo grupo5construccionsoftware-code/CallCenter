@@ -3,14 +3,26 @@ package com.example.CallCenter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import com.example.CallCenter.llamada.Llamada;
+import com.example.CallCenter.llamada.LlamadaService;
+import com.example.CallCenter.tipificacion.Tipificacion;
+import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+
 
 @Controller
 public class NavegacionController {
+
+    private final LlamadaService llamadaService;
+    private final TipificacionService tipificacionService;
+
+    public NavegacionController(LlamadaService llamadaService, TipificacionService tipificacionService) {
+        this.llamadaService = llamadaService;
+        this.tipificacionService = tipificacionService;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -71,30 +83,25 @@ public class NavegacionController {
 
     @GetMapping("/adicional1")
     public String adicional1(Model model) {
-        List<Map<String, String>> historial = new ArrayList<>();
+        List<Llamada> historial = llamadaService.listarLlamadas();
+        Map<Integer, Tipificacion> tipificacionesPorLlamada = tipificacionService.listarTipificaciones()
+                .stream()
+                .collect(Collectors.toMap(Tipificacion::getId_llamada, tipificacion -> tipificacion, (actual, ignorar) -> actual));
 
-        Map<String, String> llamada1 = new LinkedHashMap<>();
-        llamada1.put("idLlamada", "1");
-        llamada1.put("nombreCliente", "Alex Pérez");
-        llamada1.put("telefonoCliente", "123456789");
-        llamada1.put("motivoTipo", "Reclamo");
-        llamada1.put("fechaLlamada", "2026-04-10");
-        llamada1.put("hora", "10:30");
-        llamada1.put("nombreAgente", "Pepito García");
-        historial.add(llamada1);
+        List<String> motivosDisponibles = tipificacionService.listarTipificaciones()
+                .stream()
+                .map(Tipificacion::getMotivo_tipo)
+                .filter(motivo -> motivo != null && !motivo.trim().isEmpty())
+                .distinct()
+                .collect(Collectors.toList());
 
-        Map<String, String> llamada2 = new LinkedHashMap<>();
-        llamada2.put("idLlamada", "2");
-        llamada2.put("nombreCliente", "Lucía Torres");
-        llamada2.put("telefonoCliente", "987654321");
-        llamada2.put("motivoTipo", "Consulta");
-        llamada2.put("fechaLlamada", "2026-04-11");
-        llamada2.put("hora", "11:10");
-        llamada2.put("nombreAgente", "María Ramos");
-        historial.add(llamada2);
+        if (motivosDisponibles.isEmpty()) {
+            motivosDisponibles = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
+        }
 
         model.addAttribute("historialLlamadas", historial);
-
+        model.addAttribute("tipificacionesPorLlamada", tipificacionesPorLlamada);
+        model.addAttribute("motivosDisponibles", motivosDisponibles);
         return "adicional1";
     }
 
