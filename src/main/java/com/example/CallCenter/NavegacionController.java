@@ -39,7 +39,9 @@ public class NavegacionController {
     }
 
     @GetMapping("/llamadas")
-    public String llamadas() {
+    public String llamadas(Model model) {
+        model.addAttribute("llamada", new com.example.CallCenter.llamada.Llamada());
+        model.addAttribute("mostrarTabla", false);
         return "llamadas";
     }
 
@@ -49,7 +51,9 @@ public class NavegacionController {
     }
 
     @GetMapping("/tipificaciones")
-    public String tipificaciones() {
+    public String tipificaciones(Model model) {
+        model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
+        model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }
 

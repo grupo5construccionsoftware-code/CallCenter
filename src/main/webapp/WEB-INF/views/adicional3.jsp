@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,29 +36,30 @@
       <p>Modifica los datos de una llamada registrada</p>
     </div>
     <article class="card">
-      <input type="hidden" name="id_llamada" value="LL01">
-      <div class="form-grid">
-        <div>
-          <label>Código de llamada</label>
-          <input type="text" value="LL01" readonly>
+      <form:form action="/llamada/actualizar" method="post" modelAttribute="llamada">
+        <form:hidden path="id_llamada"/>
+        <form:hidden path="id_agente"/>
+        <form:hidden path="fecha_llamada"/>
+        <form:hidden path="hora"/>
+        <div class="form-grid">
+          <div>
+            <label>Código de llamada</label>
+            <input type="text" value="${llamada.id_llamada}" readonly>
+          </div>
+          <div>
+            <label for="nombre_cliente">Nombre del cliente</label>
+            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez"/>
+          </div>
+          <div>
+            <label for="telefono_cliente">Teléfono del cliente</label>
+            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123 456 789"/>
+          </div>
         </div>
-        <div>
-          <label for="cliente-editar">Nombre del cliente</label>
-          <input type="text" id="cliente-editar" name="nombre_cliente" placeholder="Ej: Alex Pérez">
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Actualizar</button>
+          <a class="button secondary" href="/llamadas"><i class="fas fa-times"></i> Cancelar</a>
         </div>
-        <div>
-          <label for="telefono-editar">Teléfono del cliente</label>
-          <input type="tel" id="telefono-editar" name="telefono_cliente" placeholder="Ej: 123 456 789">
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button">
-            <i class="fas fa-save"></i> Actualizar
-        </button>
-        <a class="button secondary" href="/llamadas">
-            <i class="fas fa-times"></i> Cancelar
-        </a>
-      </div>
+      </form:form>
     </article>
   </section>
 </div>

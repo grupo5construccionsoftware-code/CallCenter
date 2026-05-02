@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,65 +36,68 @@
       <p>Agregar detalles de la llamada</p>
     </div>
     <article class="card">
-      <div class="form-grid">
-        <div>
-          <label for="id-llamada">Código de llamada</label>
-          <input type="text" id="id-llamada" name="id_llamada" placeholder="Ej: LL01">
+      <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
+        <div class="form-grid">
+          <div>
+            <label for="id_llamada">Código de llamada</label>
+            <form:input path="id_llamada" id="id_llamada" placeholder="Ej: 1"/>
+          </div>
+          <div>
+            <label for="id_tipo">Motivo</label>
+            <form:select path="id_tipo" id="id_tipo">
+              <option value="" disabled selected>Selecciona un motivo</option>
+              <option value="1">Consulta</option>
+              <option value="2">Reclamo</option>
+              <option value="3">Venta</option>
+              <option value="4">Soporte</option>
+              <option value="5">Otros</option>
+            </form:select>
+          </div>
+          <div>
+            <label for="descripcion_tipo">Descripción</label>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura"/>
+          </div>
         </div>
-        <div>
-          <label for="tipo-llamada">Motivo</label>
-          <select id="tipo-llamada" name="id_tipo">
-            <option value="" disabled selected>Selecciona un motivo</option>
-            <option value="1">Consulta</option>
-            <option value="2">Reclamo</option>
-            <option value="3">Venta</option>
-            <option value="4">Soporte</option>
-            <option value="5">Otros</option>
-          </select>
-        </div>
-        <div>
-          <label for="descripcion-tipo">Descripción</label>
-          <input type="text" id="descripcion-tipo" name="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura">
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button">
-          <i class="fas fa-save"></i>Guardar
-        </button>
-        <button type="button" class="secondary">
-          <i class="fas fa-eye"></i>Ver tipificaciones
-        </button>
-      </div>
-      <p></p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID llamada</th>
-              <th>Cliente</th>
-              <th>Motivo</th>
-              <th>Descripción</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>LL01</td>
-              <td>Alex Pérez</td>
-              <td>Reclamo</td>
-              <td>Cliente inconforme con el servicio</td>
-              <td>
-          <a class="button" href="/adicional4">
-            <i class="fas fa-edit"></i> Editar
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Guardar</button>
+          <a class="button secondary" href="/tipificacion/list">
+            <i class="fas fa-eye"></i> Ver tipificaciones
           </a>
-          <button type="button" class="secondary">
-            <i class="fas fa-trash"></i> Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        </div>
+      </form:form>
+      <c:if test="${mostrarTabla}">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID llamada</th>
+                <th>Cliente</th>
+                <th>Motivo</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach items="${tipificaciones}" var="tipificacion">
+                <tr>
+                  <td>${tipificacion.id_llamada}</td>
+                  <td>${tipificacion.nombre_cliente}</td>
+                  <td>${tipificacion.motivo_tipo}</td>
+                  <td>${tipificacion.descripcion_tipo}</td>
+                  <td>
+                    <a class="button" href="/tipificacion/editar?id=${tipificacion.id_llamada}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/tipificacion/eliminar?id=${tipificacion.id_llamada}">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
+      </c:if>
     </article>
   </section>
 </div>

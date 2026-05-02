@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,60 +36,59 @@
       <p>Registre las llamadas con los datos solicitados</p>
     </div>
     <article class="card">
-      <div class="form-grid">
-        <input type="hidden" name="id_agente" value="age01">
-        <div>
-          <label for="cliente-llamada">Nombre del cliente</label>
-          <input type="text" id="cliente-llamada" name="nombre_cliente" placeholder="Ej: Alex Pérez">
+      <form:form action="/llamada/crear" method="post" modelAttribute="llamada">
+        <div class="form-grid">
+          <div>
+            <label for="nombre_cliente">Nombre del cliente</label>
+            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez"/>
+          </div>
+          <div>
+            <label for="telefono_cliente">Teléfono del cliente</label>
+            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123 456 789"/>
+          </div>
         </div>
-        <div>
-          <label for="telefono-llamada">Teléfono del cliente</label>
-          <input type="tel" id="telefono-llamada" name="telefono_cliente" placeholder="Ej: 123 456 789">
-        </div>
-      </div>
-      <p></p>
-      <div class="actions">
-        <button type="button">
-          <i class="fas fa-save"></i>Registrar
-        </button>
-        <button type="button" class="secondary">
-          <i class="fas fa-eye"></i>Ver llamadas
-        </button>
-      </div>
-      <p></p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID llamada</th>
-              <th>Cliente</th>
-              <th>Teléfono cliente</th>
-              <th>Agente</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>LL01</td>
-              <td>Alex Pérez</td>
-              <td>123 456 789</td>
-              <td>Pepito García</td>
-              <td>2026-04-19</td>
-              <td>10:30</td>
-              <td>
-          <a class="button" href="/adicional3">
-            <i class="fas fa-edit"></i> Editar
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Registrar</button>
+          <a class="button secondary" href="/llamada/list">
+            <i class="fas fa-eye"></i> Ver llamadas
           </a>
-          <button type="button" class="secondary">
-            <i class="fas fa-trash"></i> Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        </div>
+      </form:form>
+      <c:if test="${mostrarTabla}">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID llamada</th>
+                <th>Cliente</th>
+                <th>Teléfono cliente</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach items="${llamadas}" var="llamada">
+                <tr>
+                  <td>${llamada.id_llamada}</td>
+                  <td>${llamada.nombre_cliente}</td>
+                  <td>${llamada.telefono_cliente}</td>
+                  <td>${llamada.fecha_llamada}</td>
+                  <td>${llamada.hora}</td>
+                  <td>
+                    <a class="button" href="/llamada/editar?id=${llamada.id_llamada}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/llamada/eliminar?id=${llamada.id_llamada}">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
+      </c:if>
     </article>
   </section>
 </div>
