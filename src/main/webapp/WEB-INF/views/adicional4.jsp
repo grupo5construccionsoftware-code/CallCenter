@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,36 +36,35 @@
       <p>Modifica los detalles de una tipificación registrada</p>
     </div>
     <article class="card">
-      <input type="hidden" name="id_llamada" value="LL01">
-      <div class="form-grid">
-        <div>
-          <label>Código de llamada</label>
-          <input type="text" value="LL01" readonly>
+      <form:form action="/tipificacion/actualizar" method="post" modelAttribute="tipificacion">
+        <form:hidden path="id_llamada"/>
+        <form:hidden path="nombre_cliente"/>
+        <div class="form-grid">
+          <div>
+            <label>Código de llamada</label>
+            <input type="text" value="${tipificacion.id_llamada}" readonly>
+          </div>
+          <div>
+            <label for="id_tipo">Motivo</label>
+            <form:select path="id_tipo" id="id_tipo">
+              <option value="" disabled>Selecciona un motivo</option>
+              <option value="1">Consulta</option>
+              <option value="2">Reclamo</option>
+              <option value="3">Venta</option>
+              <option value="4">Soporte</option>
+              <option value="5">Otros</option>
+            </form:select>
+          </div>
+          <div>
+            <label for="descripcion_tipo">Descripción</label>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura"/>
+          </div>
         </div>
-        <div>
-          <label for="tipo-editar">Motivo</label>
-          <select id="tipo-editar" name="id_tipo">
-            <option value="" disabled selected>Selecciona un motivo</option>
-            <option value="1">Consulta</option>
-            <option value="2">Reclamo</option>
-            <option value="3">Venta</option>
-            <option value="4">Soporte</option>
-            <option value="5">Otros</option>
-          </select>
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Actualizar</button>
+          <a class="button secondary" href="/tipificaciones"><i class="fas fa-times"></i> Cancelar</a>
         </div>
-        <div>
-          <label for="descripcion-editar">Descripción</label>
-          <input type="text" id="descripcion-editar" name="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura">
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button">
-            <i class="fas fa-save"></i> Actualizar
-        </button>
-        <a class="button secondary" href="/tipificaciones">
-            <i class="fas fa-times"></i> Cancelar
-        </a>
-      </div>
+      </form:form>
     </article>
   </section>
 </div>
