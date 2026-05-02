@@ -51,6 +51,7 @@ public class NavegacionController {
     @GetMapping("/usuarios")
     public String usuarios(Model model) {
         model.addAttribute("agente", new com.example.CallCenter.agente.Agente());
+        model.addAttribute("mostrarTabla", false);
         return "usuarios";
     }
 
