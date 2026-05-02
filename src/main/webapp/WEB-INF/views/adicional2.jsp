@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -26,7 +27,6 @@
 
 <div class="container">
 
-  <%-- ===== FORMULARIO DE CONTACTO ===== --%>
   <section class="section">
     <article class="card">
       <div class="hero-copy">
@@ -69,5 +69,12 @@
 
 </div>
 <div class="footer">Sistema de Call Center - Contacto</div>
+
+<script>
+  document.getElementById('formContacto').addEventListener('submit', function() {
+    alert('Tu informacion fue guardada correctamente. Nos comunicaremos contigo a la brevedad.');
+  });
+</script>
+
 </body>
 </html>

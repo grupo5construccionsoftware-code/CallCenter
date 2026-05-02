@@ -17,10 +17,6 @@ public class NavegacionController {
         return "main";
     }
 
-    @GetMapping("/contacto")
-    public String contacto() {
-        return "contacto";
-    }
 
     @GetMapping("/publicidad")
     public String publicidad() {
