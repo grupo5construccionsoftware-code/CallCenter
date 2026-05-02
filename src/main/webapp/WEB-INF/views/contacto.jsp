@@ -24,47 +24,6 @@
   </div>
 </header>
 
-<section class="section">
-  <div class="grid">
-    <article class="card">
-      <div class="section-title">
-        <h2><i class="fas fa-paper-plane"></i> Contáctanos</h2>
-        <p>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</p>
-      </div>
-      <form action="/contacto/enviar" method="post">
-        <div class="form-grid">
-          <div>
-            <label for="nombre"><strong>Nombre</strong></label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
-          </div>
-          <div>
-            <label for="apellido"><strong>Apellido</strong></label>
-            <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div>
-            <label for="telefono"><strong>Número de teléfono</strong></label>
-            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 999 999 999" pattern="[0-9\s\+\-]{7,15}" required>
-          </div>
-          <div>
-            <label for="correo"><strong>Correo electrónico</strong></label>
-            <input type="email" id="correo" name="correo" placeholder="Ej: correo@ejemplo.com" required>
-          </div>
-        </div>
-        <div class="actions">
-          <button type="submit">
-            <i class="fas fa-paper-plane"></i> Enviar mensaje
-          </button>
-          <button type="reset" class="secondary">
-            <i class="fas fa-times"></i> Limpiar
-          </button>
-        </div>
-      </form>
-    </article>
-  </div>
-</section>
-
 <div class="container">
   <section class="section">
     <div class="hero-copy">
