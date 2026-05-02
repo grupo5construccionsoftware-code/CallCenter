@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,45 +36,49 @@
       <p>Registro de los agentes que operan el call center y su número telefónico</p>
     </div>
     <article class="card">
-      <input type="hidden" name="id_empresa" value="emp01">
-      <div class="form-grid">
-        <div>
-          <label for="Nombre_agente">Nombre del agente</label>
-          <input type="text" id="Nombre_agente" name="nombre_agente" placeholder="Ej: Pérez García, Juan">
+      <form:form action="/agente/crear" method="post" modelAttribute="agente">
+        <div class="form-grid">
+          <div>
+            <label for="nombreAgente">Nombre del agente</label>
+            <form:input path="nombreAgente" id="nombreAgente" placeholder="Ej: Pérez García, Juan"/>
+          </div>
+          <div>
+            <label for="telefonoAgente">Teléfono del agente</label>
+            <form:input path="telefonoAgente" id="telefonoAgente" placeholder="Ej: 123 456 789"/>
+          </div>
         </div>
-        <div>
-          <label for="Telefono_agente">Teléfono del agente</label>
-          <input type="tel" id="Telefono_agente" name="telefono_agente" placeholder="Ej: 123 456 789">
+        <div class="actions single align-center">
+          <button type="submit">
+            <i class="fas fa-save"></i> Guardar agente
+          </button>
+          <a class="button secondary" href="/agente/list">
+            <i class="fas fa-eye"></i> Ver agentes
+          </a>
         </div>
-      </div>
-      <div class="actions single align-center">
-        <button type="button">
-          <i class="fas fa-save"></i>Guardar agente
-        </button>
-        <button type="button" class="secondary">
-          <i class="fas fa-eye"></i>Ver agentes
-        </button>
-      </div>
+      </form:form>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Nombre</th><th>Teléfono</th><th>Acciones</th>
+              <th>Código</th><th>Nombre</th><th>Teléfono</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Pepito García</td>
-              <td>123 456 789</td>
-              <td>
-                <a class="button" href="/adicional5">
-                  <i class="fas fa-edit"></i> Editar
-                </a>
-                <button type="button" class="secondary">
-                  <i class="fas fa-trash"></i> Eliminar
-                </button>
-              </td>
-            </tr>
+            <c:forEach items="${agentes}" var="agente">
+              <tr>
+                <td>${agente.id_agente}</td>
+                <td>${agente.nombre_agente}</td>
+                <td>${agente.telefono_agente}</td>
+                <td>
+                  <a class="button" href="/agente/editar?id=${agente.id_agente}">
+                    <i class="fas fa-edit"></i> Editar
+                  </a>
+                  <a class="button secondary" href="/agente/eliminar?id=${agente.id_agente}">
+                    <i class="fas fa-trash"></i> Eliminar
+                  </a>
+                </td>
+              </tr>
+            </c:forEach>
           </tbody>
         </table>
       </div>

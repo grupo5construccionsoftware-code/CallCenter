@@ -2,6 +2,7 @@ package com.example.CallCenter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 
 @Controller
 public class NavegacionController {
@@ -12,7 +13,7 @@ public class NavegacionController {
     }
 
     @GetMapping("/main")
-    public String main() {
+    public String paginamain() {
         return "main";
     }
 
@@ -52,7 +53,8 @@ public class NavegacionController {
     }
 
     @GetMapping("/usuarios")
-    public String usuarios() {
+    public String usuarios(Model model) {
+        model.addAttribute("agente", new com.example.CallCenter.agente.Agente());
         return "usuarios";
     }
 
