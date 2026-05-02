@@ -42,6 +42,11 @@ public class NavegacionController {
         return "llamadas";
     }
 
+    @GetMapping("/contacto")
+    public String contacto() {
+        return "contacto";
+    }
+
     @GetMapping("/tipificaciones")
     public String tipificaciones() {
         return "tipificaciones";
@@ -60,11 +65,6 @@ public class NavegacionController {
     @GetMapping("/adicional1")
     public String adicional1() {
         return "adicional1";
-    }
-
-    @GetMapping("/adicional2")
-    public String adicional2() {
-        return "adicional2";
     }
 
     @GetMapping("/adicional3")

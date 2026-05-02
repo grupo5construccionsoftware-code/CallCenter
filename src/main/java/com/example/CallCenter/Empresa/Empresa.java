@@ -1,20 +1,18 @@
-package com.example.CallCenter.Contacto;
+package com.example.CallCenter.Empresa;
 
-public class Contacto {
+public class Empresa {
 
     private int id;
     private String nombre;
-    private String apellido;
     private String telefono;
     private String correo;
 
-    public Contacto() {
+    public Empresa() {
     }
 
-    public Contacto(int id, String nombre, String apellido, String telefono, String correo) {
+    public Empresa(int id, String nombre, String telefono, String correo) {
         this.id = id;
         this.nombre = nombre;
-        this.apellido = apellido;
         this.telefono = telefono;
         this.correo = correo;
     }
@@ -33,14 +31,6 @@ public class Contacto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getTelefono() {
