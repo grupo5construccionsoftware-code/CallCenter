@@ -34,8 +34,8 @@
     <article class="card">
 
       <c:if test="${registrado}">
-        <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-           Tus datos fueron registrados correctamente nos comunicaremos muy pronto posible
+        <div class="mensaje-exito">
+           Tu solicitud se envió correctamente
         </div>
       </c:if>
 
