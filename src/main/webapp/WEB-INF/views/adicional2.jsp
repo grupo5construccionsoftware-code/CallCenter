@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Empresa | Sistema Call Center</title>
+  <meta name="description" content="Página de contacto del sistema call center.">
+  <title>Contacto | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -23,40 +23,51 @@
     </nav>
   </div>
 </header>
+
 <div class="container">
+
+  <%-- ===== FORMULARIO DE CONTACTO ===== --%>
   <section class="section">
-    <div class="hero-copy">
-      <h1>Registro de empresa</h1>
-      <p>Completa los datos básicos de tu empresa y nos comunicaremos contigo para continuar el proceso.</p>
-    </div>
     <article class="card">
-      <div class="form-grid">
-        <div>
-          <label for="Nombre_empresa">Nombre de la empresa</label>
-          <input type="text" id="Nombre_empresa" name="nombre_empresa" placeholder="Ej: Corporación XYZ S.A.C.">
-        </div>
-        <div>
-          <label for="Telefono_empresa">Teléfono del gerente</label>
-          <input type="tel" id="Telefono_empresa" name="Telefono_empresa" placeholder="Ej: 123 456 789">
-        </div>
+      <div class="hero-copy">
+        <h1>Contáctanos</h1>
+        <p>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</p>
       </div>
-      <div class="form-grid">
-        <div>
-          <label for="Correo_empresa">Correo de contacto</label>
-          <input type="text" id="Correo_empresa" name="correo_empresa" placeholder="Ej: empresa@correo.com">
+      <form action="/contacto/enviar" method="post">
+        <div class="form-grid">
+          <div>
+            <label for="nombre"><strong>Nombre</strong></label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+          </div>
+          <div>
+            <label for="apellido"><strong>Apellido</strong></label>
+            <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required>
+          </div>
         </div>
-      </div>
-      <div class="actions">
-        <button type="button">
-          <i class="fas fa-paper-plane"></i>Enviar solicitud
-        </button>
-        <a class="button secondary" href="/contacto">
-          <i class="fas fa-reply"></i>Volver
-        </a>
-      </div>
+        <div class="form-grid">
+          <div>
+            <label for="telefono"><strong>Número de teléfono</strong></label>
+            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 999 999 999" pattern="[0-9\s\+\-]{7,15}" required>
+          </div>
+          <div>
+            <label for="correo"><strong>Correo electrónico</strong></label>
+            <input type="email" id="correo" name="correo" placeholder="Ej: correo@ejemplo.com" required>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit">
+            <i class="fas fa-paper-plane"></i> Enviar mensaje
+          </button>
+          <button type="reset" class="secondary">
+            <i class="fas fa-times"></i> Limpiar
+          </button>
+        </div>
+      </form>
     </article>
   </section>
+
+
 </div>
-<div class="footer">Sistema de Call Center - Registro de Empresa</div>
+<div class="footer">Sistema de Call Center - Contacto</div>
 </body>
 </html>
