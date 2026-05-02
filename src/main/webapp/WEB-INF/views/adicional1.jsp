@@ -41,18 +41,17 @@
           <input type="text" id="buscar-cliente" name="buscar_cliente" placeholder="Nombre del cliente...">
         </div>
         <div>
-          <label for="filtrar-motivo">Filtrar por motivo</label>
-          <select id="filtrar-motivo" name="filtrar_motivo">
-            <option value="">Todos</option>
-            <option value="reclamo">Reclamo</option>
-            <option value="consulta">Consulta</option>
-            <option value="venta">Venta</option>
-            <option value="soporte">Soporte</option>
-          </select>
-        </div>
-        <div>
           <label for="fecha-llamada">Fecha de llamada</label>
           <input type="date" id="fecha-llamada" name="fecha_llamada">
+        </div>
+        <div>
+          <label for="buscar-motivo">Buscar por motivo</label>
+          <select id="buscar-motivo" name="buscar_motivo">
+            <option value="">Todos los motivos</option>
+            <c:forEach var="motivo" items="${motivosDisponibles}">
+              <option value="${motivo}">${motivo}</option>
+            </c:forEach>
+          </select>
         </div>
       </div>
       <div class="actions">
@@ -66,26 +65,29 @@
       <div class="table-wrap" id="tabla-historial-wrap" style="display:none;">
         <table>
           <thead>
-            <tr>
-              <th>Código llamada</th>
-              <th>Cliente</th>
-              <th>Teléfono cliente</th>
-              <th>Motivo</th>
-              <th>Fecha llamada</th>
-              <th>Hora</th>
-              <th>Agente</th>
-            </tr>
+          <tr>
+            <th>Código llamada</th>
+            <th>Cliente</th>
+            <th>Teléfono cliente</th>
+            <th>Fecha llamada</th>
+            <th>Hora</th>
+            <th>Motivo</th>
+            <th>Descripción motivo</th>
+            <th>Agente</th>
+          </tr>
           </thead>
           <tbody id="tabla-historial-body">
           <c:forEach var="llamada" items="${historialLlamadas}">
+            <c:set var="tipificacion" value="${tipificacionesPorLlamada[llamada.id_llamada]}" />
             <tr>
-              <td>LL${llamada.idLlamada}</td>
-              <td>${llamada.nombreCliente}</td>
-              <td>${llamada.telefonoCliente}</td>
-              <td>${llamada.motivoTipo}</td>
-              <td>${llamada.fechaLlamada}</td>
+              <td>LL${llamada.id_llamada}</td>
+              <td>${llamada.nombre_cliente}</td>
+              <td>${llamada.telefono_cliente}</td>
+              <td>${llamada.fecha_llamada}</td>
               <td>${llamada.hora}</td>
-              <td>${llamada.nombreAgente}</td>
+              <td>${tipificacion != null ? tipificacion.motivo_tipo : ""}</td>
+              <td>${tipificacion != null ? tipificacion.descripcion_tipo : ""}</td>
+              <td>Agente ${llamada.id_agente}</td>
             </tr>
           </c:forEach>
           </tbody>
@@ -98,8 +100,8 @@
 <script>
   (function () {
     const inputCliente = document.getElementById('buscar-cliente');
-    const selectMotivo = document.getElementById('filtrar-motivo');
     const inputFecha = document.getElementById('fecha-llamada');
+    const inputMotivo = document.getElementById('buscar-motivo');
     const btnBuscar = document.getElementById('btn-buscar');
     const btnActualizar = document.getElementById('btn-actualizar');
     const filas = document.querySelectorAll('#tabla-historial-body tr');
@@ -136,28 +138,28 @@
 
     function aplicarFiltro() {
       const clienteFiltro = normalizarTexto(inputCliente.value);
-      const motivoFiltro = normalizarTexto(selectMotivo.value);
       const fechaFiltro = normalizarFecha(inputFecha.value);
+      const motivoFiltro = normalizarTexto(inputMotivo.value);
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = '';
 
       filas.forEach(function (fila) {
         const cliente = normalizarTexto(fila.children[1].textContent);
-        const motivo = normalizarTexto(fila.children[3].textContent);
-        const fecha = normalizarFecha(fila.children[4].textContent);
+        const fecha = normalizarFecha(fila.children[3].textContent);
+        const motivo = normalizarTexto(fila.children[5].textContent);
 
         const coincideCliente = !clienteFiltro || cliente.includes(clienteFiltro);
-        const coincideMotivo = !motivoFiltro || motivo === motivoFiltro;
         const coincideFecha = !fechaFiltro || fecha === fechaFiltro;
+        const coincideMotivo = !motivoFiltro || motivo.includes(motivoFiltro);
 
-        fila.style.display = (coincideCliente && coincideMotivo && coincideFecha) ? '' : 'none';
+        fila.style.display = (coincideCliente && coincideFecha && coincideMotivo) ? '' : 'none';
       });
     }
 
     function resetearFiltros() {
       inputCliente.value = '';
-      selectMotivo.value = '';
       inputFecha.value = '';
+      inputMotivo.value = '';
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = 'none';
       filas.forEach(function (fila) {
