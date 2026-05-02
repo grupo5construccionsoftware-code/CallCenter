@@ -56,14 +56,14 @@
         </div>
       </div>
       <div class="actions">
-        <button type="button">
+        <button type="button" id="btn-buscar">
           <i class="fas fa-search"></i> Buscar
         </button>
-        <button type="button" class="secondary">
+        <button type="button" class="secondary" id="btn-actualizar">
           <i class="fas fa-redo"></i> Actualizar historial
         </button>
       </div>
-      <div class="table-wrap">
+      <div class="table-wrap" id="tabla-historial-wrap" style="display:none;">
         <table>
           <thead>
             <tr>
@@ -76,16 +76,18 @@
               <th>Agente</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="tabla-historial-body">
+          <c:forEach var="llamada" items="${historialLlamadas}">
             <tr>
-              <td>LL01</td>
-              <td>Alex Pérez</td>
-              <td>123456789</td>
-              <td>Reclamo</td>
-              <td>2026-04-10</td>
-              <td>10:30</td>
-              <td>Pepito García</td>
+              <td>LL${llamada.idLlamada}</td>
+              <td>${llamada.nombreCliente}</td>
+              <td>${llamada.telefonoCliente}</td>
+              <td>${llamada.motivoTipo}</td>
+              <td>${llamada.fechaLlamada}</td>
+              <td>${llamada.hora}</td>
+              <td>${llamada.nombreAgente}</td>
             </tr>
+          </c:forEach>
           </tbody>
         </table>
       </div>
@@ -93,5 +95,49 @@
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Historial de llamadas</div>
+<script>
+  (function () {
+    const inputCliente = document.getElementById('buscar-cliente');
+    const selectMotivo = document.getElementById('filtrar-motivo');
+    const inputFecha = document.getElementById('fecha-llamada');
+    const btnBuscar = document.getElementById('btn-buscar');
+    const btnActualizar = document.getElementById('btn-actualizar');
+    const filas = document.querySelectorAll('#tabla-historial-body tr');
+
+    function aplicarFiltro() {
+      const clienteFiltro = inputCliente.value.trim().toLowerCase();
+      const motivoFiltro = selectMotivo.value.trim().toLowerCase();
+      const fechaFiltro = inputFecha.value;
+      const tablaWrap = document.getElementById('tabla-historial-wrap');
+      tablaWrap.style.display = '';
+
+      filas.forEach(function (fila) {
+        const cliente = fila.children[1].textContent.trim().toLowerCase();
+        const motivo = fila.children[3].textContent.trim().toLowerCase();
+        const fecha = fila.children[4].textContent.trim();
+
+        const coincideCliente = !clienteFiltro || cliente.includes(clienteFiltro);
+        const coincideMotivo = !motivoFiltro || motivo === motivoFiltro;
+        const coincideFecha = !fechaFiltro || fecha === fechaFiltro;
+
+        fila.style.display = (coincideCliente && coincideMotivo && coincideFecha) ? '' : 'none';
+      });
+    }
+
+    function resetearFiltros() {
+      inputCliente.value = '';
+      selectMotivo.value = '';
+      inputFecha.value = '';
+      const tablaWrap = document.getElementById('tabla-historial-wrap');
+      tablaWrap.style.display = 'none';
+      filas.forEach(function (fila) {
+        fila.style.display = '';
+      });
+    }
+
+    btnBuscar.addEventListener('click', aplicarFiltro);
+    btnActualizar.addEventListener('click', resetearFiltros);
+  })();
+</script>
 </body>
 </html>
