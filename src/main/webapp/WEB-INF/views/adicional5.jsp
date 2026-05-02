@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,30 +36,30 @@
       <p>Modifica los datos de un agente registrado</p>
     </div>
     <article class="card">
-      <input type="hidden" name="id_agente" value="age01">
-      <input type="hidden" name="id_empresa" value="emp01">
-      <div class="form-grid">
-        <div>
-          <label>Código de agente</label>
-          <input type="text" value="age01" readonly>
+      <form:form action="/agente/actualizar" method="post" modelAttribute="agente">
+        <form:hidden path="id_agente"/>
+        <form:hidden path="id_empresa"/>
+        <form:hidden path="usuario_agente"/>
+        <form:hidden path="contrasenia_agente"/>
+        <div class="form-grid">
+          <div>
+            <label>Código de agente</label>
+            <input type="text" value="${agente.id_agente}" readonly">
+          </div>
+          <div>
+            <label for="nombre_agente">Nombre del agente</label>
+            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan"/>
+          </div>
+          <div>
+            <label for="telefono_agente">Teléfono del agente</label>
+            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123 456 789"/>
+          </div>
         </div>
-        <div>
-          <label for="nombre-editar">Nombre del agente</label>
-          <input type="text" id="nombre-editar" name="nombre_agente" placeholder="Ej: Pepito García">
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Actualizar</button>
+          <a class="button secondary" href="/usuarios"><i class="fas fa-times"></i> Cancelar</a>
         </div>
-        <div>
-          <label for="telefono-editar">Teléfono del agente</label>
-          <input type="tel" id="telefono-editar" name="telefono_agente" placeholder="Ej: 123 456 789">
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button">
-            <i class="fas fa-save"></i> Actualizar
-        </button>
-        <a class="button secondary" href="/usuarios">
-            <i class="fas fa-times"></i> Cancelar
-        </a>
-      </div>
+      </form:form>
     </article>
   </section>
 </div>
