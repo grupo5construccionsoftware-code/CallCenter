@@ -311,3 +311,21 @@ button i{
   border-radius: 5px;
   margin-bottom: 15px;
 }
+
+/* Mensaje de error en formularios */
+.notice-box.error {
+  border-left: 4px solid #cc0000;
+}
+.notice-box.error p {
+  color: #cc0000;
+  margin: 0;
+}
+
+/* Mensaje de exito en formularios */
+.notice-box.success {
+  border-left: 4px solid #ff8a00;
+}
+.notice-box.success p {
+  color: var(--color-primario);
+  margin: 0;
+}
