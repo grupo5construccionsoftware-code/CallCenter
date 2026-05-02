@@ -24,6 +24,7 @@ public class AgenteController {
     public String listarAgentes(Model model) {
         List<Agente> agentes = agenteService.listarAgentes();
         model.addAttribute("agentes", agentes);
+        model.addAttribute("agente", new Agente());
         return "usuarios";
     }
 
