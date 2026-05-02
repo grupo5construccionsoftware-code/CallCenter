@@ -39,12 +39,12 @@
       <form:form action="/agente/crear" method="post" modelAttribute="agente">
         <div class="form-grid">
           <div>
-            <label for="nombreAgente">Nombre del agente</label>
-            <form:input path="nombreAgente" id="nombreAgente" placeholder="Ej: Pérez García, Juan"/>
+            <label for="nombre-agente">Nombre del agente</label>
+            <form:input path="nombre-agente" id="nombre-agente" placeholder="Ej: Pérez García, Juan"/>
           </div>
           <div>
-            <label for="telefonoAgente">Teléfono del agente</label>
-            <form:input path="telefonoAgente" id="telefonoAgente" placeholder="Ej: 123 456 789"/>
+            <label for="telefono-agente">Teléfono del agente</label>
+            <form:input path="telefono-agente" id="telefono-agente" placeholder="Ej: 123 456 789"/>
           </div>
         </div>
         <div class="actions single align-center">
