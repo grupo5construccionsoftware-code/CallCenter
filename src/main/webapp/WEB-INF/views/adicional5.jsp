@@ -47,12 +47,12 @@
             <input type="text" value="${agente.id_agente}" readonly>
           </div>
           <div>
-            <label for="nombre_agente">Nombre del agente</label>
-            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan"/>
+            <label for="nombre-agente">Nombre del agente</label>
+            <form:input path="nombre-agente" id="nombre-agente" placeholder="Ej: Pérez García, Juan"/>
           </div>
           <div>
-            <label for="telefono_agente">Teléfono del agente</label>
-            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123 456 789"/>
+            <label for="telefono-agente">Teléfono del agente</label>
+            <form:input path="telefono-agente" id="telefono-agente" placeholder="Ej: 123 456 789"/>
           </div>
         </div>
         <div class="actions">
