@@ -104,17 +104,47 @@
     const btnActualizar = document.getElementById('btn-actualizar');
     const filas = document.querySelectorAll('#tabla-historial-body tr');
 
+    function normalizarTexto(valor) {
+      return (valor || '')
+              .toString()
+              .trim()
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function normalizarFecha(valor) {
+      const texto = (valor || '').toString().trim();
+      if (!texto) {
+        return '';
+      }
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
+        return texto;
+      }
+
+      const partes = texto.split('/');
+      if (partes.length === 3) {
+        const dd = partes[0].padStart(2, '0');
+        const mm = partes[1].padStart(2, '0');
+        const yyyy = partes[2];
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      return texto;
+    }
+
     function aplicarFiltro() {
-      const clienteFiltro = inputCliente.value.trim().toLowerCase();
-      const motivoFiltro = selectMotivo.value.trim().toLowerCase();
-      const fechaFiltro = inputFecha.value;
+      const clienteFiltro = normalizarTexto(inputCliente.value);
+      const motivoFiltro = normalizarTexto(selectMotivo.value);
+      const fechaFiltro = normalizarFecha(inputFecha.value);
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = '';
 
       filas.forEach(function (fila) {
-        const cliente = fila.children[1].textContent.trim().toLowerCase();
-        const motivo = fila.children[3].textContent.trim().toLowerCase();
-        const fecha = fila.children[4].textContent.trim();
+        const cliente = normalizarTexto(fila.children[1].textContent);
+        const motivo = normalizarTexto(fila.children[3].textContent);
+        const fecha = normalizarFecha(fila.children[4].textContent);
 
         const coincideCliente = !clienteFiltro || cliente.includes(clienteFiltro);
         const coincideMotivo = !motivoFiltro || motivo === motivoFiltro;
