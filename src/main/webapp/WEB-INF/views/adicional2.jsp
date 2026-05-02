@@ -5,8 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Página de contacto del sistema call center.">
-  <title>Contacto | Sistema Call Center</title>
+  <title>Registro de Empresa | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -16,7 +15,7 @@
     <div class="brand">
       <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
     </div>
-    <nav class="menu" aria-label="Navegación principal">
+    <nav class="menu" aria-label="Navegacion principal">
       <a href="/main">Inicio</a>
       <a href="/contacto" class="active">Contacto</a>
       <a href="/publicidad">Publicidad</a>
@@ -26,55 +25,55 @@
 </header>
 
 <div class="container">
-
   <section class="section">
+    <div class="hero-copy">
+      <h1>Contáctanos</h1>
+      <p>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</p>
+    </div>
+
     <article class="card">
-      <div class="hero-copy">
-        <h1>Contáctanos</h1>
-        <p>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</p>
-      </div>
-      <form action="/contacto/enviar" method="post">
+
+      <c:if test="${registrado}">
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+           Tus datos fueron registrados correctamente nos comunicaremos muy pronto posible
+        </div>
+      </c:if>
+
+      <form id="formEmpresa" action="/adicional2/registrar" method="post">
+
         <div class="form-grid">
           <div>
-            <label for="nombre"><strong>Nombre</strong></label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+            <label for="nombre">Nombre de la empresa</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Corporacion XYZ S.A.C." required>
           </div>
           <div>
-            <label for="apellido"><strong>Apellido</strong></label>
-            <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required>
+            <label for="telefono">Telefono del gerente</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 999 999 999" required>
           </div>
         </div>
+
         <div class="form-grid">
           <div>
-            <label for="telefono"><strong>Número de teléfono</strong></label>
-            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 999 999 999" pattern="[0-9\s\+\-]{7,15}" required>
-          </div>
-          <div>
-            <label for="correo"><strong>Correo electrónico</strong></label>
-            <input type="email" id="correo" name="correo" placeholder="Ej: correo@ejemplo.com" required>
+            <label for="correo">Correo de contacto</label>
+            <input type="email" id="correo" name="correo" placeholder="Ej: empresa@correo.com" required>
           </div>
         </div>
+
         <div class="actions">
           <button type="submit">
-            <i class="fas fa-paper-plane"></i> Enviar mensaje
+            <i class="fas fa-paper-plane"></i> Enviar solicitud
           </button>
-          <button type="reset" class="secondary">
-            <i class="fas fa-times"></i> Limpiar
-          </button>
+          <a class="button secondary" href="/contacto">
+            <i class="fas fa-reply"></i> Volver
+          </a>
         </div>
+
       </form>
     </article>
   </section>
-
-
 </div>
-<div class="footer">Sistema de Call Center - Contacto</div>
 
-<script>
-  document.getElementById('formContacto').addEventListener('submit', function() {
-    alert('Tu informacion fue guardada correctamente. Nos comunicaremos contigo a la brevedad.');
-  });
-</script>
+<div class="footer">Sistema de Call Center - Registro de Empresa</div>
 
 </body>
 </html>
