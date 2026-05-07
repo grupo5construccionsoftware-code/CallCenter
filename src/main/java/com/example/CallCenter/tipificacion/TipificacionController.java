@@ -30,9 +30,14 @@ public class TipificacionController {
     }
 
     @PostMapping("/crear")
-    public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion) {
+    public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion, Model model) {
         tipificacionService.crearTipificacion(tipificacion);
-        return "redirect:/tipificaciones";
+        // Recarga la lista y activa el mensaje de guardado
+        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
+        model.addAttribute("tipificacion", new Tipificacion());
+        model.addAttribute("mostrarTabla", true);
+        model.addAttribute("guardado", true);
+        return "tipificaciones";
     }
 
     @GetMapping("/editar")

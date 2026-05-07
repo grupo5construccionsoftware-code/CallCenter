@@ -17,7 +17,6 @@ public class EmpresaController {
         this.empresaService = empresaService;
     }
 
-    // Muestra el formulario de registro
     @GetMapping
     public String mostrarFormulario(Model model) {
         model.addAttribute("empresa", new Empresa());

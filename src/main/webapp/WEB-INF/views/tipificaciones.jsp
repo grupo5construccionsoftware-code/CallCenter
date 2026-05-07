@@ -36,6 +36,14 @@
       <p>Agregar detalles de la llamada</p>
     </div>
     <article class="card">
+
+      <c:if test="${guardado == true}">
+        <div class="mensaje-exito">
+          <i class="fas fa-check-circle"></i>
+          <strong> Tipificacion guardada correctamente.</strong>
+        </div>
+      </c:if>
+
       <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
         <div class="form-grid">
           <div>

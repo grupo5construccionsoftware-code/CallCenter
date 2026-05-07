@@ -321,7 +321,6 @@ button i{
   margin: 0;
 }
 
-/* Mensaje de exito en formularios */
 .notice-box.success {
   border-left: 4px solid #ff8a00;
 }
