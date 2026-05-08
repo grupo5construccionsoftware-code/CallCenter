@@ -69,6 +69,23 @@
         </div>
 
       </form>
+
+      <c:if test="${empresaRegistrada != null}">
+        <div class="notice-box">
+          <h3><i class="fas fa-check-circle"></i> Empresa registrada exitosamente</h3>
+          <p><strong>Nombre:</strong> ${empresaRegistrada.nombre}</p>
+          <p><strong>Teléfono:</strong> ${empresaRegistrada.telefono}</p>
+          <p><strong>Correo:</strong> ${empresaRegistrada.correo}</p>
+          <p>Guarda estos datos, no se volverán a mostrar.</p>
+          <div class="actions">
+            <a class="button" href="/contacto">
+              <i class="fas fa-check"></i> Aceptar
+            </a>
+          </div>
+        </div>
+      </c:if>
+
+
     </article>
   </section>
 </div>
