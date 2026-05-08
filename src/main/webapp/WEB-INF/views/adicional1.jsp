@@ -41,8 +41,12 @@
           <input type="text" id="buscar-cliente" name="buscar_cliente" placeholder="Nombre del cliente...">
         </div>
         <div>
-          <label for="fecha-llamada">Fecha de llamada</label>
-          <input type="date" id="fecha-llamada" name="fecha_llamada">
+          <label for="fecha-inicio">Rango de fechas</label>
+          <div class="date-range">
+            <input type="date" id="fecha-inicio" name="fecha_inicio" aria-label="Fecha inicio">
+            <span>a</span>
+            <input type="date" id="fecha-fin" name="fecha_fin" aria-label="Fecha fin">
+          </div>
         </div>
         <div>
           <label for="buscar-motivo">Buscar por motivo</label>
@@ -100,7 +104,8 @@
 <script>
   (function () {
     const inputCliente = document.getElementById('buscar-cliente');
-    const inputFecha = document.getElementById('fecha-llamada');
+    const inputFechaInicio = document.getElementById('fecha-inicio');
+    const inputFechaFin = document.getElementById('fecha-fin');
     const inputMotivo = document.getElementById('buscar-motivo');
     const btnBuscar = document.getElementById('btn-buscar');
     const btnActualizar = document.getElementById('btn-actualizar');
@@ -138,7 +143,14 @@
 
     function aplicarFiltro() {
       const clienteFiltro = normalizarTexto(inputCliente.value);
-      const fechaFiltro = normalizarFecha(inputFecha.value);
+      let fechaInicio = normalizarFecha(inputFechaInicio.value);
+      let fechaFin = normalizarFecha(inputFechaFin.value);
+
+      if (fechaInicio && fechaFin && fechaInicio > fechaFin) {
+        const temporal = fechaInicio;
+        fechaInicio = fechaFin;
+        fechaFin = temporal;
+      }
       const motivoFiltro = normalizarTexto(inputMotivo.value);
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = '';
@@ -149,7 +161,9 @@
         const motivo = normalizarTexto(fila.children[5].textContent);
 
         const coincideCliente = !clienteFiltro || cliente.includes(clienteFiltro);
-        const coincideFecha = !fechaFiltro || fecha === fechaFiltro;
+        const coincideFechaInicio = !fechaInicio || fecha >= fechaInicio;
+        const coincideFechaFin = !fechaFin || fecha <= fechaFin;
+        const coincideFecha = coincideFechaInicio && coincideFechaFin;
         const coincideMotivo = !motivoFiltro || motivo.includes(motivoFiltro);
 
         fila.style.display = (coincideCliente && coincideFecha && coincideMotivo) ? '' : 'none';
@@ -158,7 +172,8 @@
 
     function resetearFiltros() {
       inputCliente.value = '';
-      inputFecha.value = '';
+      inputFechaInicio.value = '';
+      inputFechaFin.value = '';
       inputMotivo.value = '';
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = 'none';

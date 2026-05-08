@@ -30,6 +30,7 @@ public class EmpresaController {
         System.out.println("Empresa registrada: " + empresa.getNombre());
         model.addAttribute("empresa", new Empresa());
         model.addAttribute("registrado", true);
+        model.addAttribute("empresaRegistrada", empresa);
         return "adicional2";
     }
 

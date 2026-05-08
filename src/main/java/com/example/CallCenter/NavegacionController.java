@@ -89,9 +89,8 @@ public class NavegacionController {
                 .stream()
                 .collect(Collectors.toMap(Tipificacion::getId_llamada, tipificacion -> tipificacion, (actual, ignorar) -> actual));
 
-        List<String> motivosDisponibles = tipificacionService.listarTipificaciones()
+        List<String> motivosDisponibles = tipificacionService.listarTiposLlamada()
                 .stream()
-                .map(Tipificacion::getMotivo_tipo)
                 .filter(motivo -> motivo != null && !motivo.trim().isEmpty())
                 .distinct()
                 .collect(Collectors.toList());
