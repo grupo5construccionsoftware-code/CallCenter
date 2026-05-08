@@ -65,6 +65,7 @@ public class NavegacionController {
     @GetMapping("/tipificaciones")
     public String tipificaciones(Model model) {
         model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }

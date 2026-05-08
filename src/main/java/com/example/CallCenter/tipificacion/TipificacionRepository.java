@@ -1,6 +1,7 @@
 package com.example.CallCenter.tipificacion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -11,16 +12,45 @@ import com.example.CallCenter.llamada.Llamada;
 public class TipificacionRepository implements TipificacionDAO {
 
     private final List<Tipificacion> tipificaciones = new ArrayList<>();
-    private final String[] motivos = {"", "Consulta", "Reclamo", "Venta", "Soporte", "Otros"};
+    private final List<String> tiposLlamada = new ArrayList<>(
+            Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Error"));
     private final LlamadaDAO llamadaDAO;
 
     public TipificacionRepository(LlamadaDAO llamadaDAO) {
         this.llamadaDAO = llamadaDAO;
+        cargarTipificacionesIniciales();
     }
 
     @Override
     public List<Tipificacion> listarTipificaciones() {
         return tipificaciones;
+    }
+
+    @Override
+    public List<String> listarTiposLlamada() {
+        return tiposLlamada;
+    }
+
+    @Override
+    public void agregarTipoLlamada(String motivo) {
+        if (motivo == null || motivo.trim().isEmpty()) {
+            return;
+        }
+
+        String motivoLimpio = motivo.trim();
+        boolean existe = tiposLlamada.stream()
+                .anyMatch(tipo -> tipo.equalsIgnoreCase(motivoLimpio));
+
+        if (!existe) {
+            tiposLlamada.add(motivoLimpio);
+        }
+    }
+
+    @Override
+    public void eliminarTipoLlamada(int idTipo) {
+        if (idTipo >= 1 && idTipo <= tiposLlamada.size()) {
+            tiposLlamada.remove(idTipo - 1);
+        }
     }
 
     @Override
@@ -37,9 +67,7 @@ public class TipificacionRepository implements TipificacionDAO {
         if (llamada != null) {
             tipificacion.setNombre_cliente(llamada.getNombre_cliente());
         }
-        if (tipificacion.getId_tipo() >= 1 && tipificacion.getId_tipo() <= 5) {
-            tipificacion.setMotivo_tipo(motivos[tipificacion.getId_tipo()]);
-        }
+        asignarMotivo(tipificacion);
         tipificaciones.add(tipificacion);
     }
 
@@ -48,9 +76,7 @@ public class TipificacionRepository implements TipificacionDAO {
         for (int i = 0; i < tipificaciones.size(); i++) {
             if (tipificaciones.get(i).getId_llamada() == tipificacion.getId_llamada()) {
                 tipificacion.setNombre_cliente(tipificaciones.get(i).getNombre_cliente());
-                if (tipificacion.getId_tipo() >= 1 && tipificacion.getId_tipo() <= 5) {
-                    tipificacion.setMotivo_tipo(motivos[tipificacion.getId_tipo()]);
-                }
+                asignarMotivo(tipificacion);
                 tipificaciones.set(i, tipificacion);
                 break;
             }
@@ -60,5 +86,30 @@ public class TipificacionRepository implements TipificacionDAO {
     @Override
     public void eliminarTipificacion(int id_llamada) {
         tipificaciones.removeIf(t -> t.getId_llamada() == id_llamada);
+    }
+
+    private void asignarMotivo(Tipificacion tipificacion) {
+        Integer idTipo = tipificacion.getId_tipo();
+        if (idTipo != null && idTipo >= 1 && idTipo <= tiposLlamada.size()) {
+            tipificacion.setMotivo_tipo(tiposLlamada.get(idTipo - 1));
+        }
+    }
+
+    private void cargarTipificacionesIniciales() {
+        agregarTipificacionInicial(1, 1, "Maria Lopez", "Cliente consulta el estado de su solicitud.");
+        agregarTipificacionInicial(2, 2, "Carlos Perez", "Cliente presenta reclamo por cobro duplicado.");
+        agregarTipificacionInicial(3, 3, "Ana Torres", "Cliente solicita informacion sobre una promocion.");
+        agregarTipificacionInicial(4, 4, "Luis Ramirez", "Cliente requiere soporte para ingresar al sistema.");
+        agregarTipificacionInicial(5, 5, "Rosa Garcia", "Cliente reporta un error durante la atencion.");
+    }
+
+    private void agregarTipificacionInicial(int idLlamada, int idTipo, String cliente, String descripcion) {
+        Tipificacion tipificacion = new Tipificacion();
+        tipificacion.setId_llamada(idLlamada);
+        tipificacion.setId_tipo(idTipo);
+        tipificacion.setNombre_cliente(cliente);
+        tipificacion.setDescripcion_tipo(descripcion);
+        asignarMotivo(tipificacion);
+        tipificaciones.add(tipificacion);
     }
 }

@@ -25,6 +25,7 @@ public class TipificacionController {
         List<Tipificacion> tipificaciones = tipificacionService.listarTipificaciones();
         model.addAttribute("tipificaciones", tipificaciones);
         model.addAttribute("tipificacion", new Tipificacion());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         model.addAttribute("mostrarTabla", true);
         return "tipificaciones";
     }
@@ -32,18 +33,31 @@ public class TipificacionController {
     @PostMapping("/crear")
     public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion, Model model) {
         tipificacionService.crearTipificacion(tipificacion);
-        // Recarga la lista y activa el mensaje de guardado
         model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
         model.addAttribute("tipificacion", new Tipificacion());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         model.addAttribute("mostrarTabla", true);
         model.addAttribute("guardado", true);
         return "tipificaciones";
+    }
+
+    @PostMapping("/tipo/crear")
+    public String crearTipoLlamada(@RequestParam("nuevoTipo") String nuevoTipo) {
+        tipificacionService.agregarTipoLlamada(nuevoTipo);
+        return "redirect:/tipificaciones";
+    }
+
+    @PostMapping("/tipo/eliminar")
+    public String eliminarTipoLlamada(@RequestParam("idTipo") int idTipo) {
+        tipificacionService.eliminarTipoLlamada(idTipo);
+        return "redirect:/tipificaciones";
     }
 
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_llamada, Model model) {
         Tipificacion tipificacion = tipificacionService.obtenerTipificacionPorId(id_llamada);
         model.addAttribute("tipificacion", tipificacion);
+        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         return "adicional4";
     }
 

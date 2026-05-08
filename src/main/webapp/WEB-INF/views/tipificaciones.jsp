@@ -44,6 +44,34 @@
         </div>
       </c:if>
 
+      <div class="tipos-panel">
+        <div>
+          <h2>Tipos de llamada</h2>
+          <p>Agrega nuevos motivos para usarlos en las tipificaciones.</p>
+        </div>
+        <div class="tipo-acciones">
+          <form action="/tipificacion/tipo/crear" method="post" class="tipo-form">
+            <label for="nuevoTipo">Nuevo tipo</label>
+            <div class="tipo-form-row">
+              <input type="text" name="nuevoTipo" id="nuevoTipo" placeholder="Ej: Renovacion de servicio" required>
+              <button type="submit"><i class="fas fa-plus"></i> Agregar tipo</button>
+            </div>
+          </form>
+          <form action="/tipificacion/tipo/eliminar" method="post" class="tipo-form">
+            <label for="idTipoEliminar">Tipo a eliminar</label>
+            <div class="tipo-form-row">
+              <select name="idTipo" id="idTipoEliminar" required>
+                <option value="" disabled selected>Selecciona un tipo</option>
+                <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
+                  <option value="${estado.index + 1}">${tipo}</option>
+                </c:forEach>
+              </select>
+              <button type="submit" class="secondary"><i class="fas fa-trash"></i> Eliminar tipo</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
         <div class="form-grid">
           <div>
@@ -54,11 +82,9 @@
             <label for="id_tipo">Motivo</label>
             <form:select path="id_tipo" id="id_tipo" required="required">
               <option value="" disabled selected>Selecciona un motivo</option>
-              <option value="1">Consulta</option>
-              <option value="2">Reclamo</option>
-              <option value="3">Venta</option>
-              <option value="4">Soporte</option>
-              <option value="5">Otros</option>
+              <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
+                <option value="${estado.index + 1}">${tipo}</option>
+              </c:forEach>
             </form:select>
           </div>
           <div>
