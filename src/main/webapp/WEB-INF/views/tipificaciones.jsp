@@ -48,11 +48,11 @@
         <div class="form-grid">
           <div>
             <label for="id_llamada">Código de llamada</label>
-            <form:input path="id_llamada" id="id_llamada" placeholder="Ej: 1"/>
+            <form:input path="id_llamada" id="id_llamada" placeholder="Ej: 1" required="required"/>
           </div>
           <div>
             <label for="id_tipo">Motivo</label>
-            <form:select path="id_tipo" id="id_tipo">
+            <form:select path="id_tipo" id="id_tipo" required="required">
               <option value="" disabled selected>Selecciona un motivo</option>
               <option value="1">Consulta</option>
               <option value="2">Reclamo</option>
@@ -63,7 +63,7 @@
           </div>
           <div>
             <label for="descripcion_tipo">Descripción</label>
-            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura"/>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura" required="required"/>
           </div>
         </div>
         <div class="actions">

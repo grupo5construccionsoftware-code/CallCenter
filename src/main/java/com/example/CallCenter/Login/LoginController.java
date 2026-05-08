@@ -13,7 +13,7 @@ public class LoginController {
 
     @GetMapping
     public String mostrarLogin() {
-        return "login"; // Vista: WEB-INF/views/login.jsp
+        return "login";
     }
 
     @PostMapping("/ingresar")

@@ -48,7 +48,7 @@
           </div>
           <div>
             <label for="telefono">Telefono del gerente</label>
-            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 999 999 999" required>
+            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 123456789" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
           </div>
         </div>
 
