@@ -30,9 +30,12 @@ public class AgenteController {
     }
 
     @PostMapping("/crear")
-    public String crearAgente(@ModelAttribute("agente") Agente agente) {
+    public String crearAgente(@ModelAttribute("agente") Agente agente, Model model) {
         agenteService.crearAgente(agente);
-        return "redirect:/usuarios";
+        model.addAttribute("agente", new Agente());
+        model.addAttribute("mostrarTabla", false);
+        model.addAttribute("agenteCreado", agente);
+        return "usuarios";
     }
 
     @GetMapping("/editar")

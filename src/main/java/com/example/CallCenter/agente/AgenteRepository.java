@@ -9,6 +9,15 @@ import org.springframework.stereotype.Repository;
 public class AgenteRepository implements AgenteDAO {
 
     private final List<Agente> agentes = new ArrayList<>();
+    private int contadorId = 6;
+
+    {
+        agentes.add(new Agente(1, "Carlos García",   "987654321", "agente01", "age01", 1));
+        agentes.add(new Agente(2, "Ana Mendoza",    "912345678", "agente02", "age02", 1));
+        agentes.add(new Agente(3, "Luis Quispe",     "923456789", "agente03", "age03", 1));
+        agentes.add(new Agente(4, "María Flores",   "934567890", "agente04", "age04", 1));
+        agentes.add(new Agente(5, "Roberto Vargas", "945678901", "agente05", "age05", 1));
+    }
 
     @Override
     public List<Agente> listarAgentes() {
@@ -25,11 +34,11 @@ public class AgenteRepository implements AgenteDAO {
 
     @Override
     public void crearAgente(Agente agente) {
-        int nuevoId = agentes.size() + 1;
-        agente.setId_agente(nuevoId);
-        agente.setUsuario_agente("agente" + nuevoId);
-        agente.setContrasenia_agente("ag" + nuevoId + "2026");
+        agente.setId_agente(contadorId);
+        agente.setUsuario_agente("agente0" + contadorId);
+        agente.setContrasenia_agente("age0" + contadorId);
         agente.setId_empresa(1);
+        contadorId++;
         agentes.add(agente);
     }
 

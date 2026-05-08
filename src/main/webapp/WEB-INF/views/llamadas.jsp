@@ -40,11 +40,11 @@
         <div class="form-grid">
           <div>
             <label for="nombre_cliente">Nombre del cliente</label>
-            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez"/>
+            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez" required="required"/>
           </div>
           <div>
             <label for="telefono_cliente">Teléfono del cliente</label>
-            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123 456 789"/>
+            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123456789" required="required" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
           </div>
         </div>
         <div class="actions">

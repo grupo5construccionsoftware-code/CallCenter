@@ -40,11 +40,11 @@
         <div class="form-grid">
           <div>
             <label for="nombre_agente">Nombre del agente</label>
-            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan"/>
+            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan" required="required"/>
           </div>
           <div>
             <label for="telefono_agente">Teléfono del agente</label>
-            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123 456 789"/>
+            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123456789" required="required" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
           </div>
         </div>
         <div class="actions single align-center">
@@ -56,6 +56,22 @@
           </a>
         </div>
       </form:form>
+      <c:if test="${agenteCreado != null}">
+        <div class="notice-box">
+          <h3><i class="fas fa-check-circle"></i> Agente registrado exitosamente</h3>
+          <p><strong>Código:</strong> ${agenteCreado.id_agente}</p>
+          <p><strong>Nombre:</strong> ${agenteCreado.nombre_agente }</p>
+          <p><strong>Teléfono:</strong> ${agenteCreado.telefono_agente}</p>
+          <p><strong>Usuario:</strong> ${agenteCreado.usuario_agente}</p>
+          <p><strong>Contraseña:</strong> ${agenteCreado.contrasenia_agente}</p>
+          <p>Guarda estos datos, no se volverán a mostrar.</p>
+          <div class="actions">
+            <a class="button" href="/usuarios">
+              <i class="fas fa-check"></i> Aceptar
+            </a>
+          </div>
+        </div>
+      </c:if>
       <c:if test="${mostrarTabla}">
       <div class="table-wrap">
         <table>
