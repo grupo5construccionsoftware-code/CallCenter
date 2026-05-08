@@ -11,6 +11,7 @@ import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 
 @Controller
@@ -89,15 +90,15 @@ public class NavegacionController {
                 .stream()
                 .collect(Collectors.toMap(Tipificacion::getId_llamada, tipificacion -> tipificacion, (actual, ignorar) -> actual));
 
-        List<String> motivosDisponibles = tipificacionService.listarTiposLlamada()
+        List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
+        List<String> motivosDisponibles = new ArrayList<>(motivosBase);
+
+        tipificacionService.listarTiposLlamada()
                 .stream()
                 .filter(motivo -> motivo != null && !motivo.trim().isEmpty())
-                .distinct()
-                .collect(Collectors.toList());
-
-        if (motivosDisponibles.isEmpty()) {
-            motivosDisponibles = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
-        }
+                .map(String::trim)
+                .filter(motivo -> motivosBase.stream().noneMatch(base -> base.equalsIgnoreCase(motivo)))
+                .forEach(motivosDisponibles::add);
 
         model.addAttribute("historialLlamadas", historial);
         model.addAttribute("tipificacionesPorLlamada", tipificacionesPorLlamada);
