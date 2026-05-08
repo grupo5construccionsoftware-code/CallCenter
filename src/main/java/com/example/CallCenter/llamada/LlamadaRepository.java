@@ -12,6 +12,16 @@ import org.springframework.stereotype.Repository;
 public class LlamadaRepository implements LlamadaDAO {
 
     private final List<Llamada> llamadas = new ArrayList<>();
+    private int contadorId = 6;
+
+    {
+        llamadas.add(new Llamada(1, "Maria Lopez", "911111111", "2026-04-01", "09:15", 1));
+        llamadas.add(new Llamada(2, "Carlos Perez", "922222222", "2026-04-02", "10:30", 2));
+        llamadas.add(new Llamada(3, "Ana Torres", "933333333", "2026-04-03", "11:45", 3));
+        llamadas.add(new Llamada(4, "Luis Ramirez", "944444444", "2026-04-04", "14:00", 4));
+        llamadas.add(new Llamada(5, "Rosa García", "955555555", "2026-04-05", "15:30", 5));
+    }
+
 
     @Override
     public List<Llamada> listarLlamadas() {
@@ -28,11 +38,11 @@ public class LlamadaRepository implements LlamadaDAO {
 
     @Override
     public void crearLlamada(Llamada llamada) {
-        int nuevoId = llamadas.size() + 1;
-        llamada.setId_llamada(nuevoId);
+        llamada.setId_llamada(contadorId);
         llamada.setId_agente(1);
         llamada.setFecha_llamada(LocalDate.now().toString());
         llamada.setHora(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        contadorId++;
         llamadas.add(llamada);
     }
 

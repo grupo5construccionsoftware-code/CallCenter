@@ -54,6 +54,21 @@
           </a>
         </div>
       </form:form>
+      <c:if test="${llamadaCreada != null}">
+        <div class="notice-box" style="margin-top: 16px;">
+          <h3><i class="fas fa-check-circle" style="color: green;"></i> Llamada registrada exitosamente</h3>
+          <p><strong>Código de llamada:</strong> ${llamadaCreada.id_llamada}</p>
+          <p><strong>Cliente:</strong> ${llamadaCreada.nombre_cliente}</p>
+          <p><strong>Fecha:</strong> ${llamadaCreada.fecha_llamada}</p>
+          <p><strong>Hora:</strong> ${llamadaCreada.hora}</p>
+          <p style="color: #888; font-size: 13px;">Recuerda tipificar esta llamada con el código mostrado.</p>
+          <div class="actions" style="margin-top: 12px;">
+            <a class="button" href="/tipificaciones">
+              <i class="fas fa-tags"></i> Ir a tipificar
+            </a>
+          </div>
+        </div>
+      </c:if>
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
