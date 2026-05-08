@@ -312,6 +312,51 @@ button i{
   margin-bottom: 15px;
 }
 
+.tipos-panel {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background-color: #f8f9fa;
+}
+
+.tipos-panel h2 {
+  margin: 0 0 6px 0;
+  color: var(--color-primario);
+  font-size: 22px;
+}
+
+.tipos-panel p {
+  margin: 0;
+}
+
+.tipo-form {
+  flex: 1 1 320px;
+}
+
+.tipo-acciones {
+  flex: 2 1 620px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.tipo-form-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.tipo-form-row input,
+.tipo-form-row select {
+  min-width: 180px;
+}
+
 /* Mensaje de error en formularios */
 .notice-box.error {
   border-left: 4px solid #cc0000;
