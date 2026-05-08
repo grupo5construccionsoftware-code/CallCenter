@@ -17,6 +17,15 @@ public class TipificacionServiceImpl implements TipificacionService {
     public List<Tipificacion> listarTipificaciones() { return tipificacionDAO.listarTipificaciones(); }
 
     @Override
+    public List<String> listarTiposLlamada() { return tipificacionDAO.listarTiposLlamada(); }
+
+    @Override
+    public void agregarTipoLlamada(String motivo) { tipificacionDAO.agregarTipoLlamada(motivo); }
+
+    @Override
+    public void eliminarTipoLlamada(int idTipo) { tipificacionDAO.eliminarTipoLlamada(idTipo); }
+
+    @Override
     public Tipificacion obtenerTipificacionPorId(int id_llamada) { return tipificacionDAO.obtenerTipificacionPorId(id_llamada); }
 
     @Override

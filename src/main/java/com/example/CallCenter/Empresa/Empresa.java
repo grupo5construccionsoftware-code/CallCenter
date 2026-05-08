@@ -56,5 +56,4 @@ public class Empresa {
     public String getContrasenia() { return contrasenia; }
     public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
 
-
 }
