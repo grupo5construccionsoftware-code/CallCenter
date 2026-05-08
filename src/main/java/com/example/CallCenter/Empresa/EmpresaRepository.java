@@ -10,8 +10,7 @@ public class EmpresaRepository implements EmpresaDAO {
 
 
     private final List<Empresa> listaSimulada = new ArrayList<>();
-    private int contadorId = 2
-            ;
+    private int contadorId = 2;
 
     @Override
     public void registrarEmpresa(Empresa empresa) {
