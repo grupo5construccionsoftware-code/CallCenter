@@ -13,6 +13,10 @@ public class LlamadaRepository implements LlamadaDAO {
 
     private final List<Llamada> llamadas = new ArrayList<>();
 
+    public LlamadaRepository() {
+        cargarLlamadasIniciales();
+    }
+
     @Override
     public List<Llamada> listarLlamadas() {
         return llamadas;
@@ -28,7 +32,10 @@ public class LlamadaRepository implements LlamadaDAO {
 
     @Override
     public void crearLlamada(Llamada llamada) {
-        int nuevoId = llamadas.size() + 1;
+        int nuevoId = llamadas.stream()
+                .mapToInt(Llamada::getId_llamada)
+                .max()
+                .orElse(0) + 1;
         llamada.setId_llamada(nuevoId);
         llamada.setId_agente(1);
         llamada.setFecha_llamada(LocalDate.now().toString());
@@ -52,5 +59,24 @@ public class LlamadaRepository implements LlamadaDAO {
     @Override
     public void eliminarLlamada(int id_llamada) {
         llamadas.removeIf(l -> l.getId_llamada() == id_llamada);
+    }
+
+    private void cargarLlamadasIniciales() {
+        llamadas.add(crearLlamadaInicial(1, "Maria Lopez", "987654321", "2026-05-01", "09:10", 1));
+        llamadas.add(crearLlamadaInicial(2, "Carlos Perez", "923456781", "2026-05-02", "10:25", 1));
+        llamadas.add(crearLlamadaInicial(3, "Ana Torres", "934567812", "2026-05-03", "11:40", 1));
+        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez", "945678123", "2026-05-04", "13:15", 1));
+        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia", "956781234", "2026-05-05", "15:05", 1));
+    }
+
+    private Llamada crearLlamadaInicial(int id, String cliente, String telefono, String fecha, String hora, int idAgente) {
+        Llamada llamada = new Llamada();
+        llamada.setId_llamada(id);
+        llamada.setNombre_cliente(cliente);
+        llamada.setTelefono_cliente(telefono);
+        llamada.setFecha_llamada(fecha);
+        llamada.setHora(hora);
+        llamada.setId_agente(idAgente);
+        return llamada;
     }
 }
