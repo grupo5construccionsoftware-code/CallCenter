@@ -10,18 +10,16 @@ public class EmpresaRepository implements EmpresaDAO {
 
 
     private final List<Empresa> listaSimulada = new ArrayList<>();
-    private int contadorId = 2
-            ;
+    private int contadorId = 1;
 
     @Override
     public void registrarEmpresa(Empresa empresa) {
-        empresa.setId(contadorId);
+        empresa.setId(contadorId++);
         String num = String.format("%02d", contadorId);
         empresa.setUsuario("empresa" + num);
         empresa.setContrasenia("emp" + num);
         contadorId++;
         listaSimulada.add(empresa);
-
     }
 
 }
