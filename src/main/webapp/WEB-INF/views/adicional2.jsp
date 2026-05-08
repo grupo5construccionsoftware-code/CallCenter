@@ -73,9 +73,12 @@
       <c:if test="${empresaRegistrada != null}">
         <div class="notice-box">
           <h3><i class="fas fa-check-circle"></i> Empresa registrada exitosamente</h3>
+          <p><strong>Código:</strong> ${empresaRegistrada.id}</p>
           <p><strong>Nombre:</strong> ${empresaRegistrada.nombre}</p>
           <p><strong>Teléfono:</strong> ${empresaRegistrada.telefono}</p>
           <p><strong>Correo:</strong> ${empresaRegistrada.correo}</p>
+          <p><strong>Usuario:</strong> ${empresaRegistrada.usuario}</p>
+          <p><strong>Contraseña:</strong> ${empresaRegistrada.contrasenia}</p>
           <p>Guarda estos datos, no se volverán a mostrar.</p>
           <div class="actions">
             <a class="button" href="/contacto">
