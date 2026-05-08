@@ -52,16 +52,10 @@
               <option value="2">Reclamo</option>
               <option value="3">Venta</option>
               <option value="4">Soporte</option>
-              <option value="5">Otros</option>
-            </form:select>
-          </div>
-          <div>
-            <label for="tipo_adicional">Tipo adicional</label>
-            <form:select path="tipo_adicional" id="tipo_adicional">
-              <option value="">Selecciona un tipo adicional</option>
-              <c:forEach items="${tiposLlamada}" var="tipo">
-                <option value="${tipo}">${tipo}</option>
+              <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
+                <option value="${estado.index + 6}">${tipo}</option>
               </c:forEach>
+              <option value="5">Otros</option>
             </form:select>
           </div>
           <div>
