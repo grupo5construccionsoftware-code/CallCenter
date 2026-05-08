@@ -12,8 +12,8 @@ import com.example.CallCenter.llamada.Llamada;
 public class TipificacionRepository implements TipificacionDAO {
 
     private final List<Tipificacion> tipificaciones = new ArrayList<>();
-    private final List<String> motivos = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
-    private final List<String> tiposLlamada = new ArrayList<>(Arrays.asList("Error"));
+    private final List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte");
+    private final List<String> tiposLlamada = new ArrayList<>();
     private final LlamadaDAO llamadaDAO;
 
     public TipificacionRepository(LlamadaDAO llamadaDAO) {
@@ -90,15 +90,23 @@ public class TipificacionRepository implements TipificacionDAO {
 
     private void asignarMotivo(Tipificacion tipificacion) {
         Integer idTipo = tipificacion.getId_tipo();
-        if (idTipo == null || idTipo < 1 || idTipo > motivos.size()) {
+        if (idTipo == null) {
             return;
         }
 
-        if (idTipo == 5 && tipificacion.getTipo_adicional() != null
-                && !tipificacion.getTipo_adicional().trim().isEmpty()) {
-            tipificacion.setMotivo_tipo(tipificacion.getTipo_adicional().trim());
-        } else {
-            tipificacion.setMotivo_tipo(motivos.get(idTipo - 1));
+        if (idTipo >= 1 && idTipo <= motivosBase.size()) {
+            tipificacion.setMotivo_tipo(motivosBase.get(idTipo - 1));
+            return;
+        }
+
+        if (idTipo == 5) {
+            tipificacion.setMotivo_tipo("Otros");
+            return;
+        }
+
+        int indiceTipoAgregado = idTipo - 6;
+        if (indiceTipoAgregado >= 0 && indiceTipoAgregado < tiposLlamada.size()) {
+            tipificacion.setMotivo_tipo(tiposLlamada.get(indiceTipoAgregado));
         }
     }
 
@@ -107,7 +115,7 @@ public class TipificacionRepository implements TipificacionDAO {
         agregarTipificacionInicial(2, 2, "Carlos Perez", "Cliente presenta reclamo por cobro duplicado.");
         agregarTipificacionInicial(3, 3, "Ana Torres", "Cliente solicita informacion sobre una promocion.");
         agregarTipificacionInicial(4, 4, "Luis Ramirez", "Cliente requiere soporte para ingresar al sistema.");
-        agregarTipificacionInicial(5, 5, "Rosa Garcia", "Cliente reporta un error durante la atencion.", "Error");
+        agregarTipificacionInicial(5, 5, "Rosa Garcia", "Cliente reporta un caso adicional durante la atencion.");
     }
 
     private void agregarTipificacionInicial(int idLlamada, int idTipo, String cliente, String descripcion) {
