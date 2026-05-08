@@ -20,6 +20,7 @@ public class EmpresaRepository implements EmpresaDAO {
         empresa.setContrasenia("emp" + num);
         contadorId++;
         listaSimulada.add(empresa);
+
     }
 
 }
