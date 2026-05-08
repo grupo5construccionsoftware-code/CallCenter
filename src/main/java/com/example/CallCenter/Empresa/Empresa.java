@@ -6,6 +6,8 @@ public class Empresa {
     private String nombre;
     private String telefono;
     private String correo;
+    private String usuario;      // AGREGADO
+    private String contrasenia;
 
     public Empresa() {
     }
@@ -48,5 +50,10 @@ public class Empresa {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
+
+    public String getContrasenia() { return contrasenia; }
+    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
 
 }
