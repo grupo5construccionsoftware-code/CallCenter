@@ -7,6 +7,7 @@ public class Tipificacion {
     private String descripcion_tipo;
     private String nombre_cliente;
     private String motivo_tipo;
+    private String tipo_adicional;
 
     public Tipificacion() {}
 
@@ -24,4 +25,7 @@ public class Tipificacion {
 
     public String getMotivo_tipo() { return motivo_tipo; }
     public void setMotivo_tipo(String motivo_tipo) { this.motivo_tipo = motivo_tipo; }
+
+    public String getTipo_adicional() { return tipo_adicional; }
+    public void setTipo_adicional(String tipo_adicional) { this.tipo_adicional = tipo_adicional; }
 }

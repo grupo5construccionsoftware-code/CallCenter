@@ -13,6 +13,10 @@ public class LlamadaRepository implements LlamadaDAO {
 
     private final List<Llamada> llamadas = new ArrayList<>();
 
+    public LlamadaRepository() {
+        cargarLlamadasIniciales();
+    }
+
     @Override
     public List<Llamada> listarLlamadas() {
         return llamadas;
@@ -52,5 +56,13 @@ public class LlamadaRepository implements LlamadaDAO {
     @Override
     public void eliminarLlamada(int id_llamada) {
         llamadas.removeIf(l -> l.getId_llamada() == id_llamada);
+    }
+
+    private void cargarLlamadasIniciales() {
+        llamadas.add(new Llamada(1, "Maria Lopez", "987654321", LocalDate.now().toString(), "09:00", 1));
+        llamadas.add(new Llamada(2, "Carlos Perez", "912345678", LocalDate.now().toString(), "09:20", 1));
+        llamadas.add(new Llamada(3, "Ana Torres", "923456789", LocalDate.now().toString(), "09:40", 1));
+        llamadas.add(new Llamada(4, "Luis Ramirez", "934567890", LocalDate.now().toString(), "10:00", 1));
+        llamadas.add(new Llamada(5, "Rosa Garcia", "945678901", LocalDate.now().toString(), "10:20", 1));
     }
 }

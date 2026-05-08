@@ -335,6 +335,10 @@ button i{
   margin: 0;
 }
 
+.tipos-panel-oculto {
+  display: none;
+}
+
 .tipo-form {
   flex: 1 1 320px;
 }
