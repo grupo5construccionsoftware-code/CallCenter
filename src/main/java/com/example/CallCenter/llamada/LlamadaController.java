@@ -30,9 +30,12 @@ public class LlamadaController {
     }
 
     @PostMapping("/crear")
-    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada) {
+    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada, Model model) {
         llamadaService.crearLlamada(llamada);
-        return "redirect:/llamadas";
+        model.addAttribute("llamada", new Llamada());
+        model.addAttribute("mostrarTabla", false);
+        model.addAttribute("llamadaCreada", llamada);
+        return "llamadas";
     }
 
     @GetMapping("/editar")
