@@ -48,8 +48,19 @@
             <label for="id_tipo">Motivo</label>
             <form:select path="id_tipo" id="id_tipo">
               <option value="" disabled>Selecciona un motivo</option>
-              <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
-                <option value="${estado.index + 1}">${tipo}</option>
+              <option value="1">Consulta</option>
+              <option value="2">Reclamo</option>
+              <option value="3">Venta</option>
+              <option value="4">Soporte</option>
+              <option value="5">Otros</option>
+            </form:select>
+          </div>
+          <div>
+            <label for="tipo_adicional">Tipo adicional</label>
+            <form:select path="tipo_adicional" id="tipo_adicional">
+              <option value="">Selecciona un tipo adicional</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo}">${tipo}</option>
               </c:forEach>
             </form:select>
           </div>

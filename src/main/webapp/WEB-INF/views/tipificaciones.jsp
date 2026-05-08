@@ -44,7 +44,45 @@
         </div>
       </c:if>
 
-      <div class="tipos-panel">
+      <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
+        <div class="form-grid">
+          <div>
+            <label for="id_llamada">Código de llamada</label>
+            <form:input path="id_llamada" id="id_llamada" placeholder="Ej: 1" required="required"/>
+          </div>
+          <div>
+            <label for="id_tipo">Motivo</label>
+            <form:select path="id_tipo" id="id_tipo" required="required">
+              <option value="" disabled selected>Selecciona un motivo</option>
+              <option value="1">Consulta</option>
+              <option value="2">Reclamo</option>
+              <option value="3">Venta</option>
+              <option value="4">Soporte</option>
+              <option value="5">Otros</option>
+            </form:select>
+          </div>
+          <div class="tipo-adicional-campo tipos-panel-oculto" id="tipoAdicionalCampo">
+            <label for="tipo_adicional">Tipo adicional</label>
+            <form:select path="tipo_adicional" id="tipo_adicional">
+              <option value="">Selecciona un tipo adicional</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo}">${tipo}</option>
+              </c:forEach>
+            </form:select>
+          </div>
+          <div>
+            <label for="descripcion_tipo">Descripción</label>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura" required="required"/>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Guardar</button>
+          <a class="button secondary" href="/tipificacion/list">
+            <i class="fas fa-eye"></i> Ver tipificaciones
+          </a>
+        </div>
+      </form:form>
+      <div class="tipos-panel tipos-panel-oculto" id="tiposPanel">
         <div>
           <h2>Tipos de llamada</h2>
           <p>Agrega nuevos motivos para usarlos en las tipificaciones.</p>
@@ -71,34 +109,6 @@
           </form>
         </div>
       </div>
-
-      <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
-        <div class="form-grid">
-          <div>
-            <label for="id_llamada">Código de llamada</label>
-            <form:input path="id_llamada" id="id_llamada" placeholder="Ej: 1" required="required"/>
-          </div>
-          <div>
-            <label for="id_tipo">Motivo</label>
-            <form:select path="id_tipo" id="id_tipo" required="required">
-              <option value="" disabled selected>Selecciona un motivo</option>
-              <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
-                <option value="${estado.index + 1}">${tipo}</option>
-              </c:forEach>
-            </form:select>
-          </div>
-          <div>
-            <label for="descripcion_tipo">Descripción</label>
-            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura" required="required"/>
-          </div>
-        </div>
-        <div class="actions">
-          <button type="submit"><i class="fas fa-save"></i> Guardar</button>
-          <a class="button secondary" href="/tipificacion/list">
-            <i class="fas fa-eye"></i> Ver tipificaciones
-          </a>
-        </div>
-      </form:form>
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
@@ -136,5 +146,19 @@
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Tipificación de llamadas</div>
+<script>
+  const motivoSelect = document.getElementById('id_tipo');
+  const tiposPanel = document.getElementById('tiposPanel');
+  const tipoAdicionalCampo = document.getElementById('tipoAdicionalCampo');
+
+  function actualizarTiposAdicionales() {
+    const mostrar = motivoSelect.value === '5';
+    tiposPanel.classList.toggle('tipos-panel-oculto', !mostrar);
+    tipoAdicionalCampo.classList.toggle('tipos-panel-oculto', !mostrar);
+  }
+
+  motivoSelect.addEventListener('change', actualizarTiposAdicionales);
+  actualizarTiposAdicionales();
+</script>
 </body>
 </html>
