@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/agente")
@@ -35,5 +36,10 @@ public class AgenteRestController {
         //agenteService.actualizarAgente(agente);                       //F3
         return agente_resp;//F1
         //return agente;//F3
+    }
+    @DeleteMapping("/borrar/{id_agente}")
+    public Map<String, Boolean> borrarAgente(@PathVariable int id_agente) {
+        agenteService.eliminarAgente(id_agente);
+        return Map.of("eliminado", true);
     }
 }
