@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,5 +55,13 @@ class AgenteRestControllerTest {
                         .content(agenteJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre_agente").value("Juan Editado"));
+    }
+    @Test
+    @DisplayName("🔴 Debería borrar un agente por id")
+    void deberiaBorrarAgente() throws Exception {
+
+        mockMvc.perform(delete("/api/agente/borrar/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eliminado").value(true));
     }
 }
