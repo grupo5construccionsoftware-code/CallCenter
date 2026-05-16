@@ -31,4 +31,9 @@ public class LlamadaRestController {
         //llamadaService.actualizarLlamada(llamada); //F3
         return llamada_resp;
     }
+    @DeleteMapping("/borrar/{id}")
+    public void borrar(@PathVariable Long id) {
+        //llamadaService.borrarLlamada(id); //F3
+        //llamadaService.borrarLlamada(id); //F3
+    }
 }
