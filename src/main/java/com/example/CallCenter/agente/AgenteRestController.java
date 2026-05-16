@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/agente")
@@ -37,6 +39,21 @@ public class AgenteRestController {
         return agente_resp;//F1
         //return agente;//F3
     }
+
+
+        @GetMapping("/listar")
+    public List<Agente> listarAgentes() {
+        List<Agente> agentes_resp = new ArrayList<>();//F1
+
+        //Agente agente_demo = new Agente(); //F2
+        //agente_demo.setNombre_agente("Juan Pérez"); //F2
+        //agente_demo.setTelefono_agente("999888777"); //F2
+        //agentes_resp.add(agente_demo); //F2
+
+        //agentes_resp = agenteService.listarAgentes(); //F3
+        return agentes_resp;//F1
+    }
+
     @DeleteMapping("/borrar/{id_agente}")
     public Map<String, Boolean> borrarAgente(@PathVariable int id_agente) {
         agenteService.eliminarAgente(id_agente);
