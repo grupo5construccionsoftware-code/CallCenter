@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,6 +71,16 @@ class LlamadaRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre_cliente").value("Maria Hernandez"))
                 .andExpect(jsonPath("$.telefono_cliente").value("999888777"));
+    }
+
+
+
+    @Test
+    @DisplayName("Listar llamadas")
+    void deberiaListarLlamadas() throws Exception {
+        mockMvc.perform(get("/api/llamada/listar"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nombre_cliente").value("Maria Lopez"));
     }
 
     @Test
