@@ -1,32 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Métricas internas del sistema call center.">
   <title>Métricas | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación privada">
-      <a href="/dashboard">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/llamadas">Llamadas</a>
-      <a href="/tipificaciones">Tipificaciones</a>
-      <a href="/usuarios">Usuarios</a>
-      <a href="/metricas" class="active">Métricas</a>
-      <a href="/adicional1">Historial de llamadas</a>
-      <a href="/main" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
   <section class="section">
     <div class="hero-copy">
@@ -56,9 +40,7 @@
       </article>
     </div>
     <div class="actions single align-center">
-      <button type="button">
-        <i class="fas fa-redo"></i> Actualizar métricas
-      </button>
+      <button type="button"><i class="fas fa-redo"></i> Actualizar métricas</button>
     </div>
     <p></p>
     <div class="card">

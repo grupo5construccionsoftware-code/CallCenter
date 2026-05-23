@@ -1,6 +1,8 @@
 package com.example.CallCenter.Empresa;
 
 import org.springframework.stereotype.Service;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -16,4 +18,8 @@ public class EmpresaServiceImpl implements EmpresaService {
         empresaDAO.registrarEmpresa(empresa);
     }
 
+    @Override
+    public List<Empresa> listarEmpresas() {
+        return empresaDAO.listarEmpresas();
+    }
 }

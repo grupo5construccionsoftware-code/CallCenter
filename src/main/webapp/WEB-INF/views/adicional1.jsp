@@ -5,29 +5,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Historial de llamadas del sistema call center.">
   <title>Historial de llamadas | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación privada">
-      <a href="/dashboard">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/llamadas">Llamadas</a>
-      <a href="/tipificaciones">Tipificaciones</a>
-      <a href="/usuarios">Usuarios</a>
-      <a href="/metricas">Métricas</a>
-      <a href="/adicional1" class="active">Historial de llamadas</a>
-      <a href="/main" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
   <section class="section">
     <div class="hero-copy">
@@ -59,25 +42,16 @@
         </div>
       </div>
       <div class="actions">
-        <button type="button" id="btn-buscar">
-          <i class="fas fa-search"></i> Buscar
-        </button>
-        <button type="button" class="secondary" id="btn-actualizar">
-          <i class="fas fa-redo"></i> Actualizar historial
-        </button>
+        <button type="button" id="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
+        <button type="button" class="secondary" id="btn-actualizar"><i class="fas fa-redo"></i> Actualizar historial</button>
       </div>
       <div class="table-wrap" id="tabla-historial-wrap" style="display:none;">
         <table>
           <thead>
           <tr>
-            <th>Código llamada</th>
-            <th>Cliente</th>
-            <th>Teléfono cliente</th>
-            <th>Fecha llamada</th>
-            <th>Hora</th>
-            <th>Motivo</th>
-            <th>Descripción motivo</th>
-            <th>Agente</th>
+            <th>Código llamada</th><th>Cliente</th><th>Teléfono cliente</th>
+            <th>Fecha llamada</th><th>Hora</th><th>Motivo</th>
+            <th>Descripción motivo</th><th>Agente</th>
           </tr>
           </thead>
           <tbody id="tabla-historial-body">
@@ -111,80 +85,41 @@
     const btnActualizar = document.getElementById('btn-actualizar');
     const filas = document.querySelectorAll('#tabla-historial-body tr');
 
-    function normalizarTexto(valor) {
-      return (valor || '')
-              .toString()
-              .trim()
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '');
+    function norm(v) {
+      return (v||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     }
-
-    function normalizarFecha(valor) {
-      const texto = (valor || '').toString().trim();
-      if (!texto) {
-        return '';
-      }
-
-      if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
-        return texto;
-      }
-
-      const partes = texto.split('/');
-      if (partes.length === 3) {
-        const dd = partes[0].padStart(2, '0');
-        const mm = partes[1].padStart(2, '0');
-        const yyyy = partes[2];
-        return `${yyyy}-${mm}-${dd}`;
-      }
-
-      return texto;
+    function normFecha(v) {
+      const t = (v||'').toString().trim();
+      if (!t) return '';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(t)) return t;
+      const p = t.split('/');
+      if (p.length===3) return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+      return t;
     }
-
     function aplicarFiltro() {
-      const clienteFiltro = normalizarTexto(inputCliente.value);
-      let fechaInicio = normalizarFecha(inputFechaInicio.value);
-      let fechaFin = normalizarFecha(inputFechaFin.value);
-
-      if (fechaInicio && fechaFin && fechaInicio > fechaFin) {
-        const temporal = fechaInicio;
-        fechaInicio = fechaFin;
-        fechaFin = temporal;
-      }
-      const motivoFiltro = normalizarTexto(inputMotivo.value);
+      let fi = normFecha(inputFechaInicio.value);
+      let ff = normFecha(inputFechaFin.value);
+      if (fi && ff && fi > ff) { const tmp=fi; fi=ff; ff=tmp; }
       const tablaWrap = document.getElementById('tabla-historial-wrap');
       tablaWrap.style.display = '';
-
-      filas.forEach(function (fila) {
-        const cliente = normalizarTexto(fila.children[1].textContent);
-        const fecha = normalizarFecha(fila.children[3].textContent);
-        const motivo = normalizarTexto(fila.children[5].textContent);
-
-        const coincideCliente = !clienteFiltro || cliente.includes(clienteFiltro);
-        const coincideFechaInicio = !fechaInicio || fecha >= fechaInicio;
-        const coincideFechaFin = !fechaFin || fecha <= fechaFin;
-        const coincideFecha = coincideFechaInicio && coincideFechaFin;
-        const coincideMotivo = !motivoFiltro || motivo.includes(motivoFiltro);
-
-        fila.style.display = (coincideCliente && coincideFecha && coincideMotivo) ? '' : 'none';
+      filas.forEach(function(fila) {
+        const ok =
+                (!norm(inputCliente.value) || norm(fila.children[1].textContent).includes(norm(inputCliente.value))) &&
+                (!fi || normFecha(fila.children[3].textContent) >= fi) &&
+                (!ff || normFecha(fila.children[3].textContent) <= ff) &&
+                (!norm(inputMotivo.value) || norm(fila.children[5].textContent).includes(norm(inputMotivo.value)));
+        fila.style.display = ok ? '' : 'none';
       });
     }
-
     function resetearFiltros() {
-      inputCliente.value = '';
-      inputFechaInicio.value = '';
-      inputFechaFin.value = '';
-      inputMotivo.value = '';
-      const tablaWrap = document.getElementById('tabla-historial-wrap');
-      tablaWrap.style.display = 'none';
-      filas.forEach(function (fila) {
-        fila.style.display = '';
-      });
+      inputCliente.value=''; inputFechaInicio.value=''; inputFechaFin.value=''; inputMotivo.value='';
+      document.getElementById('tabla-historial-wrap').style.display='none';
+      filas.forEach(function(f){ f.style.display=''; });
     }
-
     btnBuscar.addEventListener('click', aplicarFiltro);
     btnActualizar.addEventListener('click', resetearFiltros);
   })();
 </script>
 </body>
 </html>
+

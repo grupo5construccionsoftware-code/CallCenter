@@ -6,29 +6,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tipificaciones del sistema call center.">
   <title>Tipificaciones | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación privada">
-      <a href="/dashboard">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/llamadas">Llamadas</a>
-      <a href="/tipificaciones" class="active">Tipificaciones</a>
-      <a href="/usuarios">Usuarios</a>
-      <a href="/metricas">Métricas</a>
-      <a href="/adicional1">Historial de llamadas</a>
-      <a href="/main" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
   <section class="section">
     <div class="hero-copy">
@@ -36,14 +19,12 @@
       <p>Agregar detalles de la llamada</p>
     </div>
     <article class="card">
-
       <c:if test="${guardado == true}">
         <div class="mensaje-exito">
           <i class="fas fa-check-circle"></i>
           <strong> Tipificacion guardada correctamente.</strong>
         </div>
       </c:if>
-
       <form:form id="formTipificacion" action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
         <div class="form-grid">
           <div>
@@ -106,39 +87,29 @@
       </div>
       <div class="actions">
         <button type="submit" form="formTipificacion"><i class="fas fa-save"></i> Guardar</button>
-        <a class="button secondary" href="/tipificacion/list">
-          <i class="fas fa-eye"></i> Ver tipificaciones
-        </a>
+        <a class="button secondary" href="/tipificacion/list"><i class="fas fa-eye"></i> Ver tipificaciones</a>
       </div>
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>ID llamada</th>
-                <th>Cliente</th>
-                <th>Motivo</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-              </tr>
+            <tr>
+              <th>ID llamada</th><th>Cliente</th><th>Motivo</th><th>Descripción</th><th>Acciones</th>
+            </tr>
             </thead>
             <tbody>
-              <c:forEach items="${tipificaciones}" var="tipificacion">
-                <tr>
-                  <td>${tipificacion.id_llamada}</td>
-                  <td>${tipificacion.nombre_cliente}</td>
-                  <td>${tipificacion.motivo_tipo}</td>
-                  <td>${tipificacion.descripcion_tipo}</td>
-                  <td>
-                    <a class="button" href="/tipificacion/editar?id=${tipificacion.id_llamada}">
-                      <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a class="button secondary" href="/tipificacion/eliminar?id=${tipificacion.id_llamada}">
-                      <i class="fas fa-trash"></i> Eliminar
-                    </a>
-                  </td>
-                </tr>
-              </c:forEach>
+            <c:forEach items="${tipificaciones}" var="tipificacion">
+              <tr>
+                <td>${tipificacion.id_llamada}</td>
+                <td>${tipificacion.nombre_cliente}</td>
+                <td>${tipificacion.motivo_tipo}</td>
+                <td>${tipificacion.descripcion_tipo}</td>
+                <td>
+                  <a class="button" href="/tipificacion/editar?id=${tipificacion.id_llamada}"><i class="fas fa-edit"></i> Editar</a>
+                  <a class="button secondary" href="/tipificacion/eliminar?id=${tipificacion.id_llamada}"><i class="fas fa-trash"></i> Eliminar</a>
+                </td>
+              </tr>
+            </c:forEach>
             </tbody>
           </table>
         </div>
@@ -150,12 +121,9 @@
 <script>
   const motivoSelect = document.getElementById('id_tipo');
   const tiposPanel = document.getElementById('tiposPanel');
-
   function actualizarTiposAdicionales() {
-    const mostrar = motivoSelect.value === '5';
-    tiposPanel.classList.toggle('tipos-panel-oculto', !mostrar);
+    tiposPanel.classList.toggle('tipos-panel-oculto', motivoSelect.value !== '5');
   }
-
   motivoSelect.addEventListener('change', actualizarTiposAdicionales);
   actualizarTiposAdicionales();
 </script>

@@ -21,6 +21,9 @@ public class EmpresaRepository implements EmpresaDAO {
         contadorId++;
         listaSimulada.add(empresa);
     }
-
+    @Override
+    public List<Empresa> listarEmpresas() {
+        return listaSimulada;
+    }
 }
 
