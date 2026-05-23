@@ -150,13 +150,9 @@ public class NavegacionController {
     @GetMapping("/adicional1")
     public String adicional1(HttpSession session, Model model) {
         if (session.getAttribute("rol") == null) return "redirect:/login";
+
         List<Llamada> historial = llamadaService.listarLlamadas();
-        Map<Integer, Tipificacion> tipificacionesPorLlamada = tipificacionService.listarTipificaciones()
-                .stream()
-                .collect(Collectors.toMap(
-                        Tipificacion::getId_llamada,
-                        t -> t,
-                        (actual, ignorar) -> actual));
+
         List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
         List<String> motivosDisponibles = new ArrayList<>(motivosBase);
         tipificacionService.listarTiposLlamada()
@@ -165,8 +161,8 @@ public class NavegacionController {
                 .map(String::trim)
                 .filter(m -> motivosBase.stream().noneMatch(b -> b.equalsIgnoreCase(m)))
                 .forEach(motivosDisponibles::add);
+
         model.addAttribute("historialLlamadas", historial);
-        model.addAttribute("tipificacionesPorLlamada", tipificacionesPorLlamada);
         model.addAttribute("motivosDisponibles", motivosDisponibles);
         return "adicional1";
     }
