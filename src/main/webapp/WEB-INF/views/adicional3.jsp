@@ -54,6 +54,15 @@
             <label for="telefono_cliente">Teléfono del cliente</label>
             <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123 456 789"/>
           </div>
+          <div>
+            <label for="id_tipo">Tipificación</label>
+            <form:select path="id_tipo" id="id_tipo">
+              <option value="" disabled>Selecciona una tipificación</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
+              </c:forEach>
+            </form:select>
+          </div>
         </div>
         <div class="actions">
           <button type="submit"><i class="fas fa-save"></i> Actualizar</button>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 <header class="topbar">
   <div class="topbar-inner">
@@ -29,6 +31,7 @@
     </nav>
   </div>
 </header>
+
 <div class="container">
   <section class="section">
     <div class="hero-copy">
@@ -46,6 +49,15 @@
             <label for="telefono_cliente">Teléfono del cliente</label>
             <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123456789" required="required" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
           </div>
+          <div>
+            <label for="id_tipo">Tipificación</label>
+            <form:select path="id_tipo" id="id_tipo" required="required">
+              <option value="" disabled selected>Selecciona una tipificación</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
+              </c:forEach>
+            </form:select>
+          </div>
         </div>
         <div class="actions">
           <button type="submit"><i class="fas fa-save"></i> Registrar</button>
@@ -55,16 +67,15 @@
         </div>
       </form:form>
       <c:if test="${llamadaCreada != null}">
-        <div class="notice-box" style="margin-top: 16px;">
+        <div class="notice-box">
           <h3><i class="fas fa-check-circle" style="color: green;"></i> Llamada registrada exitosamente</h3>
           <p><strong>Código de llamada:</strong> ${llamadaCreada.id_llamada}</p>
           <p><strong>Cliente:</strong> ${llamadaCreada.nombre_cliente}</p>
           <p><strong>Fecha:</strong> ${llamadaCreada.fecha_llamada}</p>
           <p><strong>Hora:</strong> ${llamadaCreada.hora}</p>
-          <p>Recuerda tipificar esta llamada con el código mostrado.</p>
-          <div class="actions" style="margin-top: 12px;">
-            <a class="button" href="/tipificaciones">
-              <i class="fas fa-tags"></i> Ir a tipificar
+          <div class="actions">
+            <a class="button" href="/llamadas">
+              <i class="fas fa-tags"></i> Aceptar
             </a>
           </div>
         </div>
@@ -77,6 +88,7 @@
                 <th>ID llamada</th>
                 <th>Cliente</th>
                 <th>Teléfono cliente</th>
+                <th>Tipificacion</th>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Acciones</th>
@@ -88,6 +100,7 @@
                   <td>${llamada.id_llamada}</td>
                   <td>${llamada.nombre_cliente}</td>
                   <td>${llamada.telefono_cliente}</td>
+                  <td>${llamada.motivo_tipo}</td>
                   <td>${llamada.fecha_llamada}</td>
                   <td>${llamada.hora}</td>
                   <td>

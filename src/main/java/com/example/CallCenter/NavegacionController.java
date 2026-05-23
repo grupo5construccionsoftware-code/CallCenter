@@ -55,6 +55,7 @@ public class NavegacionController {
     public String llamadas(Model model) {
         model.addAttribute("llamada", new com.example.CallCenter.llamada.Llamada());
         model.addAttribute("mostrarTabla", false);
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         return "llamadas";
     }
 
@@ -66,7 +67,7 @@ public class NavegacionController {
     @GetMapping("/tipificaciones")
     public String tipificaciones(Model model) {
         model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }
@@ -88,7 +89,7 @@ public class NavegacionController {
         List<Llamada> historial = llamadaService.listarLlamadas();
         Map<Integer, Tipificacion> tipificacionesPorLlamada = tipificacionService.listarTipificaciones()
                 .stream()
-                .collect(Collectors.toMap(Tipificacion::getId_llamada, tipificacion -> tipificacion, (actual, ignorar) -> actual));
+                .collect(Collectors.toMap(Tipificacion::getId_tipo, tipificacion -> tipificacion, (actual, ignorar) -> actual));
 
         List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
         List<String> motivosDisponibles = new ArrayList<>(motivosBase);
