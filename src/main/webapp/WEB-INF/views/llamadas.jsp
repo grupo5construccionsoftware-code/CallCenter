@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 <%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
@@ -29,6 +31,15 @@
             <label for="telefono_cliente">Teléfono del cliente</label>
             <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123456789" required="required" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
           </div>
+          <div>
+            <label for="id_tipo">Tipificación</label>
+            <form:select path="id_tipo" id="id_tipo" required="required">
+              <option value="" disabled selected>Selecciona una tipificación</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
+              </c:forEach>
+            </form:select>
+          </div>
         </div>
         <div class="actions">
           <button type="submit"><i class="fas fa-save"></i> Registrar</button>
@@ -36,8 +47,8 @@
         </div>
       </form:form>
       <c:if test="${llamadaCreada != null}">
-        <div class="notice-box" style="margin-top:16px;">
-          <h3><i class="fas fa-check-circle" style="color:green;"></i> Llamada registrada exitosamente</h3>
+        <div class="notice-box">
+          <h3><i class="fas fa-check-circle" style="color: green;"></i> Llamada registrada exitosamente</h3>
           <p><strong>Código de llamada:</strong> ${llamadaCreada.id_llamada}</p>
           <p><strong>Cliente:</strong> ${llamadaCreada.nombre_cliente}</p>
           <p><strong>Fecha:</strong> ${llamadaCreada.fecha_llamada}</p>
@@ -52,24 +63,35 @@
         <div class="table-wrap">
           <table>
             <thead>
-            <tr>
-              <th>ID llamada</th><th>Cliente</th><th>Teléfono cliente</th><th>Fecha</th><th>Hora</th><th>Acciones</th>
-            </tr>
+              <tr>
+                <th>ID llamada</th>
+                <th>Cliente</th>
+                <th>Teléfono cliente</th>
+                <th>Tipificacion</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
             <tbody>
-            <c:forEach items="${llamadas}" var="llamada">
-              <tr>
-                <td>${llamada.id_llamada}</td>
-                <td>${llamada.nombre_cliente}</td>
-                <td>${llamada.telefono_cliente}</td>
-                <td>${llamada.fecha_llamada}</td>
-                <td>${llamada.hora}</td>
-                <td>
-                  <a class="button" href="/llamada/editar?id=${llamada.id_llamada}"><i class="fas fa-edit"></i> Editar</a>
-                  <a class="button secondary" href="/llamada/eliminar?id=${llamada.id_llamada}"><i class="fas fa-trash"></i> Eliminar</a>
-                </td>
-              </tr>
-            </c:forEach>
+              <c:forEach items="${llamadas}" var="llamada">
+                <tr>
+                  <td>${llamada.id_llamada}</td>
+                  <td>${llamada.nombre_cliente}</td>
+                  <td>${llamada.telefono_cliente}</td>
+                  <td>${llamada.motivo_tipo}</td>
+                  <td>${llamada.fecha_llamada}</td>
+                  <td>${llamada.hora}</td>
+                  <td>
+                    <a class="button" href="/llamada/editar?id=${llamada.id_llamada}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/llamada/eliminar?id=${llamada.id_llamada}">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
         </div>

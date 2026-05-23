@@ -8,17 +8,21 @@ public class Llamada {
     private String fecha_llamada;
     private String hora;
     private int id_agente;
+    private int id_tipo;
+    private String motivo_tipo;
 
     public Llamada() {}
 
     public Llamada(int id_llamada, String nombre_cliente, String telefono_cliente,
-                   String fecha_llamada, String hora, int id_agente) {
+                   String fecha_llamada, String hora, int id_agente, int id_tipo, String motivo_tipo) {
         this.id_llamada = id_llamada;
         this.nombre_cliente = nombre_cliente;
         this.telefono_cliente = telefono_cliente;
         this.fecha_llamada = fecha_llamada;
         this.hora = hora;
         this.id_agente = id_agente;
+        this.id_tipo = id_tipo;
+        this.motivo_tipo = motivo_tipo;
     }
 
     public int getId_llamada() { return id_llamada; }
@@ -38,4 +42,10 @@ public class Llamada {
 
     public int getId_agente() { return id_agente; }
     public void setId_agente(int id_agente) { this.id_agente = id_agente; }
+
+    public Integer getId_tipo() { return id_tipo; }
+    public void setId_tipo(Integer id_tipo) { this.id_tipo = id_tipo; }
+
+    public String getMotivo_tipo() { return motivo_tipo; }
+    public void setMotivo_tipo(String motivo_tipo) { this.motivo_tipo = motivo_tipo; }
 }

@@ -122,6 +122,7 @@ public class NavegacionController {
             return "redirect:/login";
         model.addAttribute("llamada", new com.example.CallCenter.llamada.Llamada());
         model.addAttribute("mostrarTabla", false);
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         return "llamadas";
     }
 
@@ -131,7 +132,7 @@ public class NavegacionController {
         if (!"empresa".equals(rol) && !"superadmin".equals(rol))
             return "redirect:/login";
         model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }

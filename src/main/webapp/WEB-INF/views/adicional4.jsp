@@ -37,30 +37,20 @@
     </div>
     <article class="card">
       <form:form action="/tipificacion/actualizar" method="post" modelAttribute="tipificacion">
-        <form:hidden path="id_llamada"/>
-        <form:hidden path="nombre_cliente"/>
+        <form:hidden path="id_tipo"/>
+        <form:hidden path="id_empresa"/>
         <div class="form-grid">
           <div>
-            <label>Código de llamada</label>
-            <input type="text" value="${tipificacion.id_llamada}" readonly>
+            <label>Código</label>
+            <input type="text" value="${tipificacion.id_tipo}" readonly style="background-color: #f0f0f0;">
           </div>
           <div>
-            <label for="id_tipo">Motivo</label>
-            <form:select path="id_tipo" id="id_tipo">
-              <option value="" disabled>Selecciona un motivo</option>
-              <option value="1">Consulta</option>
-              <option value="2">Reclamo</option>
-              <option value="3">Venta</option>
-              <option value="4">Soporte</option>
-              <c:forEach items="${tiposLlamada}" var="tipo" varStatus="estado">
-                <option value="${estado.index + 6}">${tipo}</option>
-              </c:forEach>
-              <option value="5">Otros</option>
-            </form:select>
+            <label for="motivo_tipo">Tipificación</label>
+            <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta"/>
           </div>
           <div>
             <label for="descripcion_tipo">Descripción</label>
-            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Cliente consulta sobre su factura"/>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: El cliente solicita información"/>
           </div>
         </div>
         <div class="actions">
