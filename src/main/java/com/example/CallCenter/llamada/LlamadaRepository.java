@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import com.example.CallCenter.tipificacion.TipificacionDAO;
+import com.example.CallCenter.tipificacion.Tipificacion;
 
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +14,10 @@ import org.springframework.stereotype.Repository;
 public class LlamadaRepository implements LlamadaDAO {
 
     private final List<Llamada> llamadas = new ArrayList<>();
+    private final TipificacionDAO tipificacionDAO;
 
-    public LlamadaRepository() {
+    public LlamadaRepository(TipificacionDAO tipificacionDAO) {
+        this.tipificacionDAO = tipificacionDAO;
         cargarLlamadasIniciales();
     }
 
@@ -40,6 +44,7 @@ public class LlamadaRepository implements LlamadaDAO {
         llamada.setId_agente(1);
         llamada.setFecha_llamada(LocalDate.now().toString());
         llamada.setHora(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        asignarMotivo(llamada);
         llamadas.add(llamada);
     }
 
@@ -62,14 +67,14 @@ public class LlamadaRepository implements LlamadaDAO {
     }
 
     private void cargarLlamadasIniciales() {
-        llamadas.add(crearLlamadaInicial(1, "Maria Lopez", "987654321", "2026-05-01", "09:10", 1));
-        llamadas.add(crearLlamadaInicial(2, "Carlos Perez", "923456781", "2026-05-02", "10:25", 1));
-        llamadas.add(crearLlamadaInicial(3, "Ana Torres", "934567812", "2026-05-03", "11:40", 1));
-        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez", "945678123", "2026-05-04", "13:15", 1));
-        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia", "956781234", "2026-05-05", "15:05", 1));
+        llamadas.add(crearLlamadaInicial(1, "Maria Lopez", "987654321", "2026-05-01", "09:10", 1, 1, "Consulta"));
+        llamadas.add(crearLlamadaInicial(2, "Carlos Perez", "923456781", "2026-05-02", "10:25", 1, 2, "Reclamo"));
+        llamadas.add(crearLlamadaInicial(3, "Ana Torres", "934567812", "2026-05-03", "11:40", 1, 3, "Venta"));
+        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez", "945678123", "2026-05-04", "13:15", 1, 4, "Soporte"));
+        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia", "956781234", "2026-05-05", "15:05", 1, 5, "Otros"));
     }
 
-    private Llamada crearLlamadaInicial(int id, String cliente, String telefono, String fecha, String hora, int idAgente) {
+    private Llamada crearLlamadaInicial(int id, String cliente, String telefono, String fecha, String hora, int idAgente, int idTipo, String motivo) {
         Llamada llamada = new Llamada();
         llamada.setId_llamada(id);
         llamada.setNombre_cliente(cliente);
@@ -77,6 +82,17 @@ public class LlamadaRepository implements LlamadaDAO {
         llamada.setFecha_llamada(fecha);
         llamada.setHora(hora);
         llamada.setId_agente(idAgente);
+        llamada.setId_tipo(idTipo);
+        llamada.setMotivo_tipo(motivo);
         return llamada;
+    }
+
+    private void asignarMotivo(Llamada llamada) {
+        Integer idTipo = llamada.getId_tipo();
+        if (idTipo == null) return;
+        Tipificacion tip = tipificacionDAO.obtenerTipificacionPorId(idTipo);
+        if (tip != null) {
+            llamada.setMotivo_tipo(tip.getMotivo_tipo());
+        }
     }
 }

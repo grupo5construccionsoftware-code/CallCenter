@@ -1,14 +1,9 @@
 package com.example.CallCenter.tipificacion;
 
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tipificacion")
@@ -25,7 +20,6 @@ public class TipificacionController {
         List<Tipificacion> tipificaciones = tipificacionService.listarTipificaciones();
         model.addAttribute("tipificaciones", tipificaciones);
         model.addAttribute("tipificacion", new Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         model.addAttribute("mostrarTabla", true);
         return "tipificaciones";
     }
@@ -33,31 +27,16 @@ public class TipificacionController {
     @PostMapping("/crear")
     public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion, Model model) {
         tipificacionService.crearTipificacion(tipificacion);
-        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
         model.addAttribute("tipificacion", new Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
-        model.addAttribute("mostrarTabla", true);
-        model.addAttribute("guardado", true);
+        model.addAttribute("mostrarTabla", false);
+        model.addAttribute("tipificacionCreada", tipificacion);
         return "tipificaciones";
     }
 
-    @PostMapping("/tipo/crear")
-    public String crearTipoLlamada(@RequestParam("nuevoTipo") String nuevoTipo) {
-        tipificacionService.agregarTipoLlamada(nuevoTipo);
-        return "redirect:/tipificaciones";
-    }
-
-    @PostMapping("/tipo/eliminar")
-    public String eliminarTipoLlamada(@RequestParam("idTipo") int idTipo) {
-        tipificacionService.eliminarTipoLlamada(idTipo);
-        return "redirect:/tipificaciones";
-    }
-
     @GetMapping("/editar")
-    public String mostrarFormularioEditar(@RequestParam("id") int id_llamada, Model model) {
-        Tipificacion tipificacion = tipificacionService.obtenerTipificacionPorId(id_llamada);
+    public String mostrarFormularioEditar(@RequestParam("id") int id_tipo, Model model) {
+        Tipificacion tipificacion = tipificacionService.obtenerTipificacionPorId(id_tipo);
         model.addAttribute("tipificacion", tipificacion);
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
         return "adicional4";
     }
 
@@ -68,8 +47,8 @@ public class TipificacionController {
     }
 
     @GetMapping("/eliminar")
-    public String eliminarTipificacion(@RequestParam("id") int id_llamada) {
-        tipificacionService.eliminarTipificacion(id_llamada);
+    public String eliminarTipificacion(@RequestParam("id") int id_tipo) {
+        tipificacionService.eliminarTipificacion(id_tipo);
         return "redirect:/tipificacion/list";
     }
 }

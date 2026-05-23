@@ -1,7 +1,6 @@
 package com.example.CallCenter.tipificacion;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,13 +19,7 @@ public class TipificacionServiceImpl implements TipificacionService {
     public List<String> listarTiposLlamada() { return tipificacionDAO.listarTiposLlamada(); }
 
     @Override
-    public void agregarTipoLlamada(String motivo) { tipificacionDAO.agregarTipoLlamada(motivo); }
-
-    @Override
-    public void eliminarTipoLlamada(int idTipo) { tipificacionDAO.eliminarTipoLlamada(idTipo); }
-
-    @Override
-    public Tipificacion obtenerTipificacionPorId(int id_llamada) { return tipificacionDAO.obtenerTipificacionPorId(id_llamada); }
+    public Tipificacion obtenerTipificacionPorId(int id_tipo) { return tipificacionDAO.obtenerTipificacionPorId(id_tipo); }
 
     @Override
     public void crearTipificacion(Tipificacion tipificacion) { tipificacionDAO.crearTipificacion(tipificacion); }
@@ -35,5 +28,5 @@ public class TipificacionServiceImpl implements TipificacionService {
     public void actualizarTipificacion(Tipificacion tipificacion) { tipificacionDAO.actualizarTipificacion(tipificacion); }
 
     @Override
-    public void eliminarTipificacion(int id_llamada) { tipificacionDAO.eliminarTipificacion(id_llamada); }
+    public void eliminarTipificacion(int id_tipo) { tipificacionDAO.eliminarTipificacion(id_tipo); }
 }
