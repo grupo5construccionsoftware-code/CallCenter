@@ -44,6 +44,12 @@
           </div>
         </div>
 
+
+        <c:if test="${estadoBloqueado != null}">
+          <div class="notice-box error">
+            <p><i class="fas fa-ban"></i><strong> ${estadoBloqueado}</strong></p>
+          </div>
+        </c:if>
         <%-- Mensaje de error si las credenciales son incorrectas --%>
         <c:if test="${error == true}">
           <div class="notice-box error">
