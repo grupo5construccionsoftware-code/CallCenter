@@ -16,10 +16,21 @@
       <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
     </div>
     <nav class="menu" aria-label="Navegacion principal">
-      <a href="/main">Inicio</a>
-      <a href="/contacto" class="active">Contacto</a>
-      <a href="/publicidad">Publicidad</a>
-      <a href="/login" class="session">Login</a>
+      <c:choose>
+        <c:when test="${modoAdmin}">
+          <a href="/dashboard/superadmin">Inicio</a>
+          <a href="/gestion">Gestión</a>
+          <a href="/empresas" class="active">Lista de Empresas</a>
+          <a href="/metricas/superadmin">Métricas</a>
+          <a href="/login/salir" class="session">Salir</a>
+        </c:when>
+        <c:otherwise>
+          <a href="/main">Inicio</a>
+          <a href="${modoAdmin ? '/empresas' : '/contacto'}" class="active">Contacto</a>
+          <a href="/publicidad">Publicidad</a>
+          <a href="/login" class="session">Login</a>
+        </c:otherwise>
+      </c:choose>
     </nav>
   </div>
 </header>
@@ -27,8 +38,8 @@
 <div class="container">
   <section class="section">
     <div class="hero-copy">
-      <h1>Contáctanos</h1>
-      <p>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</p>
+      <h1><c:choose><c:when test="${modoAdmin}">Gestionar empresas</c:when><c:otherwise>Contáctanos</c:otherwise></c:choose></h1>
+      <p><c:choose><c:when test="${modoAdmin}">Registra una empresa desde el panel superadmin.</c:when><c:otherwise>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</c:otherwise></c:choose></p>
     </div>
 
     <article class="card">
@@ -39,7 +50,7 @@
         </div>
       </c:if>
 
-      <form id="formEmpresa" action="/adicional2/registrar" method="post">
+      <form id="formEmpresa" action="${modoAdmin ? '/empresa/registrar' : '/adicional2/registrar'}" method="post">
 
         <div class="form-grid">
           <div>
@@ -63,7 +74,7 @@
           <button type="submit">
             <i class="fas fa-paper-plane"></i> Enviar solicitud
           </button>
-          <a class="button secondary" href="/contacto">
+          <a class="button secondary" href="${modoAdmin ? '/empresas' : '/contacto'}">
             <i class="fas fa-reply"></i> Volver
           </a>
         </div>
@@ -81,7 +92,7 @@
           <p><strong>Contraseña:</strong> ${empresaRegistrada.contrasenia}</p>
           <p>Guarda estos datos, no se volverán a mostrar.</p>
           <div class="actions">
-            <a class="button" href="/contacto">
+            <a class="button" href="${modoAdmin ? '/empresas' : '/contacto'}">
               <i class="fas fa-check"></i> Aceptar
             </a>
           </div>
