@@ -93,7 +93,7 @@ public class NavegacionController {
     @GetMapping("/empresas")
     public String empresas(HttpSession session, Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        // TODO: model.addAttribute("empresas", empresaService.listarTodas());
+        model.addAttribute("empresas", empresaService.listarEmpresas());
         return "empresas";
     }
 
