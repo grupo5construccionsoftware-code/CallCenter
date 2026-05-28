@@ -39,7 +39,7 @@
   <section class="section">
     <div class="hero-copy">
       <h1><c:choose><c:when test="${modoAdmin}">Gestionar empresas</c:when><c:otherwise>Contáctanos</c:otherwise></c:choose></h1>
-      <p><c:choose><c:when test="${modoAdmin}">Registra una empresa desde el panel superadmin.</c:when><c:otherwise>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</c:otherwise></c:choose></p>
+      <p><c:choose><c:when test="${modoAdmin}">Registra una empresa.</c:when><c:otherwise>Completa el formulario y nos comunicaremos contigo a la brevedad posible.</c:otherwise></c:choose></p>
     </div>
 
     <article class="card">
