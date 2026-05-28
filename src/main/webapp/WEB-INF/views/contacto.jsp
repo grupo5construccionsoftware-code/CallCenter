@@ -24,76 +24,43 @@
   </div>
 </header>
 
-<div class="container">
-  <section class="section">
-    <div class="hero-copy">
-      <h1>Contacto</h1>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <h3>Contactese con nuestro personal</h3>
-        <div class="grid">
-          <article class="card">
-            <p><i class="fas fa-user"></i>Marcelo Valer, Alessandro</p>
-            <p><i class="fas fa-envelope"></i>76347799@continental.edu.pe</p>
-          </article>
-          <article class="card">
-            <p><i class="fas fa-user"></i>Apolinario Orihuela, Denilson</p>
-            <p><i class="fas fa-envelope"></i>71127773@continental.edu.pe</p>
-          </article>
-        </div>
-        <p></p>
-        <div class="grid">
-          <article class="card">
-            <p><i class="fas fa-user"></i>Galarza De la Cruz, Noeli</p>
-            <p><i class="fas fa-envelope"></i>72106014@continental.edu.pe</p>
-          </article>
-          <article class="card">
-            <p><i class="fas fa-user"></i>Ledesma Huaman, Angelo</p>
-            <p><i class="fas fa-envelope"></i>75608544@continental.edu.pe</p>
-          </article>
-        </div>
-        <p></p>
-        <div class="grid">
-          <article class="card">
-            <p><i class="fas fa-user"></i>Pineda Tenicela, Walter</p>
-            <p><i class="fas fa-envelope"></i>72749649@continental.edu.pe</p>
-          </article>
-        </div>
-      </article>
-    </div>
-  </section>
-  <section class="section">
-    <div class="grid">
-    <article class="card">
+  <div class="container">
+    <section class="section">
       <div class="hero-copy">
-        <h1>¿Quieres contratar el sevicio?</h1>
-        <p>Si tu empresa está interesada en usar nuestro sistema de call center, regístrala y nos pondremos en contacto contigo.</p>
-        <div class="actions">
-          <a class="button" href="/adicional2">
-            <i class="fas fa-clipboard-list"></i> Registrar mi empresa
-          </a>
-        </div>
-      </div> 
-    </article>
-    <article class="card">
-    <div class="hero-copy">
-      <h1>Síguenos en nuestras redes sociales</h1>
-    </div>
-      <div class="hero-actions">
-        <a href="https://facebook.com" target="_blank" class="button" title="Facebook">
-          <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a href="https://web.whatsapp.com" target="_blank" class="button" title="WhatsApp">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="https://linkedin.com" target="_blank" class="button" title="LinkedIn">
-          <i class="fab fa-linkedin"></i> LinkedIn
-        </a>
+        <h1>Contacto</h1>
+        <p>¿Tienes alguna consulta? Escríbenos y te responderemos a la brevedad.</p>
       </div>
-      </article>
+      <div class="grid">
+        <article class="card">
+          <h3>Envíanos un mensaje</h3>
+          <form action="/contacto/enviar" method="post">
+            <div>
+              <label for="nombre">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+            </div>
+            <div>
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
+            </div>
+            <div>
+              <label for="asunto">Asunto</label>
+              <input type="text" id="asunto" name="asunto" placeholder="Motivo de contacto" required>
+            </div>
+            <div>
+              <label for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+            </div>
+            <div class="actions">
+              <button type="submit" class="button">
+                <i class="fas fa-paper-plane"></i> Enviar mensaje
+              </button>
+            </div>
+          </form>
+        </article>
       </div>
     </section>
+  </div>
+
 </div>
 <div class="footer">Sistema de Call Center - Contacto</div>
 </body>
