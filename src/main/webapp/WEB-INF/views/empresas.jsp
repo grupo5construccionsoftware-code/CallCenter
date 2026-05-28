@@ -33,7 +33,7 @@
     </div>
     <article class="card">
       <div class="actions">
-        <a class="button" href="/adicional2">
+        <a class="button" href="/empresa/nueva">
           <i class="fas fa-plus"></i> Registrar nueva empresa
         </a>
       </div>
@@ -46,6 +46,7 @@
             <th>Teléfono</th>
             <th>Correo</th>
             <th>Usuario</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
           </thead>
@@ -53,7 +54,7 @@
           <c:choose>
             <c:when test="${empty empresas}">
               <tr>
-                <td colspan="6">No hay empresas registradas.</td>
+                <td colspan="7">No hay empresas registradas.</td>
               </tr>
             </c:when>
             <c:otherwise>
@@ -64,6 +65,7 @@
                   <td>${empresa.telefono}</td>
                   <td>${empresa.correo}</td>
                   <td>${empresa.usuario}</td>
+                  <td>${empresa.estado}</td>
                   <td>
                     <a class="button" href="/empresa/editar?id=${empresa.id}">
                       <i class="fas fa-edit"></i> Editar
