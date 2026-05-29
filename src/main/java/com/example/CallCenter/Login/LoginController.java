@@ -44,6 +44,7 @@ public class LoginController {
             session.setAttribute("usuario", usuario);
             return "redirect:/dashboard/agente";
         }
+        //hoal
 
         Empresa empresa = empresaService.obtenerPorCredenciales(usuario, contrasena);
         if (empresa != null) {
