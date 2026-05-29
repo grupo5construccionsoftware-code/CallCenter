@@ -64,13 +64,13 @@ public class EmpresaController {
     public String actualizarEmpresa(@ModelAttribute("empresa") Empresa empresa, HttpSession session) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
         empresaService.actualizarEmpresa(empresa);
-        return "redirect:/empresas";
+        return "redirect:/empresas?mostrar=true";
     }
 
     @GetMapping("/empresa/eliminar")
     public String eliminarEmpresa(@RequestParam("id") int id, HttpSession session) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
         empresaService.eliminarEmpresa(id);
-        return "redirect:/empresas";
+        return "redirect:/empresas?mostrar=true";
     }
 }
