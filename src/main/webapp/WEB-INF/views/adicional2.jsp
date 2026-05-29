@@ -72,7 +72,7 @@
 
         <div class="actions">
           <button type="submit">
-            <i class="fas fa-paper-plane"></i> Enviar solicitud
+            <i class="fas fa-paper-plane"></i> Registrar
           </button>
           <a class="button secondary" href="${modoAdmin ? '/empresas' : '/contacto'}">
             <i class="fas fa-reply"></i> Volver
