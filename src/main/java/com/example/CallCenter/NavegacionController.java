@@ -91,9 +91,15 @@ public class NavegacionController {
     // ─── SuperAdmin exclusivo ─────────────────────────────────────────────────
 
     @GetMapping("/empresas")
-    public String empresas(HttpSession session, Model model) {
+    public String empresas(
+            HttpSession session,
+            @RequestParam(value = "mostrar", defaultValue = "false") boolean mostrar,
+            Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        model.addAttribute("empresas", empresaService.listarEmpresas());
+        model.addAttribute("mostrarEmpresas", mostrar);
+        if (mostrar) {
+            model.addAttribute("empresas", empresaService.listarEmpresas());
+        }
         return "empresas";
     }
 
