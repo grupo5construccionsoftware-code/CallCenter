@@ -24,7 +24,6 @@
         <select name="estado" required>
           <option value="activo" ${empresa.estado == 'activo' ? 'selected' : ''}>Activo</option>
           <option value="suspendido" ${empresa.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
-          <option value="borrado" ${empresa.estado == 'borrado' ? 'selected' : ''}>Borrado</option>
         </select>
         <div class="actions" style="margin-top:16px;">
           <button type="submit">Guardar cambios</button>
