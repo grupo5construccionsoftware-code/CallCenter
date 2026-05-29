@@ -34,11 +34,17 @@ public class LoginController {
             session.setAttribute("usuario", usuario);
             return "redirect:/dashboard/superadmin";
         }
+        if ("Emp01".equals(usuario) && "Emp01".equals(contrasena)) {
+            session.setAttribute("rol", "empresa");
+            session.setAttribute("usuario", usuario);
+            return "redirect:/dashboard/empresa";
+        }
         if ("Age01".equals(usuario) && "Age01".equals(contrasena)) {
             session.setAttribute("rol", "agente");
             session.setAttribute("usuario", usuario);
             return "redirect:/dashboard/agente";
         }
+        //hoal
 
         Empresa empresa = empresaService.obtenerPorCredenciales(usuario, contrasena);
         if (empresa != null) {
