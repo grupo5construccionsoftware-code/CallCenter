@@ -36,51 +36,59 @@
         <a class="button" href="/empresa/nueva">
           <i class="fas fa-plus"></i> Registrar nueva empresa
         </a>
+        <a class="button secondary" href="/empresas?mostrar=true">
+          <i class="fas fa-eye"></i> Ver empresas
+        </a>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Teléfono</th>
-            <th>Correo</th>
-            <th>Usuario</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-          </thead>
-          <tbody>
-          <c:choose>
-            <c:when test="${empty empresas}">
+      <c:choose>
+        <c:when test="${mostrarEmpresas}">
+          <div class="table-wrap">
+            <table>
+              <thead>
               <tr>
-                <td colspan="7">No hay empresas registradas.</td>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Usuario</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
-            </c:when>
-            <c:otherwise>
-              <c:forEach var="empresa" items="${empresas}">
-                <tr>
-                  <td>${empresa.id}</td>
-                  <td>${empresa.nombre}</td>
-                  <td>${empresa.telefono}</td>
-                  <td>${empresa.correo}</td>
-                  <td>${empresa.usuario}</td>
-                  <td>${empresa.estado}</td>
-                  <td>
-                    <a class="button" href="/empresa/editar?id=${empresa.id}">
-                      <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a class="button secondary" href="/empresa/eliminar?id=${empresa.id}">
-                      <i class="fas fa-trash"></i> Eliminar
-                    </a>
-                  </td>
-                </tr>
-              </c:forEach>
-            </c:otherwise>
-          </c:choose>
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+              <c:choose>
+                <c:when test="${empty empresas}">
+                  <tr>
+                    <td colspan="7">No hay empresas registradas.</td>
+                  </tr>
+                </c:when>
+                <c:otherwise>
+                  <c:forEach var="empresa" items="${empresas}">
+                    <tr>
+                      <td>${empresa.id}</td>
+                      <td>${empresa.nombre}</td>
+                      <td>${empresa.telefono}</td>
+                      <td>${empresa.correo}</td>
+                      <td>${empresa.usuario}</td>
+                      <td>${empresa.estado}</td>
+                      <td>
+                        <a class="button" href="/empresa/editar?id=${empresa.id}">
+                          <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a class="button secondary" href="/empresa/eliminar?id=${empresa.id}">
+                          <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                      </td>
+                    </tr>
+                  </c:forEach>
+                </c:otherwise>
+              </c:choose>
+              </tbody>
+            </table>
+          </div>
+        </c:when>
+
+      </c:choose>
     </article>
   </section>
 </div>
