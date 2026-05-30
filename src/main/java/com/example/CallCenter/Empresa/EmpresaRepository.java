@@ -2,7 +2,6 @@ package com.example.CallCenter.Empresa;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,11 +32,16 @@ public class EmpresaRepository implements EmpresaDAO {
     }
 
     @Override
-    public List<Empresa> listarEmpresas() { return listaSimulada; }
+    public List<Empresa> listarEmpresas() {
+        return listaSimulada;
+    }
 
     @Override
     public Empresa obtenerEmpresaPorId(int id) {
-        return listaSimulada.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
+        return listaSimulada.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -58,6 +62,7 @@ public class EmpresaRepository implements EmpresaDAO {
 
     @Override
     public void eliminarEmpresa(int id) {
+        // Borrado lógico
         Empresa empresa = obtenerEmpresaPorId(id);
         if (empresa != null) {
             empresa.setEstado("borrado");
@@ -67,9 +72,10 @@ public class EmpresaRepository implements EmpresaDAO {
     @Override
     public Empresa obtenerPorCredenciales(String usuario, String contrasenia) {
         return listaSimulada.stream()
-                .filter(e -> usuario.equalsIgnoreCase(e.getUsuario()) && contrasenia.equals(e.getContrasenia()))
+                .filter(e -> usuario.equalsIgnoreCase(e.getUsuario())
+                        && contrasenia.equals(e.getContrasenia())
+                        && !"borrado".equals(e.getEstado()))
                 .findFirst()
                 .orElse(null);
     }
 }
-

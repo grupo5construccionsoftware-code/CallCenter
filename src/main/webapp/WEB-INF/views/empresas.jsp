@@ -5,91 +5,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Lista de empresas registradas en el sistema call center.">
   <title>Lista de Empresas | Sistema Call Center</title>
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación SuperAdmin">
-      <a href="/dashboard/superadmin">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/empresas" class="active">Lista de Empresas</a>
-      <a href="/metricas/superadmin">Métricas</a>
-      <a href="/login/salir" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
   <section class="section">
     <div class="hero-copy">
       <h1>Lista de Empresas</h1>
       <p>Empresas registradas que utilizan el sistema de call center</p>
     </div>
-    <article class="card">
-      <div class="actions">
-        <a class="button" href="/empresa/nueva">
-          <i class="fas fa-plus"></i> Registrar nueva empresa
-        </a>
-        <a class="button secondary" href="/empresas?mostrar=true">
-          <i class="fas fa-eye"></i> Ver empresas
-        </a>
-      </div>
-      <c:choose>
-        <c:when test="${mostrarEmpresas}">
-          <div class="table-wrap">
-            <table>
-              <thead>
-              <tr>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Usuario</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-              </thead>
-              <tbody>
-              <c:choose>
-                <c:when test="${empty empresas}">
-                  <tr>
-                    <td colspan="7">No hay empresas registradas.</td>
-                  </tr>
-                </c:when>
-                <c:otherwise>
-                  <c:forEach var="empresa" items="${empresas}">
-                    <tr>
-                      <td>${empresa.id}</td>
-                      <td>${empresa.nombre}</td>
-                      <td>${empresa.telefono}</td>
-                      <td>${empresa.correo}</td>
-                      <td>${empresa.usuario}</td>
-                      <td>${empresa.estado}</td>
-                      <td>
-                        <a class="button" href="/empresa/editar?id=${empresa.id}">
-                          <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <a class="button secondary" href="/empresa/eliminar?id=${empresa.id}">
-                          <i class="fas fa-trash"></i> Eliminar
-                        </a>
-                      </td>
-                    </tr>
-                  </c:forEach>
-                </c:otherwise>
-              </c:choose>
-              </tbody>
-            </table>
-          </div>
-        </c:when>
 
-      </c:choose>
-    </article>
+    <%-- Formulario de edición inline --%>
+    <c:choose>
+      <c:when test="${empresaEditar != null}">
+        <article class="card">
+          <div class="section-title">
+            <h2><i class="fas fa-edit"></i> Editando empresa: ${empresaEditar.nombre}</h2>
+          </div>
+          <form action="/empresa/actualizar" method="post">
+            <input type="hidden" name="id" value="${empresaEditar.id}">
+            <div class="form-grid">
+              <div>
+                <label for="edit-nombre">Nombre</label>
+                <input type="text" id="edit-nombre" name="nombre"
+                       value="${empresaEditar.nombre}" required>
+              </div>
+              <div>
+                <label for="edit-telefono">Teléfono</label>
+                <input type="text" id="edit-telefono" name="telefono"
+                       value="${empresaEditar.telefono}" required
+                       pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              </div>
+              <div>
+                <label for="edit-correo">Correo</label>
+                <input type="email" id="edit-correo" name="correo"
+                       value="${empresaEditar.correo}" required>
+              </div>
+              <div>
+                <label for="edit-estado">Estado</label>
+                <select id="edit-estado" name="estado">
+                  <option value="activo"     ${empresaEditar.estado == 'activo'     ? 'selected' : ''}>Activo</option>
+                  <option value="suspendido" ${empresaEditar.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
+                  <option value="borrado"    ${empresaEditar.estado == 'borrado'    ? 'selected' : ''}>Borrado</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit"><i class="fas fa-save"></i> Guardar cambios</button>
+              <a class="button secondary" href="/empresas?mostrar=true">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+            </div>
+          </form>
+        </article>
+      </c:when>
+
+      <c:otherwise>
+        <article class="card">
+          <div class="actions">
+            <a class="button" href="/empresa/nueva">
+              <i class="fas fa-plus"></i> Registrar nueva empresa
+            </a>
+            <a class="button secondary" href="/empresas?mostrar=true">
+              <i class="fas fa-eye"></i> Ver empresas
+            </a>
+          </div>
+        </article>
+      </c:otherwise>
+    </c:choose>
+
+    <%-- Tabla de empresas --%>
+    <c:if test="${mostrarEmpresas}">
+      <article class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Usuario</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:choose>
+              <c:when test="${empty empresas}">
+                <tr><td colspan="7">No hay empresas registradas.</td></tr>
+              </c:when>
+              <c:otherwise>
+                <c:forEach var="empresa" items="${empresas}">
+                  <tr>
+                    <td>${empresa.id}</td>
+                    <td>${empresa.nombre}</td>
+                    <td>${empresa.telefono}</td>
+                    <td>${empresa.correo}</td>
+                    <td>${empresa.usuario}</td>
+                    <td>${empresa.estado}</td>
+                    <td>
+                      <a class="button" href="/empresa/editar?id=${empresa.id}">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                      <a class="button secondary" href="/empresa/eliminar?id=${empresa.id}"
+                         onclick="return confirm('¿Eliminar empresa ${empresa.nombre}?')">
+                        <i class="fas fa-trash"></i> Eliminar
+                      </a>
+                    </td>
+                  </tr>
+                </c:forEach>
+              </c:otherwise>
+            </c:choose>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </c:if>
+
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Lista de Empresas</div>
