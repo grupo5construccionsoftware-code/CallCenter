@@ -1,10 +1,13 @@
 package com.example.CallCenter.llamada;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import com.example.CallCenter.tipificacion.TipificacionDAO;
 import com.example.CallCenter.tipificacion.Tipificacion;
 import org.springframework.stereotype.Repository;
@@ -14,6 +17,8 @@ public class LlamadaRepository implements LlamadaDAO {
 
     private final List<Llamada> llamadas = new ArrayList<>();
     private final TipificacionDAO tipificacionDAO;
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm[:ss]");
+    private static final DateTimeFormatter FORMATO_HORA_COMPLETA = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public LlamadaRepository(TipificacionDAO tipificacionDAO) {
         this.tipificacionDAO = tipificacionDAO;
@@ -23,6 +28,20 @@ public class LlamadaRepository implements LlamadaDAO {
     @Override
     public List<Llamada> listarLlamadas() {
         return llamadas;
+    }
+
+    @Override
+    public List<Llamada> listarLlamadasPorAgente(int idAgente) {
+        return llamadas.stream()
+                .filter(l -> l.getId_agente() == idAgente)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Llamada> listarLlamadasPorAgentes(Collection<Integer> idsAgentes) {
+        return llamadas.stream()
+                .filter(l -> idsAgentes != null && idsAgentes.contains(l.getId_agente()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -40,7 +59,9 @@ public class LlamadaRepository implements LlamadaDAO {
                 .max()
                 .orElse(0) + 1;
         llamada.setId_llamada(nuevoId);
-        llamada.setId_agente(1);
+        if (llamada.getId_agente() <= 0) {
+            llamada.setId_agente(1);
+        }
         llamada.setFecha_llamada(LocalDate.now().toString());
         llamada.setHora(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
         llamada.setEstado("activo");
@@ -50,6 +71,13 @@ public class LlamadaRepository implements LlamadaDAO {
         if (llamada.getDescripcion_llamada() == null) {
             llamada.setDescripcion_llamada("");
         }
+        if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank()) {
+            llamada.setHora_inicio(LocalTime.now().format(FORMATO_HORA_COMPLETA));
+        }
+        if (llamada.getEstado_llamada() == null || llamada.getEstado_llamada().isBlank()) {
+            llamada.setEstado_llamada("Activo");
+        }
+        completarFinYDuracion(llamada);
         asignarMotivo(llamada);
         llamadas.add(llamada);
     }
@@ -58,12 +86,20 @@ public class LlamadaRepository implements LlamadaDAO {
     public void actualizarLlamada(Llamada llamada) {
         for (int i = 0; i < llamadas.size(); i++) {
             if (llamadas.get(i).getId_llamada() == llamada.getId_llamada()) {
+                Llamada llamadaActual = llamadas.get(i);
                 llamada.setFecha_llamada(llamadas.get(i).getFecha_llamada());
-                llamada.setHora(llamadas.get(i).getHora());
                 llamada.setId_agente(llamadas.get(i).getId_agente());
                 llamada.setDuracion(llamadas.get(i).getDuracion());
                 if (llamada.getEstado() == null || llamada.getEstado().trim().isEmpty()) {
                     llamada.setEstado(llamadas.get(i).getEstado());
+                if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank()) {
+                    llamada.setHora_inicio(llamadaActual.getHora_inicio());
+                }
+                if (llamada.getHora_fin() == null || llamada.getHora_fin().isBlank()) {
+                    llamada.setHora_fin(llamadaActual.getHora_fin());
+                }
+                if (llamada.getDuracion() == null || llamada.getDuracion().isBlank()) {
+                    llamada.setDuracion(llamadaActual.getDuracion());
                 }
                 asignarMotivo(llamada);
                 llamadas.set(i, llamada);
@@ -98,9 +134,13 @@ public class LlamadaRepository implements LlamadaDAO {
         llamada.setNombre_cliente(cliente);
         llamada.setTelefono_cliente(telefono);
         llamada.setFecha_llamada(fecha);
-        llamada.setHora(hora);
+        llamada.setHora_inicio(horaInicio);
+        llamada.setHora_fin(horaFin);
+        llamada.setDuracion(duracion);
+        llamada.setDescripcion_tipo(descripcionTipo);
         llamada.setId_agente(idAgente);
         llamada.setId_tipo(idTipo);
+        llamada.setEstado_llamada(estado);
         llamada.setMotivo_tipo(motivo);
         llamada.setDuracion(duracion);
         llamada.setEstado(estado);
@@ -114,6 +154,34 @@ public class LlamadaRepository implements LlamadaDAO {
         Tipificacion tip = tipificacionDAO.obtenerTipificacionPorId(idTipo);
         if (tip != null) {
             llamada.setMotivo_tipo(tip.getMotivo_tipo());
+        }
+    }
+
+    private String calcularDuracion(String horaInicio, String horaFin) {
+        LocalTime inicio = LocalTime.parse(horaInicio, FORMATO_HORA);
+        LocalTime fin = LocalTime.parse(horaFin, FORMATO_HORA);
+        Duration duracion = Duration.between(inicio, fin);
+        if (duracion.isNegative()) {
+            duracion = duracion.plusHours(24);
+        }
+
+        long horas = duracion.toHours();
+        long minutos = duracion.toMinutesPart();
+        long segundos = duracion.toSecondsPart();
+        List<String> partes = new ArrayList<>();
+
+        if (horas > 0) partes.add(horas + " h");
+        if (minutos > 0) partes.add(minutos + " min");
+        if (segundos > 0 || partes.isEmpty()) partes.add(segundos + " seg");
+        return String.join(" ", partes);
+    }
+
+    private void completarFinYDuracion(Llamada llamada) {
+        if (llamada.getHora_fin() == null || llamada.getHora_fin().isBlank()) {
+            llamada.setHora_fin(LocalTime.now().format(FORMATO_HORA_COMPLETA));
+        }
+        if (llamada.getDuracion() == null || llamada.getDuracion().isBlank()) {
+            llamada.setDuracion(calcularDuracion(llamada.getHora_inicio(), llamada.getHora_fin()));
         }
     }
 }

@@ -37,15 +37,35 @@ public class AgenteRepository implements AgenteDAO {
     }
 
     @Override
-    public void crearAgente(Agente agente) {
-        agente.setId_agente(contadorId);
-        agente.setUsuario_agente("agente0" + contadorId);
-        agente.setContrasenia_agente("age0" + contadorId);
-        agente.setId_empresa(1);
-        agente.setEstado("activo");
-        contadorId++;
-        agentes.add(agente);
+    public Agente obtenerPorCredenciales(String usuario, String contrasenia) {
+        return agentes.stream()
+                .filter(a -> usuario.equalsIgnoreCase(a.getUsuario_agente())
+                        && contrasenia.equals(a.getContrasenia_agente()))
+                .findFirst()
+                .orElse(null);
     }
+
+    @Override
+    public boolean existeTelefonoAgente(String telefono_agente, int idAgenteExcluir) {
+        return agentes.stream()
+                .anyMatch(a -> a.getId_agente() != idAgenteExcluir
+                        && a.getTelefono_agente() != null
+                        && a.getTelefono_agente().equals(telefono_agente));
+    }
+
+    @Override
+    public void crearAgente(Agente agente) {
+    agente.setId_agente(contadorId);
+    String num = String.format("%02d", contadorId);
+    agente.setUsuario_agente("agente" + num);
+    agente.setContrasenia_agente("age" + num);
+    if (agente.getId_empresa() <= 0) {
+        agente.setId_empresa(1);
+    }
+    agente.setEstado("activo");
+    contadorId++;
+    agentes.add(agente);
+}
 
     @Override
     public void actualizarAgente(Agente agente) {

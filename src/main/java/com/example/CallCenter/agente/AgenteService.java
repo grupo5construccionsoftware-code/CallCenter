@@ -8,6 +8,10 @@ public interface AgenteService {
 
     Agente obtenerAgentePorId(int id_agente);
 
+    Agente obtenerPorCredenciales(String usuario, String contrasenia);
+
+    boolean existeTelefonoAgente(String telefono_agente, int idAgenteExcluir);
+
     void crearAgente(Agente agente);
 
     void actualizarAgente(Agente agente);

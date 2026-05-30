@@ -203,6 +203,81 @@
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Registro de llamadas</div>
+<script>
+  const formLlamada = document.querySelector('form[action="/llamada/crear"]');
+  const accionesInicioLlamada = document.getElementById('acciones-inicio-llamada');
+  const btnIniciarLlamada = document.getElementById('btn-iniciar-llamada');
+  const btnCancelarLlamada = document.getElementById('btn-cancelar-llamada');
+  const nombreCliente = document.getElementById('nombre_cliente');
+  const horaInicio = document.getElementById('hora_inicio');
+  const horaFin = document.getElementById('hora_fin');
+  const duracion = document.getElementById('duracion');
+  const estadoLlamada = document.getElementById('estado_llamada');
+
+  function horaActual() {
+    const ahora = new Date();
+    return [
+      String(ahora.getHours()).padStart(2, '0'),
+      String(ahora.getMinutes()).padStart(2, '0'),
+      String(ahora.getSeconds()).padStart(2, '0')
+    ].join(':');
+  }
+
+  function segundosDesdeMedianoche(hora) {
+    const partes = hora.split(':').map(Number);
+    return (partes[0] * 3600) + (partes[1] * 60) + (partes[2] || 0);
+  }
+
+  function calcularDuracion() {
+    if (!horaInicio.value || !horaFin.value) return;
+    let segundos = segundosDesdeMedianoche(horaFin.value) - segundosDesdeMedianoche(horaInicio.value);
+    if (segundos < 0) segundos += 24 * 3600;
+
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+    const partes = [];
+
+    if (horas > 0) partes.push(horas + ' h');
+    if (minutos > 0) partes.push(minutos + ' min');
+    if (segundosRestantes > 0 || partes.length === 0) partes.push(segundosRestantes + ' seg');
+    duracion.value = partes.join(' ');
+  }
+
+  function limpiarFinalizacion() {
+    horaFin.value = '';
+    duracion.value = '';
+  }
+
+  btnIniciarLlamada.addEventListener('click', function () {
+    horaInicio.value = horaActual();
+    horaFin.value = '';
+    duracion.value = '';
+    estadoLlamada.value = 'Activo';
+    accionesInicioLlamada.style.display = 'none';
+    formLlamada.style.display = '';
+    nombreCliente.focus();
+  });
+
+  btnCancelarLlamada.addEventListener('click', function () {
+    formLlamada.reset();
+    horaInicio.value = '';
+    horaFin.value = '';
+    duracion.value = '';
+    estadoLlamada.value = '';
+    formLlamada.style.display = 'none';
+    accionesInicioLlamada.style.display = '';
+  });
+
+  formLlamada.addEventListener('submit', function () {
+    if (!horaInicio.value) {
+      horaInicio.value = horaActual();
+    }
+    estadoLlamada.value = 'Activo';
+    horaFin.value = horaActual();
+    calcularDuracion();
+  });
+</script>
 </body>
 </html>
 

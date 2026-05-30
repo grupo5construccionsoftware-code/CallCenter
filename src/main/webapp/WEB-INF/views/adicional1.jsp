@@ -20,8 +20,8 @@
     <article class="card">
       <div class="form-grid">
         <div>
-          <label for="buscar-cliente">Buscar por cliente</label>
-          <input type="text" id="buscar-cliente" placeholder="Nombre del cliente...">
+          <label for="buscar-principal">${modoHistorialEmpresa ? 'Buscar por agente' : 'Buscar por cliente'}</label>
+          <input type="text" id="buscar-principal" autocomplete="off" placeholder="${modoHistorialEmpresa ? 'Nombre o código del agente...' : 'Nombre del cliente...'}">
         </div>
         <div>
           <label for="fecha-inicio">Rango de fechas</label>
@@ -45,6 +45,7 @@
         <button type="button" id="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
         <button type="button" class="secondary" id="btn-actualizar"><i class="fas fa-redo"></i> Actualizar historial</button>
       </div>
+      <div class="notice-box" id="resumen-historial" style="display:none;"></div>
       <div class="table-wrap" id="tabla-historial-wrap" style="display:none;">
         <table>
           <thead>
@@ -53,21 +54,33 @@
             <th>Cliente</th>
             <th>Teléfono</th>
             <th>Fecha</th>
-            <th>Hora</th>
+            <th>Hora inicio</th>
+            <th>Hora fin</th>
+            <th>Duración</th>
+            <th>Descripción tipo</th>
             <th>Motivo</th>
             <th>Agente</th>
+            <th>Estado</th>
           </tr>
           </thead>
           <tbody id="tabla-historial-body">
           <c:forEach var="llamada" items="${historialLlamadas}">
-            <tr>
+            <c:set var="agenteFila" value="${agentesPorId[llamada.id_agente]}" />
+            <tr data-cliente="${llamada.nombre_cliente}"
+                data-agente="${agenteFila != null ? agenteFila.nombre_agente : ''} ${agenteFila != null ? agenteFila.usuario_agente : ''} ${llamada.id_agente} agente ${llamada.id_agente}"
+                data-agente-nombre="${agenteFila != null ? agenteFila.nombre_agente : 'Agente'}"
+                data-agente-codigo="${agenteFila != null ? agenteFila.usuario_agente : llamada.id_agente}">
               <td>LL${llamada.id_llamada}</td>
               <td>${llamada.nombre_cliente}</td>
               <td>${llamada.telefono_cliente}</td>
               <td>${llamada.fecha_llamada}</td>
-              <td>${llamada.hora}</td>
+              <td>${llamada.hora_inicio}</td>
+              <td>${llamada.hora_fin}</td>
+              <td>${llamada.duracion}</td>
+              <td>${llamada.descripcion_tipo}</td>
               <td>${llamada.motivo_tipo}</td>
-              <td>Agente ${llamada.id_agente}</td>
+              <td>${agenteFila != null ? agenteFila.nombre_agente : 'Agente'} (${agenteFila != null ? agenteFila.usuario_agente : llamada.id_agente})</td>
+              <td>${llamada.estado_llamada}</td>
             </tr>
           </c:forEach>
           </tbody>
@@ -79,13 +92,15 @@
 <div class="footer">Sistema de Call Center - Historial de llamadas</div>
 <script>
   (function () {
-    const inputCliente    = document.getElementById('buscar-cliente');
+    const modoEmpresa     = ${modoHistorialEmpresa ? 'true' : 'false'};
+    const inputPrincipal  = document.getElementById('buscar-principal');
     const inputFechaInicio = document.getElementById('fecha-inicio');
     const inputFechaFin   = document.getElementById('fecha-fin');
     const inputMotivo     = document.getElementById('buscar-motivo');
     const btnBuscar       = document.getElementById('btn-buscar');
     const btnActualizar   = document.getElementById('btn-actualizar');
     const tablaWrap       = document.getElementById('tabla-historial-wrap');
+    const resumen         = document.getElementById('resumen-historial');
     const filas           = document.querySelectorAll('#tabla-historial-body tr');
 
     function norm(v) {
@@ -106,20 +121,44 @@
       let ff = normFecha(inputFechaFin.value);
       if (fi && ff && fi > ff) { const tmp = fi; fi = ff; ff = tmp; }
       tablaWrap.style.display = '';
+      let visibles = 0;
+      const conteoAgentes = {};
+      const textoPrincipal = norm(inputPrincipal.value);
       filas.forEach(function (fila) {
+        const campoPrincipal = modoEmpresa ? fila.dataset.agente : fila.dataset.cliente;
         const ok =
-                (!norm(inputCliente.value) || norm(fila.children[1].textContent).includes(norm(inputCliente.value))) &&
+                (!textoPrincipal || norm(campoPrincipal).includes(textoPrincipal)) &&
                 (!fi || normFecha(fila.children[3].textContent) >= fi) &&
                 (!ff || normFecha(fila.children[3].textContent) <= ff) &&
-                (!norm(inputMotivo.value) || norm(fila.children[5].textContent).includes(norm(inputMotivo.value)));
+                (!norm(inputMotivo.value) || norm(fila.children[8].textContent).includes(norm(inputMotivo.value)));
         fila.style.display = ok ? '' : 'none';
+        if (ok) {
+          visibles++;
+          const claveAgente = fila.dataset.agenteNombre + ' (' + fila.dataset.agenteCodigo + ')';
+          conteoAgentes[claveAgente] = (conteoAgentes[claveAgente] || 0) + 1;
+        }
       });
+      actualizarResumen(visibles, conteoAgentes);
+    }
+
+    function actualizarResumen(total, conteoAgentes) {
+      resumen.style.display = '';
+      if (modoEmpresa && norm(inputPrincipal.value)) {
+        const detalle = Object.keys(conteoAgentes)
+                .map(function (agente) { return agente + ' realizó ' + conteoAgentes[agente] + ' registro(s) de llamada'; })
+                .join('<br>');
+        resumen.innerHTML = '<strong>Resultado:</strong> ' + (detalle || 'No se encontraron llamadas para ese agente.') + '. Total: ' + total + ' llamada(s).';
+        return;
+      }
+      resumen.innerHTML = '<strong>Resultado:</strong> Total: ' + total + ' llamada(s).';
     }
 
     function resetearFiltros() {
-      inputCliente.value = ''; inputFechaInicio.value = '';
+      inputPrincipal.value = ''; inputFechaInicio.value = '';
       inputFechaFin.value = ''; inputMotivo.value = '';
       tablaWrap.style.display = 'none';
+      resumen.style.display = 'none';
+      resumen.innerHTML = '';
       filas.forEach(function (f) { f.style.display = ''; });
     }
 
@@ -129,4 +168,3 @@
 </script>
 </body>
 </html>
-

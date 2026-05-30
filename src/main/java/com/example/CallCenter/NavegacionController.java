@@ -12,6 +12,12 @@ import com.example.CallCenter.llamada.Llamada;
 import com.example.CallCenter.llamada.LlamadaService;
 import com.example.CallCenter.tipificacion.TipificacionService;
 import com.example.CallCenter.Empresa.EmpresaService;
+import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.AgenteService;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 @Controller
 public class NavegacionController {
@@ -19,13 +25,16 @@ public class NavegacionController {
     private final LlamadaService llamadaService;
     private final TipificacionService tipificacionService;
     private final EmpresaService empresaService;
+    private final AgenteService agenteService;
 
     public NavegacionController(LlamadaService llamadaService,
                                 TipificacionService tipificacionService,
-                                EmpresaService empresaService) {
+                                EmpresaService empresaService,
+                                AgenteService agenteService) {
         this.llamadaService = llamadaService;
         this.tipificacionService = tipificacionService;
         this.empresaService = empresaService;
+        this.agenteService = agenteService;
     }
 
     // ─── Páginas públicas ──────────────────────────────────────────────────────
@@ -155,6 +164,8 @@ public class NavegacionController {
                 .forEach(motivosDisponibles::add);
         model.addAttribute("historialLlamadas", historial);
         model.addAttribute("motivosDisponibles", motivosDisponibles);
+        model.addAttribute("agentesPorId", agentesPorId);
+        model.addAttribute("modoHistorialEmpresa", "empresa".equals(rol));
         return "adicional1";
     }
 
@@ -166,4 +177,23 @@ public class NavegacionController {
 
     @GetMapping("/adicional5")
     public String adicional5() { return "adicional5"; }
+
+    private List<Agente> obtenerAgentesVisibles(String rol, int idEmpresa) {
+        if ("superadmin".equals(rol)) {
+            return agenteService.listarAgentes();
+        }
+        return agenteService.listarAgentes().stream()
+                .filter(a -> a.getId_empresa() == idEmpresa)
+                .collect(Collectors.toList());
+    }
+
+    private int obtenerIdEmpresaSesion(HttpSession session) {
+        Object idEmpresa = session.getAttribute("id_empresa");
+        return idEmpresa instanceof Integer ? (Integer) idEmpresa : 1;
+    }
+
+    private int obtenerIdAgenteSesion(HttpSession session) {
+        Object idAgente = session.getAttribute("id_agente");
+        return idAgente instanceof Integer ? (Integer) idAgente : 1;
+    }
 }
