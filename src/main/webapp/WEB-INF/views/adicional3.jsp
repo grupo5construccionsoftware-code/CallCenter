@@ -40,7 +40,6 @@
         <form:hidden path="id_llamada"/>
         <form:hidden path="id_agente"/>
         <form:hidden path="fecha_llamada"/>
-        <form:hidden path="hora"/>
         <div class="form-grid">
           <div>
             <label>Código de llamada</label>
@@ -48,19 +47,36 @@
           </div>
           <div>
             <label for="nombre_cliente">Nombre del cliente</label>
-            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez"/>
+            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez" required="required"/>
           </div>
           <div>
             <label for="telefono_cliente">Teléfono del cliente</label>
-            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123 456 789"/>
+            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123456789" required="required" pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);"/>
           </div>
           <div>
             <label for="id_tipo">Tipificación</label>
-            <form:select path="id_tipo" id="id_tipo">
+            <form:select path="id_tipo" id="id_tipo" required="required">
               <option value="" disabled>Selecciona una tipificación</option>
               <c:forEach items="${tiposLlamada}" var="tipo">
                 <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
               </c:forEach>
+            </form:select>
+          </div>
+          <div style="display:none;">
+            <form:hidden path="hora_inicio" id="hora_inicio"/>
+            <form:hidden path="hora_fin" id="hora_fin"/>
+            <form:hidden path="duracion" id="duracion"/>
+          </div>
+          <div>
+            <label for="descripcion_tipo">Descripción tipo</label>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Detalle de la llamada"/>
+          </div>
+          <div>
+            <label for="estado_llamada">Estado llamada</label>
+            <form:select path="estado_llamada" id="estado_llamada">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Eliminado">Eliminado</option>
             </form:select>
           </div>
         </div>
@@ -73,5 +89,56 @@
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Editar Llamada</div>
+<script>
+  const formLlamada = document.querySelector('form[action="/llamada/actualizar"]');
+  const horaInicio = document.getElementById('hora_inicio');
+  const horaFin = document.getElementById('hora_fin');
+  const duracion = document.getElementById('duracion');
+  const estadoLlamada = document.getElementById('estado_llamada');
+
+  function horaActual() {
+    const ahora = new Date();
+    return [
+      String(ahora.getHours()).padStart(2, '0'),
+      String(ahora.getMinutes()).padStart(2, '0'),
+      String(ahora.getSeconds()).padStart(2, '0')
+    ].join(':');
+  }
+
+  function segundosDesdeMedianoche(hora) {
+    const partes = hora.split(':').map(Number);
+    return (partes[0] * 3600) + (partes[1] * 60) + (partes[2] || 0);
+  }
+
+  function calcularDuracion() {
+    if (!horaInicio.value || !horaFin.value) return;
+    let segundos = segundosDesdeMedianoche(horaFin.value) - segundosDesdeMedianoche(horaInicio.value);
+    if (segundos < 0) segundos += 24 * 3600;
+
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+    const partes = [];
+
+    if (horas > 0) partes.push(horas + ' h');
+    if (minutos > 0) partes.push(minutos + ' min');
+    if (segundosRestantes > 0 || partes.length === 0) partes.push(segundosRestantes + ' seg');
+    duracion.value = partes.join(' ');
+  }
+
+  function limpiarFinalizacion() {
+    horaFin.value = '';
+    duracion.value = '';
+  }
+
+  formLlamada.addEventListener('submit', function () {
+    if (!horaFin.value) {
+      horaFin.value = horaActual();
+    }
+    if (horaInicio.value && horaFin.value) {
+      calcularDuracion();
+    }
+  });
+</script>
 </body>
 </html>

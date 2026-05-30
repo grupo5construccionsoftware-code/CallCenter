@@ -53,9 +53,13 @@
             <th>Cliente</th>
             <th>Teléfono</th>
             <th>Fecha</th>
-            <th>Hora</th>
+            <th>Hora inicio</th>
+            <th>Hora fin</th>
+            <th>Duración</th>
+            <th>Descripción tipo</th>
             <th>Motivo</th>
             <th>Agente</th>
+            <th>Estado</th>
           </tr>
           </thead>
           <tbody id="tabla-historial-body">
@@ -65,9 +69,13 @@
               <td>${llamada.nombre_cliente}</td>
               <td>${llamada.telefono_cliente}</td>
               <td>${llamada.fecha_llamada}</td>
-              <td>${llamada.hora}</td>
+              <td>${llamada.hora_inicio}</td>
+              <td>${llamada.hora_fin}</td>
+              <td>${llamada.duracion}</td>
+              <td>${llamada.descripcion_tipo}</td>
               <td>${llamada.motivo_tipo}</td>
               <td>Agente ${llamada.id_agente}</td>
+              <td>${llamada.estado_llamada}</td>
             </tr>
           </c:forEach>
           </tbody>

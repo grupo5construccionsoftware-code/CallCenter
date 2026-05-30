@@ -25,10 +25,6 @@
             <label for="motivo_tipo">Tipificación</label>
             <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta" required="required"/>
           </div>
-          <div>
-            <label for="descripcion_tipo">Descripción</label>
-            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: El cliente solicita información" required="required"/>
-          </div>
         </div>
         <div class="actions">
           <button type="submit"><i class="fas fa-save"></i> Guardar</button>
@@ -42,7 +38,6 @@
           <h3><i class="fas fa-check-circle" style="color: green;"></i> Tipificación registrada exitosamente</h3>
           <p><strong>Código:</strong> ${tipificacionCreada.id_tipo}</p>
           <p><strong>Tipificación:</strong> ${tipificacionCreada.motivo_tipo}</p>
-          <p><strong>Descripción:</strong> ${tipificacionCreada.descripcion_tipo}</p>
           <div class="actions" style="margin-top: 12px;">
             <a class="button" href="/tipificaciones">
               <i class="fas fa-check"></i> Aceptar
@@ -57,7 +52,6 @@
               <tr>
                 <th>ID</th>
                 <th>Tipificación</th>
-                <th>Descripción</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -66,7 +60,6 @@
                 <tr>
                   <td>${tipificacion.id_tipo}</td>
                   <td>${tipificacion.motivo_tipo}</td>
-                  <td>${tipificacion.descripcion_tipo}</td>
                   <td>
                     <a class="button" href="/tipificacion/editar?id=${tipificacion.id_tipo}">
                       <i class="fas fa-edit"></i> Editar
@@ -85,14 +78,5 @@
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Tipificación de llamadas</div>
-<script>
-  const motivoSelect = document.getElementById('id_tipo');
-  const tiposPanel = document.getElementById('tiposPanel');
-  function actualizarTiposAdicionales() {
-    tiposPanel.classList.toggle('tipos-panel-oculto', motivoSelect.value !== '5');
-  }
-  motivoSelect.addEventListener('change', actualizarTiposAdicionales);
-  actualizarTiposAdicionales();
-</script>
 </body>
 </html>

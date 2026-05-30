@@ -27,7 +27,7 @@
           </div>
           <div>
             <label for="telefono_agente">Teléfono del agente</label>
-            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123456789" required="required" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
+            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123456789" required="required" pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);"/>
           </div>
         </div>
         <div class="actions single align-center">
@@ -35,6 +35,12 @@
           <a class="button secondary" href="/agente/list"><i class="fas fa-eye"></i> Ver agentes</a>
         </div>
       </form:form>
+      <c:if test="${error != null}">
+        <div class="notice-box">
+          <h3><i class="fas fa-exclamation-circle" style="color: #c0392b;"></i> No se pudo guardar el agente</h3>
+          <p>${error}</p>
+        </div>
+      </c:if>
       <c:if test="${agenteCreado != null}">
         <div class="notice-box">
           <h3><i class="fas fa-check-circle"></i> Agente registrado exitosamente</h3>

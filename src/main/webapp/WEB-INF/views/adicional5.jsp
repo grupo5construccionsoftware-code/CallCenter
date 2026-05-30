@@ -48,11 +48,11 @@
           </div>
           <div>
             <label for="nombre_agente">Nombre del agente</label>
-            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan"/>
+            <form:input path="nombre_agente" id="nombre_agente" placeholder="Ej: Pérez García, Juan" required="required"/>
           </div>
           <div>
             <label for="telefono_agente">Teléfono del agente</label>
-            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123 456 789"/>
+            <form:input path="telefono_agente" id="telefono_agente" placeholder="Ej: 123456789" required="required" pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);"/>
           </div>
         </div>
         <div class="actions">
@@ -60,6 +60,12 @@
           <a class="button secondary" href="/usuarios"><i class="fas fa-times"></i> Cancelar</a>
         </div>
       </form:form>
+      <c:if test="${error != null}">
+        <div class="notice-box">
+          <h3><i class="fas fa-exclamation-circle" style="color: #c0392b;"></i> No se pudo actualizar el agente</h3>
+          <p>${error}</p>
+        </div>
+      </c:if>
     </article>
   </section>
 </div>

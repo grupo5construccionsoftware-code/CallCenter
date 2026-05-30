@@ -27,7 +27,14 @@ public class AgenteController {
 
     @PostMapping("/crear")
     public String crearAgente(@ModelAttribute("agente") Agente agente, Model model) {
-        agenteService.crearAgente(agente);
+        try {
+            agenteService.crearAgente(agente);
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("agente", agente);
+            model.addAttribute("mostrarTabla", false);
+            model.addAttribute("error", ex.getMessage());
+            return "usuarios";
+        }
         model.addAttribute("agente", new Agente());
         model.addAttribute("mostrarTabla", false);
         model.addAttribute("agenteCreado", agente);
@@ -42,8 +49,14 @@ public class AgenteController {
     }
 
     @PostMapping("/actualizar")
-    public String actualizarAgente(@ModelAttribute("agente") Agente agente) {
-        agenteService.actualizarAgente(agente);
+    public String actualizarAgente(@ModelAttribute("agente") Agente agente, Model model) {
+        try {
+            agenteService.actualizarAgente(agente);
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("agente", agente);
+            model.addAttribute("error", ex.getMessage());
+            return "adicional5";
+        }
         return "redirect:/agente/list";
     }
 

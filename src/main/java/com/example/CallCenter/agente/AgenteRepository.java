@@ -33,6 +33,14 @@ public class AgenteRepository implements AgenteDAO {
     }
 
     @Override
+    public boolean existeTelefonoAgente(String telefono_agente, int idAgenteExcluir) {
+        return agentes.stream()
+                .anyMatch(a -> a.getId_agente() != idAgenteExcluir
+                        && a.getTelefono_agente() != null
+                        && a.getTelefono_agente().equals(telefono_agente));
+    }
+
+    @Override
     public void crearAgente(Agente agente) {
         agente.setId_agente(contadorId);
         agente.setUsuario_agente("agente0" + contadorId);

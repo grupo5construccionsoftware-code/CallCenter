@@ -39,6 +39,9 @@ public class TipificacionRepository implements TipificacionDAO {
     public void crearTipificacion(Tipificacion tipificacion) {
         tipificacion.setId_tipo(contadorId);
         tipificacion.setId_empresa(1);
+        if (tipificacion.getEstado_tipo() == null || tipificacion.getEstado_tipo().isBlank()) {
+            tipificacion.setEstado_tipo("Activo");
+        }
         contadorId++;
         tipificaciones.add(tipificacion);
     }
@@ -56,7 +59,10 @@ public class TipificacionRepository implements TipificacionDAO {
 
     @Override
     public void eliminarTipificacion(int id_tipo) {
-        tipificaciones.removeIf(t -> t.getId_tipo() == id_tipo);
+        Tipificacion tipificacion = obtenerTipificacionPorId(id_tipo);
+        if (tipificacion != null) {
+            tipificacion.setEstado_tipo("Eliminado");
+        }
     }
 
     private void cargarTipificacionesIniciales() {

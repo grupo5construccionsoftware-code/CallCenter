@@ -86,7 +86,8 @@
             <div>
               <label for="telefono">Telefono del gerente</label>
               <input type="tel" id="telefono" name="telefono" placeholder="Ej: 123456789" required
-                     pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                     pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos"
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
             </div>
           </div>
           <div class="form-grid">
