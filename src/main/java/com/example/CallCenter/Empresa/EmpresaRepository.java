@@ -2,7 +2,7 @@ package com.example.CallCenter.Empresa;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,17 +33,11 @@ public class EmpresaRepository implements EmpresaDAO {
     }
 
     @Override
-    public List<Empresa> listarEmpresas() {
-        // Devuelve todas, incluyendo borradas (se muestran en tabla con su estado)
-        return listaSimulada;
-    }
+    public List<Empresa> listarEmpresas() { return listaSimulada; }
 
     @Override
     public Empresa obtenerEmpresaPorId(int id) {
-        return listaSimulada.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst()
-                .orElse(null);
+        return listaSimulada.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
     }
 
     @Override
@@ -64,7 +58,6 @@ public class EmpresaRepository implements EmpresaDAO {
 
     @Override
     public void eliminarEmpresa(int id) {
-        // Borrado lógico: solo cambia el estado a "borrado"
         Empresa empresa = obtenerEmpresaPorId(id);
         if (empresa != null) {
             empresa.setEstado("borrado");
@@ -74,9 +67,7 @@ public class EmpresaRepository implements EmpresaDAO {
     @Override
     public Empresa obtenerPorCredenciales(String usuario, String contrasenia) {
         return listaSimulada.stream()
-                .filter(e -> usuario.equalsIgnoreCase(e.getUsuario())
-                        && contrasenia.equals(e.getContrasenia())
-                        && !"borrado".equals(e.getEstado()))
+                .filter(e -> usuario.equalsIgnoreCase(e.getUsuario()) && contrasenia.equals(e.getContrasenia()))
                 .findFirst()
                 .orElse(null);
     }
