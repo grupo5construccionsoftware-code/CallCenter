@@ -11,6 +11,8 @@ import com.example.CallCenter.llamada.LlamadaService;
 import com.example.CallCenter.tipificacion.Tipificacion;
 import com.example.CallCenter.tipificacion.TipificacionService;
 import com.example.CallCenter.Empresa.EmpresaService;
+import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.AgenteService;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Arrays;
@@ -22,13 +24,16 @@ public class NavegacionController {
     private final LlamadaService llamadaService;
     private final TipificacionService tipificacionService;
     private final EmpresaService empresaService;
+    private final AgenteService agenteService;
 
     public NavegacionController(LlamadaService llamadaService,
                                 TipificacionService tipificacionService,
-                                EmpresaService empresaService) {
+                                EmpresaService empresaService,
+                                AgenteService agenteService) {
         this.llamadaService = llamadaService;
         this.tipificacionService = tipificacionService;
         this.empresaService = empresaService;
+        this.agenteService = agenteService;
     }
 
     // ─── Páginas públicas ──────────────────────────────────────────────────────
@@ -157,7 +162,17 @@ public class NavegacionController {
     public String adicional1(HttpSession session, Model model) {
         if (session.getAttribute("rol") == null) return "redirect:/login";
 
-        List<Llamada> historial = llamadaService.listarLlamadas();
+        String rol = (String) session.getAttribute("rol");
+        int idEmpresa = obtenerIdEmpresaSesion(session);
+        List<Agente> agentesVisibles = obtenerAgentesVisibles(rol, idEmpresa);
+        List<Integer> idsAgentesVisibles = agentesVisibles.stream()
+                .map(Agente::getId_agente)
+                .collect(Collectors.toList());
+        List<Llamada> historial = "agente".equals(rol)
+                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
+                : llamadaService.listarLlamadasPorAgentes(idsAgentesVisibles);
+        Map<Integer, Agente> agentesPorId = agentesVisibles.stream()
+                .collect(Collectors.toMap(Agente::getId_agente, a -> a, (a, b) -> a));
 
         List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
         List<String> motivosDisponibles = new ArrayList<>(motivosBase);
@@ -170,6 +185,8 @@ public class NavegacionController {
 
         model.addAttribute("historialLlamadas", historial);
         model.addAttribute("motivosDisponibles", motivosDisponibles);
+        model.addAttribute("agentesPorId", agentesPorId);
+        model.addAttribute("modoHistorialEmpresa", "empresa".equals(rol));
         return "adicional1";
     }
 
@@ -181,4 +198,23 @@ public class NavegacionController {
 
     @GetMapping("/adicional5")
     public String adicional5() { return "adicional5"; }
+
+    private List<Agente> obtenerAgentesVisibles(String rol, int idEmpresa) {
+        if ("superadmin".equals(rol)) {
+            return agenteService.listarAgentes();
+        }
+        return agenteService.listarAgentes().stream()
+                .filter(a -> a.getId_empresa() == idEmpresa)
+                .collect(Collectors.toList());
+    }
+
+    private int obtenerIdEmpresaSesion(HttpSession session) {
+        Object idEmpresa = session.getAttribute("id_empresa");
+        return idEmpresa instanceof Integer ? (Integer) idEmpresa : 1;
+    }
+
+    private int obtenerIdAgenteSesion(HttpSession session) {
+        Object idAgente = session.getAttribute("id_agente");
+        return idAgente instanceof Integer ? (Integer) idAgente : 1;
+    }
 }
