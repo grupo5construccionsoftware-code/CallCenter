@@ -2,6 +2,8 @@ package com.example.CallCenter.llamada;
 
 import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.List;
+
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +25,10 @@ public class LlamadaController {
     }
 
     @GetMapping("/list")
-    public String listarLlamadas(Model model) {
-        List<Llamada> llamadas = llamadaService.listarLlamadas();
+    public String listarLlamadas(HttpSession session, Model model) {
+        List<Llamada> llamadas = "agente".equals(session.getAttribute("rol"))
+                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
+                : llamadaService.listarLlamadas();
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
@@ -33,7 +37,8 @@ public class LlamadaController {
     }
 
     @PostMapping("/crear")
-    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada, Model model) {
+    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada, HttpSession session, Model model) {
+        llamada.setId_agente(obtenerIdAgenteSesion(session));
         llamadaService.crearLlamada(llamada);
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("mostrarTabla", false);
@@ -60,5 +65,10 @@ public class LlamadaController {
     public String eliminarLlamada(@RequestParam("id") int id_llamada) {
         llamadaService.eliminarLlamada(id_llamada);
         return "redirect:/llamada/list";
+    }
+
+    private int obtenerIdAgenteSesion(HttpSession session) {
+        Object idAgente = session.getAttribute("id_agente");
+        return idAgente instanceof Integer ? (Integer) idAgente : 1;
     }
 }
