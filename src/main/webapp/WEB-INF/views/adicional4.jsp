@@ -46,11 +46,15 @@
           </div>
           <div>
             <label for="motivo_tipo">Tipificación</label>
-            <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta"/>
+            <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta" required="required"/>
           </div>
           <div>
-            <label for="descripcion_tipo">Descripción</label>
-            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: El cliente solicita información"/>
+            <label for="estado_tipo">Estado tipo</label>
+            <form:select path="estado_tipo" id="estado_tipo">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Eliminado">Eliminado</option>
+            </form:select>
           </div>
         </div>
         <div class="actions">

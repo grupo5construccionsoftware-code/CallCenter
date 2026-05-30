@@ -17,7 +17,7 @@
         <label>Nombre</label>
         <input type="text" name="nombre" value="${empresa.nombre}" required>
         <label>Teléfono</label>
-        <input type="text" name="telefono" value="${empresa.telefono}" required>
+        <input type="text" name="telefono" value="${empresa.telefono}" required pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
         <label>Correo</label>
         <input type="email" name="correo" value="${empresa.correo}" required>
         <label>Estado</label>
