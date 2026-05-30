@@ -2,6 +2,8 @@ package com.example.CallCenter.Login;
 
 import com.example.CallCenter.Empresa.Empresa;
 import com.example.CallCenter.Empresa.EmpresaService;
+import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.AgenteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import jakarta.servlet.http.HttpSession;
 public class LoginController {
 
     private final EmpresaService empresaService;
+    private final AgenteService agenteService;
 
-    public LoginController(EmpresaService empresaService) {
+    public LoginController(EmpresaService empresaService, AgenteService agenteService) {
         this.empresaService = empresaService;
+        this.agenteService = agenteService;
     }
 
     @GetMapping
@@ -37,11 +41,23 @@ public class LoginController {
         if ("Emp01".equals(usuario) && "Emp01".equals(contrasena)) {
             session.setAttribute("rol", "empresa");
             session.setAttribute("usuario", usuario);
+            session.setAttribute("id_empresa", 1);
             return "redirect:/dashboard/empresa";
         }
         if ("Age01".equals(usuario) && "Age01".equals(contrasena)) {
             session.setAttribute("rol", "agente");
             session.setAttribute("usuario", usuario);
+            session.setAttribute("id_agente", 1);
+            session.setAttribute("id_empresa", 1);
+            return "redirect:/dashboard/agente";
+        }
+
+        Agente agente = agenteService.obtenerPorCredenciales(usuario, contrasena);
+        if (agente != null) {
+            session.setAttribute("rol", "agente");
+            session.setAttribute("usuario", agente.getUsuario_agente());
+            session.setAttribute("id_agente", agente.getId_agente());
+            session.setAttribute("id_empresa", agente.getId_empresa());
             return "redirect:/dashboard/agente";
         }
 
