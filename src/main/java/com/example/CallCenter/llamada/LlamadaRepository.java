@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.example.CallCenter.tipificacion.TipificacionDAO;
 import com.example.CallCenter.tipificacion.Tipificacion;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -63,14 +64,6 @@ public class LlamadaRepository implements LlamadaDAO {
             llamada.setId_agente(1);
         }
         llamada.setFecha_llamada(LocalDate.now().toString());
-        llamada.setHora(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-        llamada.setEstado("activo");
-        if (llamada.getDuracion() == null || llamada.getDuracion().trim().isEmpty()) {
-            llamada.setDuracion("00:00");
-        }
-        if (llamada.getDescripcion_llamada() == null) {
-            llamada.setDescripcion_llamada("");
-        }
         if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank()) {
             llamada.setHora_inicio(LocalTime.now().format(FORMATO_HORA_COMPLETA));
         }
@@ -89,9 +82,6 @@ public class LlamadaRepository implements LlamadaDAO {
                 Llamada llamadaActual = llamadas.get(i);
                 llamada.setFecha_llamada(llamadas.get(i).getFecha_llamada());
                 llamada.setId_agente(llamadas.get(i).getId_agente());
-                llamada.setDuracion(llamadas.get(i).getDuracion());
-                if (llamada.getEstado() == null || llamada.getEstado().trim().isEmpty()) {
-                    llamada.setEstado(llamadas.get(i).getEstado());
                 if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank()) {
                     llamada.setHora_inicio(llamadaActual.getHora_inicio());
                 }
@@ -110,25 +100,24 @@ public class LlamadaRepository implements LlamadaDAO {
 
     @Override
     public void eliminarLlamada(int id_llamada) {
-        // Borrado lógico: cambia estado a "borrado"
-        llamadas.stream()
-                .filter(l -> l.getId_llamada() == id_llamada)
-                .findFirst()
-                .ifPresent(l -> l.setEstado("borrado"));
+        Llamada llamada = obtenerLlamadaPorId(id_llamada);
+        if (llamada != null) {
+            llamada.setEstado_llamada("Eliminado");
+        }
     }
 
     private void cargarLlamadasIniciales() {
-        llamadas.add(crearLlamadaInicial(1, "Maria Lopez",   "987654321", "2026-05-01", "09:10", 1, 1, "Consulta", "05:23", "activo", "El cliente consulta sobre su factura"));
-        llamadas.add(crearLlamadaInicial(2, "Carlos Perez",  "923456781", "2026-05-02", "10:25", 1, 2, "Reclamo",  "08:47", "activo", "El cliente presenta una queja por cobro incorrecto"));
-        llamadas.add(crearLlamadaInicial(3, "Ana Torres",    "934567812", "2026-05-03", "11:40", 1, 3, "Venta",    "12:05", "activo", "El cliente adquiere el plan básico"));
-        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez",  "945678123", "2026-05-04", "13:15", 1, 4, "Soporte",  "06:30", "activo", "El cliente necesita ayuda con la aplicación"));
-        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia",   "956781234", "2026-05-05", "15:05", 1, 5, "Otros",    "03:15", "activo", "Consulta general"));
+        llamadas.add(crearLlamadaInicial(1, "Maria Lopez", "987654321", "2026-05-01", "09:10", "09:20", "10 min", "Consulta de informacion", 1, 1, "Inactivo", "Consulta"));
+        llamadas.add(crearLlamadaInicial(2, "Carlos Perez", "923456781", "2026-05-02", "10:25", "10:40", "15 min", "Reclamo por servicio", 1, 2, "Inactivo", "Reclamo"));
+        llamadas.add(crearLlamadaInicial(3, "Ana Torres", "934567812", "2026-05-03", "11:40", "11:55", "15 min", "Interes en compra", 1, 3, "Inactivo", "Venta"));
+        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez", "945678123", "2026-05-04", "13:15", "13:30", "15 min", "Soporte tecnico", 1, 4, "Inactivo", "Soporte"));
+        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia", "956781234", "2026-05-05", "15:05", "15:12", "7 min", "Otro motivo", 1, 5, "Inactivo", "Otros"));
     }
 
-    private Llamada crearLlamadaInicial(int id, String cliente, String telefono,
-                                        String fecha, String hora, int idAgente,
-                                        int idTipo, String motivo, String duracion,
-                                        String estado, String descripcion) {
+    private Llamada crearLlamadaInicial(int id, String cliente, String telefono, String fecha,
+                                        String horaInicio, String horaFin, String duracion,
+                                        String descripcionTipo, int idAgente, int idTipo,
+                                        String estado, String motivo) {
         Llamada llamada = new Llamada();
         llamada.setId_llamada(id);
         llamada.setNombre_cliente(cliente);
@@ -142,9 +131,6 @@ public class LlamadaRepository implements LlamadaDAO {
         llamada.setId_tipo(idTipo);
         llamada.setEstado_llamada(estado);
         llamada.setMotivo_tipo(motivo);
-        llamada.setDuracion(duracion);
-        llamada.setEstado(estado);
-        llamada.setDescripcion_llamada(descripcion);
         return llamada;
     }
 

@@ -1,6 +1,5 @@
 package com.example.CallCenter.agente;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,20 +45,15 @@ public class AgenteController {
         return "usuarios";
     }
 
-    // Editar inline: recarga usuarios.jsp con datos del agente
     @GetMapping("/editar")
-    public String mostrarFormularioEditar(@RequestParam("id") int id_agente, 
-                                      HttpSession session, Model model) {
-    Agente agente = agenteService.obtenerAgentePorId(id_agente);
-    if (agente == null || !puedeGestionarAgente(session, agente)) {
-        return "redirect:/agente/list";
+    public String mostrarFormularioEditar(@RequestParam("id") int id_agente, HttpSession session, Model model) {
+        Agente agente = agenteService.obtenerAgentePorId(id_agente);
+        if (agente == null || !puedeGestionarAgente(session, agente)) {
+            return "redirect:/agente/list";
+        }
+        model.addAttribute("agente", agente);
+        return "adicional5";
     }
-    model.addAttribute("agenteEditar", agente);
-    model.addAttribute("agente", new Agente());
-    model.addAttribute("agentes", agenteService.listarAgentes());
-    model.addAttribute("mostrarTabla", true);
-    return "usuarios";
-}
 
     @PostMapping("/actualizar")
     public String actualizarAgente(@ModelAttribute("agente") Agente agente, HttpSession session, Model model) {

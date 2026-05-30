@@ -18,110 +18,65 @@
       <h1>Tipificaciones</h1>
       <p>Registro y gestión de los tipos de llamada del sistema</p>
     </div>
-
-    <c:choose>
-      <c:when test="${tipificacionEditar != null}">
-        <article class="card">
-          <div class="section-title">
-            <h2><i class="fas fa-edit"></i> Editando tipificación: ${tipificacionEditar.motivo_tipo}</h2>
+    <article class="card">
+      <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
+        <div class="form-grid">
+          <div>
+            <label for="motivo_tipo">Tipificación</label>
+            <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta" required="required"/>
           </div>
-          <form action="/tipificacion/actualizar" method="post">
-            <input type="hidden" name="id_tipo" value="${tipificacionEditar.id_tipo}">
-            <div class="form-grid">
-              <div>
-                <label for="edit-motivo">Tipificación</label>
-                <input type="text" id="edit-motivo" name="motivo_tipo"
-                       value="${tipificacionEditar.motivo_tipo}" required>
-              </div>
-              <div>
-                <label for="edit-estado">Estado</label>
-                <select id="edit-estado" name="estado">
-                  <option value="activo"     ${tipificacionEditar.estado == 'activo'     ? 'selected' : ''}>Activo</option>
-                  <option value="suspendido" ${tipificacionEditar.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
-                  <option value="borrado"    ${tipificacionEditar.estado == 'borrado'    ? 'selected' : ''}>Borrado</option>
-                </select>
-              </div>
-            </div>
-            <div class="actions">
-              <button type="submit"><i class="fas fa-save"></i> Guardar cambios</button>
-              <a class="button secondary" href="/tipificacion/list">
-                <i class="fas fa-times"></i> Cancelar
-              </a>
-            </div>
-          </form>
-        </article>
-      </c:when>
-
-      <c:otherwise>
-        <article class="card">
-          <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
-            <div class="form-grid">
-              <div>
-                <label for="motivo_tipo">Tipificación</label>
-                <form:input path="motivo_tipo" id="motivo_tipo"
-                            placeholder="Ej: Consulta" required="required"/>
-              </div>
-            </div>
-            <div class="actions">
-              <button type="submit"><i class="fas fa-save"></i> Guardar</button>
-              <a class="button secondary" href="/tipificacion/list">
-                <i class="fas fa-eye"></i> Ver tipificaciones
-              </a>
-            </div>
-          </form:form>
-
-          <c:if test="${tipificacionCreada != null}">
-            <div class="notice-box">
-              <h3><i class="fas fa-check-circle"></i> Tipificación registrada exitosamente</h3>
-              <p><strong>Código:</strong> ${tipificacionCreada.id_tipo}</p>
-              <p><strong>Tipificación:</strong> ${tipificacionCreada.motivo_tipo}</p>
-              <div class="actions">
-                <a class="button" href="/tipificaciones"><i class="fas fa-check"></i> Aceptar</a>
-              </div>
-            </div>
-          </c:if>
-        </article>
-      </c:otherwise>
-    </c:choose>
-
-    <c:if test="${mostrarTabla}">
-      <article class="card">
+        </div>
+        <div class="actions">
+          <button type="submit"><i class="fas fa-save"></i> Guardar</button>
+          <a class="button secondary" href="/tipificacion/list">
+            <i class="fas fa-eye"></i> Ver tipificaciones
+          </a>
+        </div>
+      </form:form>
+      <c:if test="${tipificacionCreada != null}">
+        <div class="notice-box" style="margin-top: 16px;">
+          <h3><i class="fas fa-check-circle" style="color: green;"></i> Tipificación registrada exitosamente</h3>
+          <p><strong>Código:</strong> ${tipificacionCreada.id_tipo}</p>
+          <p><strong>Tipificación:</strong> ${tipificacionCreada.motivo_tipo}</p>
+          <div class="actions" style="margin-top: 12px;">
+            <a class="button" href="/tipificaciones">
+              <i class="fas fa-check"></i> Aceptar
+            </a>
+          </div>
+        </div>
+      </c:if>
+      <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
             <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tipificación</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
+              <tr>
+                <th>ID</th>
+                <th>Tipificación</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
             <tbody>
-            <c:forEach items="${tipificaciones}" var="tip">
-              <tr>
-                <td>${tip.id_tipo}</td>
-                <td>${tip.motivo_tipo}</td>
-                <td>${tip.estado}</td>
-                <td>
-                  <a class="button" href="/tipificacion/editar?id=${tip.id_tipo}">
-                    <i class="fas fa-edit"></i> Editar
-                  </a>
-                  <a class="button secondary" href="/tipificacion/eliminar?id=${tip.id_tipo}"
-                     onclick="return confirm('¿Eliminar tipificación ${tip.motivo_tipo}?')">
-                    <i class="fas fa-trash"></i> Eliminar
-                  </a>
-                </td>
-              </tr>
-            </c:forEach>
+              <c:forEach items="${tipificaciones}" var="tipificacion">
+                <tr>
+                  <td>${tipificacion.id_tipo}</td>
+                  <td>${tipificacion.motivo_tipo}</td>
+                  <td>
+                    <a class="button" href="/tipificacion/editar?id=${tipificacion.id_tipo}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/tipificacion/eliminar?id=${tipificacion.id_tipo}">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
         </div>
-      </article>
-    </c:if>
-
+      </c:if>
+    </article>
   </section>
 </div>
 <div class="footer">Sistema de Call Center - Tipificación de llamadas</div>
 </body>
 </html>
-

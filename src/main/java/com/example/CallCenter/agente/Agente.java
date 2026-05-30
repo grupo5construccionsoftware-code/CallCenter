@@ -8,7 +8,6 @@ public class Agente {
     private String usuario_agente;
     private String contrasenia_agente;
     private int id_empresa;
-    private String estado;
 
     public Agente() {}
 
@@ -20,7 +19,6 @@ public class Agente {
         this.usuario_agente = usuario_agente;
         this.contrasenia_agente = contrasenia_agente;
         this.id_empresa = id_empresa;
-        this.estado = "activo";
     }
 
     public int getId_agente() { return id_agente; }
@@ -40,7 +38,4 @@ public class Agente {
 
     public int getId_empresa() { return id_empresa; }
     public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }
-
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
 }

@@ -14,8 +14,6 @@ public class Llamada {
     private int id_tipo;
     private String estado_llamada;
     private String motivo_tipo;
-    private String descripcion_llamada;
-    private String estado;
 
     public Llamada() {}
 
@@ -63,9 +61,6 @@ public class Llamada {
     public String getHora() { return hora_inicio; }
     public void setHora(String hora) { this.hora_inicio = hora; }
 
-    public String getDuracion() { return duracion; }
-    public void setDuracion(String duracion) { this.duracion = duracion; }
-
     public int getId_agente() { return id_agente; }
     public void setId_agente(int id_agente) { this.id_agente = id_agente; }
 
@@ -77,11 +72,4 @@ public class Llamada {
 
     public String getMotivo_tipo() { return motivo_tipo; }
     public void setMotivo_tipo(String motivo_tipo) { this.motivo_tipo = motivo_tipo; }
-
-    public String getDescripcion_llamada() { return descripcion_llamada; }
-    public void setDescripcion_llamada(String descripcion_llamada) { this.descripcion_llamada = descripcion_llamada; }
-
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
 }
-

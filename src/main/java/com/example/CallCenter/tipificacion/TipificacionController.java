@@ -15,15 +15,11 @@ public class TipificacionController {
         this.tipificacionService = tipificacionService;
     }
 
-    private void cargarDatosBase(Model model) {
-        model.addAttribute("tipificacion", new Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
-    }
-
     @GetMapping("/list")
     public String listarTipificaciones(Model model) {
-        cargarDatosBase(model);
-        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
+        List<Tipificacion> tipificaciones = tipificacionService.listarTipificaciones();
+        model.addAttribute("tipificaciones", tipificaciones);
+        model.addAttribute("tipificacion", new Tipificacion());
         model.addAttribute("mostrarTabla", true);
         return "tipificaciones";
     }
@@ -31,7 +27,7 @@ public class TipificacionController {
     @PostMapping("/crear")
     public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion, Model model) {
         tipificacionService.crearTipificacion(tipificacion);
-        cargarDatosBase(model);
+        model.addAttribute("tipificacion", new Tipificacion());
         model.addAttribute("mostrarTabla", false);
         model.addAttribute("tipificacionCreada", tipificacion);
         return "tipificaciones";
@@ -39,11 +35,9 @@ public class TipificacionController {
 
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_tipo, Model model) {
-        cargarDatosBase(model);
-        model.addAttribute("tipificacionEditar", tipificacionService.obtenerTipificacionPorId(id_tipo));
-        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
-        model.addAttribute("mostrarTabla", true);
-        return "tipificaciones";
+        Tipificacion tipificacion = tipificacionService.obtenerTipificacionPorId(id_tipo);
+        model.addAttribute("tipificacion", tipificacion);
+        return "adicional4";
     }
 
     @PostMapping("/actualizar")

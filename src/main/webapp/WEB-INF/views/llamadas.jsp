@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="/CallCenter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 <%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
@@ -18,183 +20,98 @@
       <h1>Registro de llamadas</h1>
       <p>Registre las llamadas con los datos solicitados</p>
     </div>
-
-    <%-- Formulario de edición inline --%>
-    <c:if test="${llamadaEditar != null}">
-      <article class="card">
-        <div class="section-title">
-          <h2><i class="fas fa-edit"></i> Editando llamada: LL${llamadaEditar.id_llamada}</h2>
-        </div>
-        <form action="/llamada/actualizar" method="post">
-          <input type="hidden" name="id_llamada"    value="${llamadaEditar.id_llamada}">
-          <input type="hidden" name="fecha_llamada" value="${llamadaEditar.fecha_llamada}">
-          <input type="hidden" name="hora"          value="${llamadaEditar.hora}">
-          <input type="hidden" name="duracion"      value="${llamadaEditar.duracion}">
-          <input type="hidden" name="id_agente"     value="${llamadaEditar.id_agente}">
-          <div class="form-grid">
-            <div>
-              <label for="edit-nombre">Nombre del cliente</label>
-              <input type="text" id="edit-nombre" name="nombre_cliente"
-                     value="${llamadaEditar.nombre_cliente}" required>
-            </div>
-            <div>
-              <label for="edit-telefono">Teléfono del cliente</label>
-              <input type="text" id="edit-telefono" name="telefono_cliente"
-                     value="${llamadaEditar.telefono_cliente}" required
-                     pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-            </div>
-            <div>
-              <label for="edit-tipo">Tipificación</label>
-              <select id="edit-tipo" name="id_tipo">
-                <c:forEach items="${tiposLlamada}" var="tipo">
-                  <option value="${tipo.id_tipo}"
-                    ${llamadaEditar.id_tipo == tipo.id_tipo ? 'selected' : ''}>
-                      ${tipo.motivo_tipo}
-                  </option>
-                </c:forEach>
-              </select>
-            </div>
-            <div>
-              <label for="edit-descripcion">Descripción</label>
-              <input type="text" id="edit-descripcion" name="descripcion_llamada"
-                     value="${llamadaEditar.descripcion_llamada}"
-                     placeholder="Ej: El cliente consulta sobre su factura">
-            </div>
-            <div>
-              <label for="edit-estado">Estado</label>
-              <select id="edit-estado" name="estado">
-                <option value="activo"     ${llamadaEditar.estado == 'activo'     ? 'selected' : ''}>Activo</option>
-                <option value="suspendido" ${llamadaEditar.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
-                <option value="borrado"    ${llamadaEditar.estado == 'borrado'    ? 'selected' : ''}>Borrado</option>
-              </select>
-            </div>
-          </div>
-          <div class="actions">
-            <button type="submit"><i class="fas fa-save"></i> Guardar cambios</button>
-            <a class="button secondary" href="/llamada/list">
-              <i class="fas fa-times"></i> Cancelar
-            </a>
-          </div>
-        </form>
-      </article>
-    </c:if>
-
     <article class="card">
-
-      <%-- Botones principales --%>
-      <c:if test="${not mostrarFormulario and llamadaEditar == null}">
+      <div class="actions single align-center" id="acciones-inicio-llamada">
+        <button type="button" id="btn-iniciar-llamada"><i class="fas fa-phone"></i> Registrar llamada</button>
+        <a class="button secondary" href="/llamada/list"><i class="fas fa-eye"></i> Ver llamadas</a>
+      </div>
+      <form:form action="/llamada/crear" method="post" modelAttribute="llamada" id="form-llamada" style="display:none;">
+        <div class="form-grid">
+          <div>
+            <label for="nombre_cliente">Nombre del cliente</label>
+            <form:input path="nombre_cliente" id="nombre_cliente" placeholder="Ej: Alex Pérez" required="required"/>
+          </div>
+          <div>
+            <label for="telefono_cliente">Teléfono del cliente</label>
+            <form:input path="telefono_cliente" id="telefono_cliente" placeholder="Ej: 123456789" required="required" pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);"/>
+          </div>
+          <div>
+            <label for="id_tipo">Tipificación</label>
+            <form:select path="id_tipo" id="id_tipo" required="required">
+              <option value="" disabled selected>Selecciona una tipificación</option>
+              <c:forEach items="${tiposLlamada}" var="tipo">
+                <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
+              </c:forEach>
+            </form:select>
+          </div>
+          <div style="display:none;">
+            <form:hidden path="hora_inicio" id="hora_inicio"/>
+            <form:hidden path="hora_fin" id="hora_fin"/>
+            <form:hidden path="duracion" id="duracion"/>
+            <form:hidden path="estado_llamada" id="estado_llamada"/>
+          </div>
+          <div>
+            <label for="descripcion_tipo">Descripción tipo</label>
+            <form:input path="descripcion_tipo" id="descripcion_tipo" placeholder="Ej: Detalle de la llamada"/>
+          </div>
+        </div>
         <div class="actions">
-          <a class="button" href="/llamada/comenzar">
-            <i class="fas fa-phone"></i> Comenzar registro
-          </a>
-          <a class="button secondary" href="/llamada/list">
-            <i class="fas fa-eye"></i> Ver llamadas
-          </a>
+          <button type="submit"><i class="fas fa-save"></i> Registrar</button>
+          <button type="button" class="secondary" id="btn-cancelar-llamada"><i class="fas fa-times"></i> Cancelar</button>
+          <a class="button secondary" href="/llamada/list"><i class="fas fa-eye"></i> Ver llamadas</a>
         </div>
-      </c:if>
-
-      <%-- Formulario nuevo registro --%>
-      <c:if test="${mostrarFormulario}">
-        <div class="notice-box" style="background:#e8f4fd; border-left:4px solid var(--color-primario); margin-bottom:14px;">
-          <p><i class="fas fa-clock"></i> <strong>Registro iniciado a las ${horaInicio}</strong> — Complete los datos y presione "Finalizar registro".</p>
-        </div>
-        <form:form action="/llamada/crear" method="post" modelAttribute="llamada">
-          <div class="form-grid">
-            <div>
-              <label for="nombre_cliente">Nombre del cliente</label>
-              <form:input path="nombre_cliente" id="nombre_cliente"
-                          placeholder="Ej: Alex Pérez" required="required"/>
-            </div>
-            <div>
-              <label for="telefono_cliente">Teléfono del cliente</label>
-              <form:input path="telefono_cliente" id="telefono_cliente"
-                          placeholder="Ej: 123456789" required="required"
-                          pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
-            </div>
-            <div>
-              <label for="id_tipo">Tipificación</label>
-              <form:select path="id_tipo" id="id_tipo" required="required">
-                <option value="" disabled selected>Selecciona una tipificación</option>
-                <c:forEach items="${tiposLlamada}" var="tipo">
-                  <option value="${tipo.id_tipo}">${tipo.motivo_tipo}</option>
-                </c:forEach>
-              </form:select>
-            </div>
-            <div>
-              <label for="descripcion_llamada">Descripción</label>
-              <form:input path="descripcion_llamada" id="descripcion_llamada"
-                          placeholder="Ej: El cliente consulta sobre su factura"/>
-            </div>
-          </div>
-          <div class="actions">
-            <button type="submit"><i class="fas fa-stop-circle"></i> Finalizar registro</button>
-            <a class="button secondary" href="/llamada/list">
-              <i class="fas fa-eye"></i> Ver llamadas
-            </a>
-          </div>
-        </form:form>
-      </c:if>
-
-      <%-- Confirmación tras registrar --%>
+      </form:form>
       <c:if test="${llamadaCreada != null}">
         <div class="notice-box">
-          <h3><i class="fas fa-check-circle"></i> Llamada registrada exitosamente</h3>
-          <p><strong>Código:</strong> LL${llamadaCreada.id_llamada}</p>
+          <h3><i class="fas fa-check-circle" style="color: green;"></i> Llamada registrada exitosamente</h3>
+          <p><strong>Código de llamada:</strong> ${llamadaCreada.id_llamada}</p>
           <p><strong>Cliente:</strong> ${llamadaCreada.nombre_cliente}</p>
           <p><strong>Fecha:</strong> ${llamadaCreada.fecha_llamada}</p>
-          <p><strong>Hora:</strong> ${llamadaCreada.hora}</p>
-          <p><strong>Duración:</strong> ${llamadaCreada.duracion} min</p>
-          <p><strong>Tipificación:</strong> ${llamadaCreada.motivo_tipo}</p>
-          <div class="actions">
-            <a class="button" href="/llamada/comenzar">
-              <i class="fas fa-phone"></i> Nueva llamada
-            </a>
-            <a class="button secondary" href="/llamada/list">
-              <i class="fas fa-eye"></i> Ver llamadas
-            </a>
+          <p>Recuerda tipificar esta llamada con el código mostrado.</p>
+          <div class="actions" style="margin-top:12px;">
+            <a class="button" href="/llamadas"><i class="fas fa-check"></i> Aceptar</a>
           </div>
         </div>
       </c:if>
-
-      <%-- Tabla de llamadas --%>
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
             <thead>
-            <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Teléfono</th>
-              <th>Tipificación</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Duración</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
+              <tr>
+                <th>ID llamada</th>
+                <th>Cliente</th>
+                <th>Teléfono cliente</th>
+                <th>Tipificacion</th>
+                <th>Fecha</th>
+                <th>Duración</th>
+                <th>Descripción tipo</th>
+                <th>Agente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
             <tbody>
-            <c:forEach items="${llamadas}" var="ll">
-              <tr>
-                <td>LL${ll.id_llamada}</td>
-                <td>${ll.nombre_cliente}</td>
-                <td>${ll.telefono_cliente}</td>
-                <td>${ll.motivo_tipo}</td>
-                <td>${ll.fecha_llamada}</td>
-                <td>${ll.hora}</td>
-                <td>${ll.duracion}</td>
-                <td>${ll.estado}</td>
-                <td>
-                  <a class="button" href="/llamada/editar?id=${ll.id_llamada}">
-                    <i class="fas fa-edit"></i> Editar
-                  </a>
-                  <a class="button secondary" href="/llamada/eliminar?id=${ll.id_llamada}"
-                     onclick="return confirm('¿Eliminar llamada LL${ll.id_llamada}?')">
-                    <i class="fas fa-trash"></i> Eliminar
-                  </a>
-                </td>
-              </tr>
-            </c:forEach>
+              <c:forEach items="${llamadas}" var="llamada">
+                <tr>
+                  <td>${llamada.id_llamada}</td>
+                  <td>${llamada.nombre_cliente}</td>
+                  <td>${llamada.telefono_cliente}</td>
+                  <td>${llamada.motivo_tipo}</td>
+                  <td>${llamada.fecha_llamada}</td>
+                  <td>${llamada.duracion}</td>
+                  <td>${llamada.descripcion_tipo}</td>
+                  <td>${llamada.id_agente}</td>
+                  <td>${llamada.estado_llamada}</td>
+                  <td>
+                    <a class="button" href="/llamada/editar?id=${llamada.id_llamada}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/llamada/eliminar?id=${llamada.id_llamada}">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
         </div>
@@ -280,5 +197,4 @@
 </script>
 </body>
 </html>
-
 

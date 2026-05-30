@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
 import com.example.CallCenter.llamada.Llamada;
 import com.example.CallCenter.llamada.LlamadaService;
+import com.example.CallCenter.tipificacion.Tipificacion;
 import com.example.CallCenter.tipificacion.TipificacionService;
 import com.example.CallCenter.Empresa.EmpresaService;
 import com.example.CallCenter.agente.Agente;
@@ -97,11 +96,15 @@ public class NavegacionController {
     // ─── SuperAdmin exclusivo ─────────────────────────────────────────────────
 
     @GetMapping("/empresas")
-    public String empresas(HttpSession session, Model model,
-                           @RequestParam(value = "mostrar", required = false) String mostrar) {
+    public String empresas(
+            HttpSession session,
+            @RequestParam(value = "mostrar", defaultValue = "false") boolean mostrar,
+            Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        model.addAttribute("empresas", empresaService.listarEmpresas());
-        model.addAttribute("mostrarEmpresas", "true".equals(mostrar));
+        model.addAttribute("mostrarEmpresas", mostrar);
+        if (mostrar) {
+            model.addAttribute("empresas", empresaService.listarEmpresas());
+        }
         return "empresas";
     }
 
@@ -111,13 +114,13 @@ public class NavegacionController {
             @RequestParam(value = "id_empresa", required = false) Long idEmpresa,
             Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        model.addAttribute("empresas", empresaService.listarEmpresas());
-        model.addAttribute("empresaSeleccionada", idEmpresa);
-        model.addAttribute("totalEmpresas", empresaService.listarEmpresas().size());
+        // TODO: cargar empresas y métricas filtradas
+        model.addAttribute("totalEmpresas", 5);
         model.addAttribute("totalLlamadas", 128);
         model.addAttribute("totalAgentes", 12);
         model.addAttribute("clientesSatisfechos", 114);
         model.addAttribute("tipificacionComun", "Consulta");
+        model.addAttribute("empresaSeleccionada", idEmpresa);
         return "metricas_superadmin";
     }
 
@@ -125,18 +128,22 @@ public class NavegacionController {
 
     @GetMapping("/llamadas")
     public String llamadas(HttpSession session, Model model) {
-        if (session.getAttribute("rol") == null) return "redirect:/login";
+        String rol = (String) session.getAttribute("rol");
+        if (!"agente".equals(rol) && !"empresa".equals(rol) && !"superadmin".equals(rol))
+            return "redirect:/login";
         model.addAttribute("llamada", new com.example.CallCenter.llamada.Llamada());
         model.addAttribute("mostrarTabla", false);
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         return "llamadas";
     }
 
     @GetMapping("/tipificaciones")
     public String tipificaciones(HttpSession session, Model model) {
         String rol = (String) session.getAttribute("rol");
-        if (!"empresa".equals(rol) && !"superadmin".equals(rol)) return "redirect:/login";
+        if (!"empresa".equals(rol) && !"superadmin".equals(rol))
+            return "redirect:/login";
         model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
+        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }
@@ -144,7 +151,8 @@ public class NavegacionController {
     @GetMapping("/usuarios")
     public String usuarios(HttpSession session, Model model) {
         String rol = (String) session.getAttribute("rol");
-        if (!"empresa".equals(rol) && !"superadmin".equals(rol)) return "redirect:/login";
+        if (!"empresa".equals(rol) && !"superadmin".equals(rol))
+            return "redirect:/login";
         model.addAttribute("agente", new com.example.CallCenter.agente.Agente());
         model.addAttribute("mostrarTabla", false);
         return "usuarios";
@@ -153,7 +161,19 @@ public class NavegacionController {
     @GetMapping("/adicional1")
     public String adicional1(HttpSession session, Model model) {
         if (session.getAttribute("rol") == null) return "redirect:/login";
-        List<Llamada> historial = llamadaService.listarLlamadas();
+
+        String rol = (String) session.getAttribute("rol");
+        int idEmpresa = obtenerIdEmpresaSesion(session);
+        List<Agente> agentesVisibles = obtenerAgentesVisibles(rol, idEmpresa);
+        List<Integer> idsAgentesVisibles = agentesVisibles.stream()
+                .map(Agente::getId_agente)
+                .collect(Collectors.toList());
+        List<Llamada> historial = "agente".equals(rol)
+                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
+                : llamadaService.listarLlamadasPorAgentes(idsAgentesVisibles);
+        Map<Integer, Agente> agentesPorId = agentesVisibles.stream()
+                .collect(Collectors.toMap(Agente::getId_agente, a -> a, (a, b) -> a));
+
         List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
         List<String> motivosDisponibles = new ArrayList<>(motivosBase);
         tipificacionService.listarTiposLlamada()
@@ -162,6 +182,7 @@ public class NavegacionController {
                 .map(String::trim)
                 .filter(m -> motivosBase.stream().noneMatch(b -> b.equalsIgnoreCase(m)))
                 .forEach(motivosDisponibles::add);
+
         model.addAttribute("historialLlamadas", historial);
         model.addAttribute("motivosDisponibles", motivosDisponibles);
         model.addAttribute("agentesPorId", agentesPorId);
