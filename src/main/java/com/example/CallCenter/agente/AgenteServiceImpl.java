@@ -24,6 +24,11 @@ public class AgenteServiceImpl implements AgenteService {
     }
 
     @Override
+    public Agente obtenerPorCredenciales(String usuario, String contrasenia) {
+        return agenteDAO.obtenerPorCredenciales(usuario, contrasenia);
+    }
+
+    @Override
     public boolean existeTelefonoAgente(String telefono_agente, int idAgenteExcluir) {
         return agenteDAO.existeTelefonoAgente(telefono_agente, idAgenteExcluir);
     }
