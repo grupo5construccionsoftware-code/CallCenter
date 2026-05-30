@@ -2,9 +2,7 @@ package com.example.CallCenter.agente;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +19,15 @@ public class AgenteController {
 
     @GetMapping("/list")
     public String listarAgentes(HttpSession session, Model model) {
-        List<Agente> agentes = filtrarAgentesPorSesion(session);
-        model.addAttribute("agentes", agentes);
+        model.addAttribute("agentes", filtrarAgentesPorSesion(session));
         model.addAttribute("agente", new Agente());
         model.addAttribute("mostrarTabla", true);
         return "usuarios";
     }
 
     @PostMapping("/crear")
-    public String crearAgente(@ModelAttribute("agente") Agente agente, HttpSession session, Model model) {
+    public String crearAgente(@ModelAttribute("agente") Agente agente,
+                              HttpSession session, Model model) {
         try {
             agente.setId_empresa(obtenerIdEmpresaSesion(session));
             agenteService.crearAgente(agente);
@@ -45,18 +43,24 @@ public class AgenteController {
         return "usuarios";
     }
 
+    // ─── Edición inline: carga el agente en agenteEditar y devuelve usuarios.jsp ──
     @GetMapping("/editar")
-    public String mostrarFormularioEditar(@RequestParam("id") int id_agente, HttpSession session, Model model) {
+    public String mostrarFormularioEditar(@RequestParam("id") int id_agente,
+                                          HttpSession session, Model model) {
         Agente agente = agenteService.obtenerAgentePorId(id_agente);
         if (agente == null || !puedeGestionarAgente(session, agente)) {
             return "redirect:/agente/list";
         }
-        model.addAttribute("agente", agente);
-        return "adicional5";
+        model.addAttribute("agenteEditar", agente);           // activa el bloque de edición
+        model.addAttribute("agente", new Agente());           // necesario para el form:form
+        model.addAttribute("agentes", filtrarAgentesPorSesion(session));
+        model.addAttribute("mostrarTabla", true);
+        return "usuarios";
     }
 
     @PostMapping("/actualizar")
-    public String actualizarAgente(@ModelAttribute("agente") Agente agente, HttpSession session, Model model) {
+    public String actualizarAgente(@ModelAttribute("agente") Agente agente,
+                                   HttpSession session, Model model) {
         Agente agenteActual = agenteService.obtenerAgentePorId(agente.getId_agente());
         if (agenteActual == null || !puedeGestionarAgente(session, agenteActual)) {
             return "redirect:/agente/list";
@@ -64,9 +68,12 @@ public class AgenteController {
         try {
             agenteService.actualizarAgente(agente);
         } catch (IllegalArgumentException ex) {
-            model.addAttribute("agente", agente);
+            model.addAttribute("agenteEditar", agente);
+            model.addAttribute("agente", new Agente());
+            model.addAttribute("agentes", filtrarAgentesPorSesion(session));
+            model.addAttribute("mostrarTabla", true);
             model.addAttribute("error", ex.getMessage());
-            return "adicional5";
+            return "usuarios";
         }
         return "redirect:/agente/list";
     }
@@ -79,6 +86,8 @@ public class AgenteController {
         }
         return "redirect:/agente/list";
     }
+
+    // ─── Helpers ───────────────────────────────────────────────────────────────
 
     private List<Agente> filtrarAgentesPorSesion(HttpSession session) {
         if ("superadmin".equals(session.getAttribute("rol"))) {
@@ -96,7 +105,8 @@ public class AgenteController {
     }
 
     private int obtenerIdEmpresaSesion(HttpSession session) {
-        Object idEmpresa = session.getAttribute("id_empresa");
-        return idEmpresa instanceof Integer ? (Integer) idEmpresa : 1;
+        Object id = session.getAttribute("id_empresa");
+        return id instanceof Integer ? (Integer) id : 1;
     }
 }
+

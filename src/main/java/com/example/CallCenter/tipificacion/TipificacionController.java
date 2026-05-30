@@ -17,15 +17,15 @@ public class TipificacionController {
 
     @GetMapping("/list")
     public String listarTipificaciones(Model model) {
-        List<Tipificacion> tipificaciones = tipificacionService.listarTipificaciones();
-        model.addAttribute("tipificaciones", tipificaciones);
+        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
         model.addAttribute("tipificacion", new Tipificacion());
         model.addAttribute("mostrarTabla", true);
         return "tipificaciones";
     }
 
     @PostMapping("/crear")
-    public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion, Model model) {
+    public String crearTipificacion(@ModelAttribute("tipificacion") Tipificacion tipificacion,
+                                    Model model) {
         tipificacionService.crearTipificacion(tipificacion);
         model.addAttribute("tipificacion", new Tipificacion());
         model.addAttribute("mostrarTabla", false);
@@ -33,11 +33,17 @@ public class TipificacionController {
         return "tipificaciones";
     }
 
+    // ─── Edición inline: pone tipificacionEditar en el modelo y devuelve tipificaciones.jsp ──
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_tipo, Model model) {
         Tipificacion tipificacion = tipificacionService.obtenerTipificacionPorId(id_tipo);
-        model.addAttribute("tipificacion", tipificacion);
-        return "adicional4";
+        if (tipificacion == null) return "redirect:/tipificacion/list";
+
+        model.addAttribute("tipificacionEditar", tipificacion);
+        model.addAttribute("tipificacion", new Tipificacion());
+        model.addAttribute("tipificaciones", tipificacionService.listarTipificaciones());
+        model.addAttribute("mostrarTabla", true);
+        return "tipificaciones";
     }
 
     @PostMapping("/actualizar")

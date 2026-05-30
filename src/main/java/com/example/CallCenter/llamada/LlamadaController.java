@@ -2,15 +2,11 @@ package com.example.CallCenter.llamada;
 
 import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/llamada")
@@ -37,7 +33,8 @@ public class LlamadaController {
     }
 
     @PostMapping("/crear")
-    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada, HttpSession session, Model model) {
+    public String crearLlamada(@ModelAttribute("llamada") Llamada llamada,
+                               HttpSession session, Model model) {
         llamada.setId_agente(obtenerIdAgenteSesion(session));
         llamadaService.crearLlamada(llamada);
         model.addAttribute("llamada", new Llamada());
@@ -47,12 +44,23 @@ public class LlamadaController {
         return "llamadas";
     }
 
+    // ─── Edición inline: pone llamadaEditar en el modelo y devuelve llamadas.jsp ──
     @GetMapping("/editar")
-    public String mostrarFormularioEditar(@RequestParam("id") int id_llamada, Model model) {
+    public String mostrarFormularioEditar(@RequestParam("id") int id_llamada,
+                                          HttpSession session, Model model) {
         Llamada llamada = llamadaService.obtenerLlamadaPorId(id_llamada);
-        model.addAttribute("llamada", llamada);
+        if (llamada == null) return "redirect:/llamada/list";
+
+        List<Llamada> llamadas = "agente".equals(session.getAttribute("rol"))
+                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
+                : llamadaService.listarLlamadas();
+
+        model.addAttribute("llamadaEditar", llamada);
+        model.addAttribute("llamada", new Llamada());
         model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
-        return "adicional3";
+        model.addAttribute("llamadas", llamadas);
+        model.addAttribute("mostrarTabla", true);
+        return "llamadas";
     }
 
     @PostMapping("/actualizar")
@@ -68,7 +76,8 @@ public class LlamadaController {
     }
 
     private int obtenerIdAgenteSesion(HttpSession session) {
-        Object idAgente = session.getAttribute("id_agente");
-        return idAgente instanceof Integer ? (Integer) idAgente : 1;
+        Object id = session.getAttribute("id_agente");
+        return id instanceof Integer ? (Integer) id : 1;
     }
 }
+
