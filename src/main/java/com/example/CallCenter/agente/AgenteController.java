@@ -1,7 +1,7 @@
 package com.example.CallCenter.agente;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +18,7 @@ public class AgenteController {
 
     @GetMapping("/list")
     public String listarAgentes(Model model) {
-        List<Agente> agentes = agenteService.listarAgentes();
-        model.addAttribute("agentes", agentes);
+        model.addAttribute("agentes", agenteService.listarAgentes());
         model.addAttribute("agente", new Agente());
         model.addAttribute("mostrarTabla", true);
         return "usuarios";
@@ -34,11 +33,14 @@ public class AgenteController {
         return "usuarios";
     }
 
+    // Editar inline: recarga usuarios.jsp con datos del agente
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_agente, Model model) {
-        Agente agente = agenteService.obtenerAgentePorId(id_agente);
-        model.addAttribute("agente", agente);
-        return "adicional5";
+        model.addAttribute("agenteEditar", agenteService.obtenerAgentePorId(id_agente));
+        model.addAttribute("agente", new Agente());
+        model.addAttribute("agentes", agenteService.listarAgentes());
+        model.addAttribute("mostrarTabla", true);
+        return "usuarios";
     }
 
     @PostMapping("/actualizar")

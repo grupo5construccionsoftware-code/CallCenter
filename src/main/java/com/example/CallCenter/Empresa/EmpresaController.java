@@ -17,6 +17,8 @@ public class EmpresaController {
         this.empresaService = empresaService;
     }
 
+    // ─── Registro público (desde /contacto) ───────────────────────────────────
+
     @GetMapping("/adicional2")
     public String mostrarFormularioPublico(Model model) {
         model.addAttribute("empresa", new Empresa());
@@ -34,6 +36,8 @@ public class EmpresaController {
         return "adicional2";
     }
 
+    // ─── Registro desde panel SuperAdmin ──────────────────────────────────────
+
     @GetMapping("/empresa/nueva")
     public String mostrarFormularioAdmin(HttpSession session, Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
@@ -43,7 +47,8 @@ public class EmpresaController {
     }
 
     @PostMapping("/empresa/registrar")
-    public String registrarEmpresaAdmin(@ModelAttribute("empresa") Empresa empresa, HttpSession session, Model model) {
+    public String registrarEmpresaAdmin(@ModelAttribute("empresa") Empresa empresa,
+                                        HttpSession session, Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
         empresaService.registrarEmpresa(empresa);
         model.addAttribute("empresa", new Empresa());
@@ -53,19 +58,27 @@ public class EmpresaController {
         return "adicional2";
     }
 
+    // ─── Editar: carga el formulario inline en empresas.jsp ───────────────────
+
     @GetMapping("/empresa/editar")
-    public String mostrarEditar(@RequestParam("id") int id, HttpSession session, Model model) {
+    public String mostrarEditar(@RequestParam("id") int id,
+                                HttpSession session, Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        model.addAttribute("empresa", empresaService.obtenerEmpresaPorId(id));
-        return "empresa_editar";
+        model.addAttribute("empresaEditar", empresaService.obtenerEmpresaPorId(id));
+        model.addAttribute("empresas", empresaService.listarEmpresas());
+        model.addAttribute("mostrarEmpresas", true);
+        return "empresas";
     }
 
     @PostMapping("/empresa/actualizar")
-    public String actualizarEmpresa(@ModelAttribute("empresa") Empresa empresa, HttpSession session) {
+    public String actualizarEmpresa(@ModelAttribute("empresa") Empresa empresa,
+                                    HttpSession session) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
         empresaService.actualizarEmpresa(empresa);
         return "redirect:/empresas?mostrar=true";
     }
+
+    // ─── Eliminar ─────────────────────────────────────────────────────────────
 
     @GetMapping("/empresa/eliminar")
     public String eliminarEmpresa(@RequestParam("id") int id, HttpSession session) {

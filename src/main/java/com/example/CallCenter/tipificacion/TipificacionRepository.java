@@ -17,12 +17,15 @@ public class TipificacionRepository implements TipificacionDAO {
 
     @Override
     public List<Tipificacion> listarTipificaciones() {
+        // Devuelve todas, incluyendo borradas (se muestran en tabla con su estado)
         return tipificaciones;
     }
 
     @Override
     public List<String> listarTiposLlamada() {
+        // Solo activas para usar en formularios de llamadas
         return tipificaciones.stream()
+                .filter(t -> !"borrado".equals(t.getEstado()) && !"suspendido".equals(t.getEstado()))
                 .map(Tipificacion::getMotivo_tipo)
                 .collect(Collectors.toList());
     }
@@ -39,6 +42,7 @@ public class TipificacionRepository implements TipificacionDAO {
     public void crearTipificacion(Tipificacion tipificacion) {
         tipificacion.setId_tipo(contadorId);
         tipificacion.setId_empresa(1);
+        tipificacion.setEstado("activo");
         contadorId++;
         tipificaciones.add(tipificacion);
     }
@@ -48,6 +52,9 @@ public class TipificacionRepository implements TipificacionDAO {
         for (int i = 0; i < tipificaciones.size(); i++) {
             if (tipificaciones.get(i).getId_tipo() == tipificacion.getId_tipo()) {
                 tipificacion.setId_empresa(tipificaciones.get(i).getId_empresa());
+                if (tipificacion.getEstado() == null || tipificacion.getEstado().trim().isEmpty()) {
+                    tipificacion.setEstado(tipificaciones.get(i).getEstado());
+                }
                 tipificaciones.set(i, tipificacion);
                 break;
             }
@@ -56,14 +63,17 @@ public class TipificacionRepository implements TipificacionDAO {
 
     @Override
     public void eliminarTipificacion(int id_tipo) {
-        tipificaciones.removeIf(t -> t.getId_tipo() == id_tipo);
+        tipificaciones.stream()
+                .filter(t -> t.getId_tipo() == id_tipo)
+                .findFirst()
+                .ifPresent(t -> t.setEstado("borrado"));
     }
 
     private void cargarTipificacionesIniciales() {
-        tipificaciones.add(new Tipificacion(1, "Consulta",  "El cliente solicita información general.", 1));
-        tipificaciones.add(new Tipificacion(2, "Reclamo",   "El cliente presenta una queja formal.", 1));
-        tipificaciones.add(new Tipificacion(3, "Venta",     "El cliente adquiere un producto o servicio.", 1));
-        tipificaciones.add(new Tipificacion(4, "Soporte",   "El cliente necesita asistencia técnica.", 1));
-        tipificaciones.add(new Tipificacion(5, "Otros",     "Casos que no encajan en las categorías anteriores.", 1));
+        tipificaciones.add(new Tipificacion(1, "Consulta", "El cliente solicita información general.", 1));
+        tipificaciones.add(new Tipificacion(2, "Reclamo",  "El cliente presenta una queja formal.", 1));
+        tipificaciones.add(new Tipificacion(3, "Venta",    "El cliente adquiere un producto o servicio.", 1));
+        tipificaciones.add(new Tipificacion(4, "Soporte",  "El cliente necesita asistencia técnica.", 1));
+        tipificaciones.add(new Tipificacion(5, "Otros",    "Casos que no encajan en las categorías anteriores.", 1));
     }
 }

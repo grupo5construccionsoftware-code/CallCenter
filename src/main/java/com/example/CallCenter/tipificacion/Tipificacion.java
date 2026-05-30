@@ -6,6 +6,7 @@ public class Tipificacion {
     private String motivo_tipo;
     private String descripcion_tipo;
     private int id_empresa;
+    private String estado;
 
     public Tipificacion() {}
 
@@ -14,6 +15,7 @@ public class Tipificacion {
         this.motivo_tipo = motivo_tipo;
         this.descripcion_tipo = descripcion_tipo;
         this.id_empresa = id_empresa;
+        this.estado = "activo";
     }
 
     public int getId_tipo() { return id_tipo; }
@@ -27,4 +29,7 @@ public class Tipificacion {
 
     public int getId_empresa() { return id_empresa; }
     public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }
