@@ -2,7 +2,6 @@ package com.example.CallCenter.agente;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,16 +10,21 @@ public class AgenteRepository implements AgenteDAO {
     private final List<Agente> agentes = new ArrayList<>();
     private int contadorId = 6;
 
-    {
-        agentes.add(new Agente(1, "Carlos García",   "987654321", "agente01", "age01", 1));
-        agentes.add(new Agente(2, "Ana Mendoza",    "912345678", "agente02", "age02", 1));
-        agentes.add(new Agente(3, "Luis Quispe",     "923456789", "agente03", "age03", 1));
-        agentes.add(new Agente(4, "María Flores",   "934567890", "agente04", "age04", 1));
-        agentes.add(new Agente(5, "Roberto Vargas", "945678901", "agente05", "age05", 1));
+    public AgenteRepository() {
+        Agente a1 = new Agente(1, "Carlos García",  "987654321", "agente01", "age01", 1);
+        Agente a2 = new Agente(2, "Ana Mendoza",    "912345678", "agente02", "age02", 1);
+        Agente a3 = new Agente(3, "Luis Quispe",    "923456789", "agente03", "age03", 1);
+        Agente a4 = new Agente(4, "María Flores",   "934567890", "agente04", "age04", 1);
+        Agente a5 = new Agente(5, "Roberto Vargas", "945678901", "agente05", "age05", 1);
+        a1.setEstado("activo"); a2.setEstado("activo"); a3.setEstado("activo");
+        a4.setEstado("activo"); a5.setEstado("activo");
+        agentes.add(a1); agentes.add(a2); agentes.add(a3);
+        agentes.add(a4); agentes.add(a5);
     }
 
     @Override
     public List<Agente> listarAgentes() {
+        // Devuelve todos, incluyendo borrados (se muestran en tabla con su estado)
         return agentes;
     }
 
@@ -51,16 +55,17 @@ public class AgenteRepository implements AgenteDAO {
 
     @Override
     public void crearAgente(Agente agente) {
-        agente.setId_agente(contadorId);
-        String num = String.format("%02d", contadorId);
-        agente.setUsuario_agente("agente" + num);
-        agente.setContrasenia_agente("age" + num);
-        if (agente.getId_empresa() <= 0) {
-            agente.setId_empresa(1);
-        }
-        contadorId++;
-        agentes.add(agente);
+    agente.setId_agente(contadorId);
+    String num = String.format("%02d", contadorId);
+    agente.setUsuario_agente("agente" + num);
+    agente.setContrasenia_agente("age" + num);
+    if (agente.getId_empresa() <= 0) {
+        agente.setId_empresa(1);
     }
+    agente.setEstado("activo");
+    contadorId++;
+    agentes.add(agente);
+}
 
     @Override
     public void actualizarAgente(Agente agente) {
@@ -69,6 +74,9 @@ public class AgenteRepository implements AgenteDAO {
                 agente.setUsuario_agente(agentes.get(i).getUsuario_agente());
                 agente.setContrasenia_agente(agentes.get(i).getContrasenia_agente());
                 agente.setId_empresa(agentes.get(i).getId_empresa());
+                if (agente.getEstado() == null || agente.getEstado().trim().isEmpty()) {
+                    agente.setEstado(agentes.get(i).getEstado());
+                }
                 agentes.set(i, agente);
                 break;
             }
@@ -77,6 +85,9 @@ public class AgenteRepository implements AgenteDAO {
 
     @Override
     public void eliminarAgente(int id_agente) {
-        agentes.removeIf(a -> a.getId_agente() == id_agente);
+        agentes.stream()
+                .filter(a -> a.getId_agente() == id_agente)
+                .findFirst()
+                .ifPresent(a -> a.setEstado("borrado"));
     }
 }
