@@ -5,7 +5,9 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import com.example.CallCenter.tipificacion.TipificacionDAO;
 import com.example.CallCenter.tipificacion.Tipificacion;
 
@@ -30,6 +32,20 @@ public class LlamadaRepository implements LlamadaDAO {
     }
 
     @Override
+    public List<Llamada> listarLlamadasPorAgente(int idAgente) {
+        return llamadas.stream()
+                .filter(l -> l.getId_agente() == idAgente)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Llamada> listarLlamadasPorAgentes(Collection<Integer> idsAgentes) {
+        return llamadas.stream()
+                .filter(l -> idsAgentes != null && idsAgentes.contains(l.getId_agente()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Llamada obtenerLlamadaPorId(int id_llamada) {
         return llamadas.stream()
                 .filter(l -> l.getId_llamada() == id_llamada)
@@ -44,7 +60,9 @@ public class LlamadaRepository implements LlamadaDAO {
                 .max()
                 .orElse(0) + 1;
         llamada.setId_llamada(nuevoId);
-        llamada.setId_agente(1);
+        if (llamada.getId_agente() <= 0) {
+            llamada.setId_agente(1);
+        }
         llamada.setFecha_llamada(LocalDate.now().toString());
         if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank()) {
             llamada.setHora_inicio(LocalTime.now().format(FORMATO_HORA_COMPLETA));
