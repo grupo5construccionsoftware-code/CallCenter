@@ -1,6 +1,14 @@
 package com.example.CallCenter.tipificacion;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "empresa_tipo")
 public class EmpresaTipo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private int id_empresa;
     private int id_tipo;
@@ -13,6 +21,9 @@ public class EmpresaTipo {
         this.id_tipo = id_tipo;
         this.estado_asignacion = "ACTIVO";
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public int getId_empresa() { return id_empresa; }
     public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }

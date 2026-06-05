@@ -1,8 +1,15 @@
 package com.example.CallCenter.Empresa;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "empresa")
 public class Empresa {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_empresa;
+
     private String nombre_empresa;
     private String telefono_empresa;
     private String correo_empresa;
@@ -10,8 +17,7 @@ public class Empresa {
     private String contrasenia_empresa;
     private String estado_empresa;
 
-    public Empresa() {
-    }
+    public Empresa() {}
 
     public Empresa(int id_empresa, String nombre_empresa, String telefono_empresa, String correo_empresa) {
         this.id_empresa = id_empresa;

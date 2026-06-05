@@ -1,18 +1,25 @@
 package com.example.CallCenter.llamada;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "llamada")
 public class Llamada {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_llamada;
+
     private String nombre_cliente;
     private String telefono_cliente;
     private String fecha_llamada;
-    private String hora_inicio;   // hora de inicio
+    private String hora_inicio;
     private String hora_fin;
     private String duracion;
-    private String descripcion_tipo;   // antes "descripcion_llamada" en versión nueva
+    private String descripcion_tipo;
     private int id_agente;
     private int id_tipo;
-    private String estado_llamada;     // antes "estado" en versión nueva
+    private String estado_llamada;
     private String motivo_tipo;
 
     public Llamada() {}
@@ -35,8 +42,6 @@ public class Llamada {
         this.motivo_tipo = motivo_tipo;
     }
 
-    // ── Getters y Setters ──────────────────────────────────────────────────────
-
     public int getId_llamada() { return id_llamada; }
     public void setId_llamada(int id_llamada) { this.id_llamada = id_llamada; }
 
@@ -52,7 +57,6 @@ public class Llamada {
     public String getHora_inicio() { return hora_inicio; }
     public void setHora_inicio(String hora_inicio) { this.hora_inicio = hora_inicio; }
 
-    // Alias para compatibilidad con el nuevo LlamadaRepository (usa setHora/getHora)
     public String getHora() { return hora_inicio; }
     public void setHora(String hora) { this.hora_inicio = hora; }
 
@@ -65,7 +69,6 @@ public class Llamada {
     public String getDescripcion_tipo() { return descripcion_tipo; }
     public void setDescripcion_tipo(String descripcion_tipo) { this.descripcion_tipo = descripcion_tipo; }
 
-    // Alias para compatibilidad con el nuevo LlamadaRepository (usa setDescripcion_llamada)
     public String getDescripcion_llamada() { return descripcion_tipo; }
     public void setDescripcion_llamada(String descripcion) { this.descripcion_tipo = descripcion; }
 
@@ -78,11 +81,9 @@ public class Llamada {
     public String getEstado_llamada() { return estado_llamada; }
     public void setEstado_llamada(String estado_llamada) { this.estado_llamada = estado_llamada; }
 
-    // Alias para compatibilidad con el nuevo LlamadaRepository (usa setEstado/getEstado)
     public String getEstado() { return estado_llamada; }
     public void setEstado(String estado) { this.estado_llamada = estado; }
 
     public String getMotivo_tipo() { return motivo_tipo; }
     public void setMotivo_tipo(String motivo_tipo) { this.motivo_tipo = motivo_tipo; }
 }
-

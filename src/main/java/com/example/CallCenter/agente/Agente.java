@@ -1,8 +1,15 @@
 package com.example.CallCenter.agente;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "agente")
 public class Agente {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_agente;
+
     private String nombre_agente;
     private String telefono_agente;
     private String usuario_agente;
