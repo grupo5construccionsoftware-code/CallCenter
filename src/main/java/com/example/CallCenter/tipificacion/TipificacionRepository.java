@@ -9,24 +9,50 @@ import org.springframework.stereotype.Repository;
 public class TipificacionRepository implements TipificacionDAO {
 
     private final List<Tipificacion> tipificaciones = new ArrayList<>();
+    private final List<EmpresaTipo> empresaTipos = new ArrayList<>();
     private int contadorId = 6;
 
     public TipificacionRepository() {
-        cargarTipificacionesIniciales();
+        cargarTipificacionesGlobales();
+        asignarTipificacionesBase(1);
     }
 
     @Override
-    public List<Tipificacion> listarTipificaciones() {
-        // Devuelve todas (activas + borradas) para mostrar en tabla con su estado
+    public List<Tipificacion> listarTodas() {
         return tipificaciones;
     }
 
     @Override
-    public List<String> listarTiposLlamada() {
-        // Solo activas, para los formularios de llamadas y filtros
+    public List<Tipificacion> listarPorEmpresa(int id_empresa) {
+        return empresaTipos.stream()
+                .filter(et -> et.getId_empresa() == id_empresa)
+                .map(et -> {
+                    Tipificacion t = tipificaciones.stream()
+                            .filter(tip -> tip.getId_tipo() == et.getId_tipo())
+                            .findFirst().orElse(null);
+                    if (t == null) return null;
+                    Tipificacion copia = new Tipificacion(t.getId_tipo(), t.getMotivo_tipo(), et.getEstado_asignacion());
+                    return copia;
+                })
+                .filter(t -> t != null)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Tipificacion> listarActivasPorEmpresa(int id_empresa) {
+        List<Integer> ids = empresaTipos.stream()
+                .filter(et -> et.getId_empresa() == id_empresa
+                        && "ACTIVO".equals(et.getEstado_asignacion()))
+                .map(EmpresaTipo::getId_tipo)
+                .collect(Collectors.toList());
         return tipificaciones.stream()
-                .filter(t -> t.getEstado_tipo() != null
-                        && !"Eliminado".equalsIgnoreCase(t.getEstado_tipo()))
+                .filter(t -> ids.contains(t.getId_tipo()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> listarMotivosPorEmpresa(int id_empresa) {
+        return listarPorEmpresa(id_empresa).stream()
                 .map(Tipificacion::getMotivo_tipo)
                 .collect(Collectors.toList());
     }
@@ -35,49 +61,61 @@ public class TipificacionRepository implements TipificacionDAO {
     public Tipificacion obtenerTipificacionPorId(int id_tipo) {
         return tipificaciones.stream()
                 .filter(t -> t.getId_tipo() == id_tipo)
-                .findFirst()
-                .orElse(null);
+                .findFirst().orElse(null);
     }
 
     @Override
-    public void crearTipificacion(Tipificacion tipificacion) {
-        tipificacion.setId_tipo(contadorId);
-        tipificacion.setId_empresa(1);
-        if (tipificacion.getEstado_tipo() == null || tipificacion.getEstado_tipo().isBlank()) {
-            tipificacion.setEstado_tipo("Activo");
+    public Tipificacion buscarPorMotivo(String motivo_tipo) {
+        return tipificaciones.stream()
+                .filter(t -> t.getMotivo_tipo().equalsIgnoreCase(motivo_tipo))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public void crearTipificacion(Tipificacion tipificacion, int id_empresa) {
+        Tipificacion existente = buscarPorMotivo(tipificacion.getMotivo_tipo());
+        if (existente != null) {
+            tipificacion.setId_tipo(existente.getId_tipo());
+        } else {
+            tipificacion.setId_tipo(contadorId);
+            tipificacion.setEstado_tipo("ACTIVO");
+            contadorId++;
+            tipificaciones.add(tipificacion);
         }
-        contadorId++;
-        tipificaciones.add(tipificacion);
+        boolean yaAsignada = empresaTipos.stream()
+                .anyMatch(et -> et.getId_empresa() == id_empresa
+                        && et.getId_tipo() == tipificacion.getId_tipo());
+        if (!yaAsignada) {
+            empresaTipos.add(new EmpresaTipo(id_empresa, tipificacion.getId_tipo()));
+        }
+    }
+
+
+    @Override
+    public void cambiarEstadoAsignacion(int id_tipo, int id_empresa, String estado) {
+        empresaTipos.stream()
+                .filter(et -> et.getId_tipo() == id_tipo && et.getId_empresa() == id_empresa)
+                .findFirst()
+                .ifPresent(et -> et.setEstado_asignacion(estado));
     }
 
     @Override
-    public void actualizarTipificacion(Tipificacion tipificacion) {
-        for (int i = 0; i < tipificaciones.size(); i++) {
-            if (tipificaciones.get(i).getId_tipo() == tipificacion.getId_tipo()) {
-                tipificacion.setId_empresa(tipificaciones.get(i).getId_empresa());
-                if (tipificacion.getEstado_tipo() == null || tipificacion.getEstado_tipo().isBlank()) {
-                    tipificacion.setEstado_tipo(tipificaciones.get(i).getEstado_tipo());
-                }
-                tipificaciones.set(i, tipificacion);
-                break;
+    public void asignarTipificacionesBase(int id_empresa) {
+        for (int i = 1; i <= 5; i++) {
+            int finalI = i;
+            boolean yaAsignada = empresaTipos.stream()
+                    .anyMatch(et -> et.getId_empresa() == id_empresa && et.getId_tipo() == finalI);
+            if (!yaAsignada) {
+                empresaTipos.add(new EmpresaTipo(id_empresa, i));
             }
         }
     }
 
-    @Override
-    public void eliminarTipificacion(int id_tipo) {
-        // Borrado lógico
-        Tipificacion tip = obtenerTipificacionPorId(id_tipo);
-        if (tip != null) {
-            tip.setEstado_tipo("Eliminado");
-        }
-    }
-
-    private void cargarTipificacionesIniciales() {
-        tipificaciones.add(new Tipificacion(1, "Consulta", "El cliente solicita información general.", 1));
-        tipificaciones.add(new Tipificacion(2, "Reclamo",  "El cliente presenta una queja formal.", 1));
-        tipificaciones.add(new Tipificacion(3, "Venta",    "El cliente adquiere un producto o servicio.", 1));
-        tipificaciones.add(new Tipificacion(4, "Soporte",  "El cliente necesita asistencia técnica.", 1));
-        tipificaciones.add(new Tipificacion(5, "Otros",    "Casos que no encajan en las categorías anteriores.", 1));
+    private void cargarTipificacionesGlobales() {
+        tipificaciones.add(new Tipificacion(1, "Consulta", "ACTIVO"));
+        tipificaciones.add(new Tipificacion(2, "Reclamo",  "ACTIVO"));
+        tipificaciones.add(new Tipificacion(3, "Venta",    "ACTIVO"));
+        tipificaciones.add(new Tipificacion(4, "Soporte",  "ACTIVO"));
+        tipificaciones.add(new Tipificacion(5, "Otros",    "ACTIVO"));
     }
 }

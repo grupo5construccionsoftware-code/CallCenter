@@ -197,13 +197,15 @@
                 <td>${ll.id_agente}</td>
                 <td>${ll.estado_llamada}</td>
                 <td>
-                  <a class="button" href="/llamada/editar?id=${ll.id_llamada}">
-                    <i class="fas fa-edit"></i> Editar
-                  </a>
-                  <a class="button secondary" href="/llamada/eliminar?id=${ll.id_llamada}"
-                     onclick="return confirm('¿Eliminar llamada LL${ll.id_llamada}?')">
-                    <i class="fas fa-trash"></i> Eliminar
-                  </a>
+                  <div class="actions" style="margin-top:0; flex-wrap:nowrap; width:fit-content; margin-left:auto; margin-right:auto;">
+                    <a class="button" href="/llamada/editar?id=${ll.id_llamada}">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="button secondary" href="/llamada/eliminar?id=${ll.id_llamada}"
+                       onclick="return confirm('¿Eliminar llamada LL${ll.id_llamada}?')">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                  </div>
                 </td>
               </tr>
             </c:forEach>

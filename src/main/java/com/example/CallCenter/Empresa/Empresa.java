@@ -2,37 +2,43 @@ package com.example.CallCenter.Empresa;
 
 public class Empresa {
 
-    private int id;
-    private String nombre;
-    private String telefono;
-    private String correo;
-    private String usuario;
-    private String contrasenia;
-    private String estado;
+    private int id_empresa;
+    private String nombre_empresa;
+    private String telefono_empresa;
+    private String correo_empresa;
+    private String usuario_empresa;
+    private String contrasenia_empresa;
+    private String estado_empresa;
 
     public Empresa() {
     }
 
-    public Empresa(int id, String nombre, String telefono, String correo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = "activo";
+    public Empresa(int id_empresa, String nombre_empresa, String telefono_empresa, String correo_empresa) {
+        this.id_empresa = id_empresa;
+        this.nombre_empresa = nombre_empresa;
+        this.telefono_empresa = telefono_empresa;
+        this.correo_empresa = correo_empresa;
+        this.estado_empresa = "ACTIVO";
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
-    public String getCorreo() { return correo; }
-    public void setCorreo(String correo) { this.correo = correo; }
-    public String getUsuario() { return usuario; }
-    public void setUsuario(String usuario) { this.usuario = usuario; }
-    public String getContrasenia() { return contrasenia; }
-    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public int getId_empresa() { return id_empresa; }
+    public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }
+
+    public String getNombre_empresa() { return nombre_empresa; }
+    public void setNombre_empresa(String nombre_empresa) { this.nombre_empresa = nombre_empresa; }
+
+    public String getTelefono_empresa() { return telefono_empresa; }
+    public void setTelefono_empresa(String telefono_empresa) { this.telefono_empresa = telefono_empresa; }
+
+    public String getCorreo_empresa() { return correo_empresa; }
+    public void setCorreo_empresa(String correo_empresa) { this.correo_empresa = correo_empresa; }
+
+    public String getUsuario_empresa() { return usuario_empresa; }
+    public void setUsuario_empresa(String usuario_empresa) { this.usuario_empresa = usuario_empresa; }
+
+    public String getContrasenia_empresa() { return contrasenia_empresa; }
+    public void setContrasenia_empresa(String contrasenia_empresa) { this.contrasenia_empresa = contrasenia_empresa; }
+
+    public String getEstado_empresa() { return estado_empresa; }
+    public void setEstado_empresa(String estado_empresa) { this.estado_empresa = estado_empresa; }
 }

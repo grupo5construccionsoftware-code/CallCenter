@@ -36,9 +36,9 @@
             <div>
               <label for="edit-estado">Estado</label>
               <select id="edit-estado" name="estado_tipo">
-                <option value="Activo"      ${tipificacionEditar.estado_tipo == 'Activo'      ? 'selected' : ''}>Activo</option>
-                <option value="suspendido"  ${tipificacionEditar.estado_tipo == 'suspendido'  ? 'selected' : ''}>Suspendido</option>
-                <option value="Eliminado"   ${tipificacionEditar.estado_tipo == 'Eliminado'   ? 'selected' : ''}>Eliminado</option>
+                <option value="ACTIVO"      ${tipificacionEditar.estado_tipo == 'ACTIVO'      ? 'selected' : ''}>Activo</option>
+                <option value="INACTIVO"  ${tipificacionEditar.estado_tipo == 'INACTIVO'  ? 'selected' : ''}>Inactivo</option>
+                <option value="ELIMINADO"   ${tipificacionEditar.estado_tipo == 'ELIMINADO'   ? 'selected' : ''}>Eliminado</option>
               </select>
             </div>
           </div>

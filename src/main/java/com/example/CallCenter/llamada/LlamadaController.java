@@ -2,7 +2,6 @@ package com.example.CallCenter.llamada;
 
 import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.List;
-import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +26,7 @@ public class LlamadaController {
                 : llamadaService.listarLlamadas();
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("llamada", new Llamada());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
         model.addAttribute("mostrarTabla", true);
         return "llamadas";
     }
@@ -39,7 +38,7 @@ public class LlamadaController {
         llamadaService.crearLlamada(llamada);
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("mostrarTabla", false);
-        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
         model.addAttribute("llamadaCreada", llamada);
         return "llamadas";
     }
@@ -57,7 +56,7 @@ public class LlamadaController {
 
         model.addAttribute("llamadaEditar", llamada);
         model.addAttribute("llamada", new Llamada());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("mostrarTabla", true);
         return "llamadas";

@@ -17,8 +17,6 @@ public class EmpresaController {
         this.empresaService = empresaService;
     }
 
-    // ─── Registro público ──────────────────────────────────────────────────────
-
     @GetMapping("/adicional2")
     public String mostrarFormularioPublico(Model model) {
         model.addAttribute("empresa", new Empresa());
@@ -28,15 +26,11 @@ public class EmpresaController {
 
     @PostMapping("/adicional2/registrar")
     public String registrarEmpresaPublico(@ModelAttribute("empresa") Empresa empresa, Model model) {
-        empresaService.registrarEmpresa(empresa);
         model.addAttribute("empresa", new Empresa());
         model.addAttribute("registrado", true);
-        model.addAttribute("empresaRegistrada", empresa);
         model.addAttribute("modoAdmin", false);
         return "adicional2";
     }
-
-    // ─── Registro admin ────────────────────────────────────────────────────────
 
     @GetMapping("/empresa/nueva")
     public String mostrarFormularioAdmin(HttpSession session, Model model) {
@@ -58,15 +52,13 @@ public class EmpresaController {
         return "adicional2";
     }
 
-    // ─── Edición inline en empresas.jsp ───────────────────────────────────────
-
     @GetMapping("/empresa/editar")
-    public String mostrarEditar(@RequestParam("id") int id, HttpSession session, Model model) {
+    public String mostrarEditar(@RequestParam("id") int id_empresa, HttpSession session, Model model) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        model.addAttribute("empresaEditar", empresaService.obtenerEmpresaPorId(id));
+        model.addAttribute("empresaEditar", empresaService.obtenerEmpresaPorId(id_empresa));
         model.addAttribute("empresas", empresaService.listarEmpresas());
         model.addAttribute("mostrarEmpresas", true);
-        return "empresas";   // ← muestra el formulario inline en empresas.jsp
+        return "empresas";
     }
 
     @PostMapping("/empresa/actualizar")
@@ -77,12 +69,10 @@ public class EmpresaController {
         return "redirect:/empresas?mostrar=true";
     }
 
-    // ─── Eliminar ──────────────────────────────────────────────────────────────
-
     @GetMapping("/empresa/eliminar")
-    public String eliminarEmpresa(@RequestParam("id") int id, HttpSession session) {
+    public String eliminarEmpresa(@RequestParam("id") int id_empresa, HttpSession session) {
         if (!"superadmin".equals(session.getAttribute("rol"))) return "redirect:/login";
-        empresaService.eliminarEmpresa(id);
+        empresaService.eliminarEmpresa(id_empresa);
         return "redirect:/empresas?mostrar=true";
     }
 }

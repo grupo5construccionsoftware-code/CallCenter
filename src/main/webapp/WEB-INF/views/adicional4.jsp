@@ -38,28 +38,26 @@
     <article class="card">
       <form:form action="/tipificacion/actualizar" method="post" modelAttribute="tipificacion">
         <form:hidden path="id_tipo"/>
-        <form:hidden path="id_empresa"/>
         <div class="form-grid">
           <div>
             <label>Código</label>
             <input type="text" value="${tipificacion.id_tipo}" readonly style="background-color: #f0f0f0;">
           </div>
           <div>
-            <label for="motivo_tipo">Tipificación</label>
-            <form:input path="motivo_tipo" id="motivo_tipo" placeholder="Ej: Consulta" required="required"/>
+            <label>Motivo</label>
+            <input type="text" value="${tipificacion.motivo_tipo}" readonly style="background-color: #f0f0f0;">
           </div>
           <div>
-            <label for="estado_tipo">Estado tipo</label>
+            <label for="estado_tipo">Estado</label>
             <form:select path="estado_tipo" id="estado_tipo">
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-              <option value="Eliminado">Eliminado</option>
+              <option value="ACTIVO">ACTIVO</option>
+              <option value="INACTIVO">INACTIVO</option>
             </form:select>
           </div>
         </div>
         <div class="actions">
           <button type="submit"><i class="fas fa-save"></i> Actualizar</button>
-          <a class="button secondary" href="/tipificaciones"><i class="fas fa-times"></i> Cancelar</a>
+          <a class="button secondary" href="/tipificacion/list"><i class="fas fa-times"></i> Cancelar</a>
         </div>
       </form:form>
     </article>

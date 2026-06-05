@@ -11,12 +11,11 @@ public class AgenteRepository implements AgenteDAO {
     private int contadorId = 6;
 
     public AgenteRepository() {
-        agentes.add(new Agente(1, "Carlos García",  "987654321", "agente01", "age01", 1));
-        agentes.add(new Agente(2, "Ana Mendoza",    "912345678", "agente02", "age02", 1));
-        agentes.add(new Agente(3, "Luis Quispe",    "923456789", "agente03", "age03", 1));
-        agentes.add(new Agente(4, "María Flores",   "934567890", "agente04", "age04", 1));
-        agentes.add(new Agente(5, "Roberto Vargas", "945678901", "agente05", "age05", 1));
-        // estado="activo" se asigna en el constructor de Agente
+        agentes.add(new Agente(1, "Carlos García",  "987654321", "Age1E1", "Age1E1", 1));
+        agentes.add(new Agente(2, "Ana Mendoza",    "912345678", "Age2E1", "Age2E1", 1));
+        agentes.add(new Agente(3, "Luis Quispe",    "923456789", "Age3E1", "Age3E1", 1));
+        agentes.add(new Agente(4, "María Flores",   "934567890", "Age4E1", "Age4E1", 1));
+        agentes.add(new Agente(5, "Roberto Vargas", "945678901", "Age5E1", "Age5E1", 1));
     }
 
     @Override
@@ -36,7 +35,8 @@ public class AgenteRepository implements AgenteDAO {
     public Agente obtenerPorCredenciales(String usuario, String contrasenia) {
         return agentes.stream()
                 .filter(a -> usuario.equalsIgnoreCase(a.getUsuario_agente())
-                        && contrasenia.equals(a.getContrasenia_agente()))
+                        && contrasenia.equals(a.getContrasenia_agente())
+                        && "ACTIVO".equals(a.getEstado_agente()))
                 .findFirst()
                 .orElse(null);
     }
@@ -52,11 +52,12 @@ public class AgenteRepository implements AgenteDAO {
     @Override
     public void crearAgente(Agente agente) {
         agente.setId_agente(contadorId);
-        String num = String.format("%02d", contadorId);
-        agente.setUsuario_agente("agente" + num);
-        agente.setContrasenia_agente("age" + num);
-        if (agente.getId_empresa() <= 0) agente.setId_empresa(1);
-        if (agente.getEstado() == null || agente.getEstado().isBlank()) agente.setEstado("activo");
+        int idEmpresa = agente.getId_empresa() > 0 ? agente.getId_empresa() : 1;
+        agente.setUsuario_agente("Age" + contadorId + "E" + idEmpresa);
+        agente.setContrasenia_agente("Age" + contadorId + "E" + idEmpresa);
+        if (agente.getEstado_agente() == null || agente.getEstado_agente().isBlank()) {
+            agente.setEstado_agente("ACTIVO");
+        }
         contadorId++;
         agentes.add(agente);
     }
@@ -68,8 +69,8 @@ public class AgenteRepository implements AgenteDAO {
                 agente.setUsuario_agente(agentes.get(i).getUsuario_agente());
                 agente.setContrasenia_agente(agentes.get(i).getContrasenia_agente());
                 agente.setId_empresa(agentes.get(i).getId_empresa());
-                if (agente.getEstado() == null || agente.getEstado().isBlank()) {
-                    agente.setEstado(agentes.get(i).getEstado());
+                if (agente.getEstado_agente() == null || agente.getEstado_agente().isBlank()) {
+                    agente.setEstado_agente(agentes.get(i).getEstado_agente());
                 }
                 agentes.set(i, agente);
                 break;
@@ -79,8 +80,10 @@ public class AgenteRepository implements AgenteDAO {
 
     @Override
     public void eliminarAgente(int id_agente) {
-        // Borrado físico
-        agentes.removeIf(a -> a.getId_agente() == id_agente);
+        Agente agente = obtenerAgentePorId(id_agente);
+        if (agente != null) {
+            agente.setEstado_agente("ELIMINADO");
+        }
     }
 }
 
