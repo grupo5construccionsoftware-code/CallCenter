@@ -26,8 +26,10 @@ public class EmpresaController {
 
     @PostMapping("/adicional2/registrar")
     public String registrarEmpresaPublico(@ModelAttribute("empresa") Empresa empresa, Model model) {
+        empresaService.registrarEmpresa(empresa);
         model.addAttribute("empresa", new Empresa());
         model.addAttribute("registrado", true);
+        model.addAttribute("empresaRegistrada", empresa);
         model.addAttribute("modoAdmin", false);
         return "adicional2";
     }
