@@ -1,8 +1,15 @@
 package com.example.CallCenter.tipificacion;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tipificacion")
 public class Tipificacion {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_tipo;
+
     private String motivo_tipo;
     private String estado_tipo;
 
