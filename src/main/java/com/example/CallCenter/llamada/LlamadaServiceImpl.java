@@ -7,44 +7,44 @@ import org.springframework.stereotype.Service;
 @Service
 public class LlamadaServiceImpl implements LlamadaService {
 
-    private final LlamadaDAO llamadaDAO;
+    private final LlamadaRepository llamadaRepository;
 
-    public LlamadaServiceImpl(LlamadaDAO llamadaDAO) {
-        this.llamadaDAO = llamadaDAO;
+    public LlamadaServiceImpl(LlamadaRepository llamadaRepository) {
+        this.llamadaRepository = llamadaRepository;
     }
 
     @Override
     public List<Llamada> listarLlamadas() {
-        return llamadaDAO.listarLlamadas();
+        return llamadaRepository.findAll();
     }
 
     @Override
     public List<Llamada> listarLlamadasPorAgente(int idAgente) {
-        return llamadaDAO.listarLlamadasPorAgente(idAgente);
+        return llamadaRepository.findByIdAgente(idAgente);
     }
 
     @Override
     public List<Llamada> listarLlamadasPorAgentes(Collection<Integer> idsAgentes) {
-        return llamadaDAO.listarLlamadasPorAgentes(idsAgentes);
+        return llamadaRepository.findByIdAgenteIn(idsAgentes);
     }
 
     @Override
     public Llamada obtenerLlamadaPorId(int id_llamada) {
-        return llamadaDAO.obtenerLlamadaPorId(id_llamada);
+        return llamadaRepository.findById(id_llamada).orElse(null);
     }
 
     @Override
     public void crearLlamada(Llamada llamada) {
-        llamadaDAO.crearLlamada(llamada);
+        llamadaRepository.save(llamada);
     }
 
     @Override
     public void actualizarLlamada(Llamada llamada) {
-        llamadaDAO.actualizarLlamada(llamada);
+        llamadaRepository.save(llamada);
     }
 
     @Override
     public void eliminarLlamada(int id_llamada) {
-        llamadaDAO.eliminarLlamada(id_llamada);
+        llamadaRepository.deleteById(id_llamada);
     }
 }
