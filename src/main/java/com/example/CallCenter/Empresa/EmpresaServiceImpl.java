@@ -1,16 +1,19 @@
 package com.example.CallCenter.Empresa;
 
+import com.example.CallCenter.tipificacion.TipificacionService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
 
     private final EmpresaRepository empresaRepository;
+    private final TipificacionService tipificacionService;
 
-    public EmpresaServiceImpl(EmpresaRepository empresaRepository) {
+    public EmpresaServiceImpl(EmpresaRepository empresaRepository,
+                              TipificacionService tipificacionService) {
         this.empresaRepository = empresaRepository;
+        this.tipificacionService = tipificacionService;
     }
 
     @Override
@@ -28,6 +31,9 @@ public class EmpresaServiceImpl implements EmpresaService {
         empresa.setUsuario_empresa(guardada.getUsuario_empresa());
         empresa.setContrasenia_empresa(guardada.getContrasenia_empresa());
         empresa.setEstado_empresa(guardada.getEstado_empresa());
+
+        // Asignar tipificaciones base a la nueva empresa
+        tipificacionService.asignarTipificacionesBase(guardada.getId_empresa());
     }
 
     @Override

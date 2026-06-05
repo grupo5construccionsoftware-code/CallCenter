@@ -1,7 +1,10 @@
 package com.example.CallCenter.llamada;
 
+import com.example.CallCenter.agente.AgenteService;
 import com.example.CallCenter.tipificacion.TipificacionService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +16,14 @@ public class LlamadaController {
 
     private final LlamadaService llamadaService;
     private final TipificacionService tipificacionService;
+    private final AgenteService agenteService;
 
-    public LlamadaController(LlamadaService llamadaService, TipificacionService tipificacionService) {
+    public LlamadaController(LlamadaService llamadaService,
+                             TipificacionService tipificacionService,
+                             AgenteService agenteService) {
         this.llamadaService = llamadaService;
         this.tipificacionService = tipificacionService;
+        this.agenteService = agenteService;
     }
 
     @GetMapping("/list")
@@ -27,6 +34,7 @@ public class LlamadaController {
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
+        model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("mostrarTabla", true);
         return "llamadas";
     }
@@ -39,11 +47,11 @@ public class LlamadaController {
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("mostrarTabla", false);
         model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
+        model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("llamadaCreada", llamada);
         return "llamadas";
     }
 
-    // ─── Edición inline: pone llamadaEditar en el modelo y devuelve llamadas.jsp ──
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_llamada,
                                           HttpSession session, Model model) {
@@ -58,6 +66,7 @@ public class LlamadaController {
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
         model.addAttribute("llamadas", llamadas);
+        model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("mostrarTabla", true);
         return "llamadas";
     }
@@ -74,9 +83,16 @@ public class LlamadaController {
         return "redirect:/llamada/list";
     }
 
+
     private int obtenerIdAgenteSesion(HttpSession session) {
         Object id = session.getAttribute("id_agente");
         return id instanceof Integer ? (Integer) id : 1;
     }
-}
 
+    private Map<Integer, String> construirAgenteMap() {
+        Map<Integer, String> map = new HashMap<>();
+        agenteService.listarAgentes().forEach(a ->
+                map.put(a.getId_agente(), a.getNombre_agente()));
+        return map;
+    }
+}

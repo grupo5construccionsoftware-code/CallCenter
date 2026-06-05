@@ -41,10 +41,13 @@ public class AgenteServiceImpl implements AgenteService {
         validarAgente(agente, 0);
         int idEmpresa = agente.getId_empresa() > 0 ? agente.getId_empresa() : 1;
         agente.setEstado_agente("ACTIVO");
+
+        int totalAgentes = agenteRepository.countByIdEmpresa(idEmpresa);
+        int correlativo = totalAgentes + 1;
+
         Agente guardado = agenteRepository.save(agente);
-        int nuevoId = guardado.getId_agente();
-        guardado.setUsuario_agente("Age" + nuevoId + "E" + idEmpresa);
-        guardado.setContrasenia_agente("Age" + nuevoId + "E" + idEmpresa);
+        guardado.setUsuario_agente("Age" + correlativo + "E" + idEmpresa);
+        guardado.setContrasenia_agente("Age" + correlativo + "E" + idEmpresa);
         agenteRepository.save(guardado);
     }
 

@@ -16,4 +16,7 @@ public interface LlamadaRepository extends JpaRepository<Llamada, Integer> {
 
     @Query("SELECT l FROM Llamada l WHERE l.id_agente IN :idsAgentes")
     List<Llamada> findByIdAgenteIn(@Param("idsAgentes") Collection<Integer> idsAgentes);
+
+    @Query("SELECT t.motivo_tipo FROM Tipificacion t WHERE t.id_tipo = :idTipo")
+    String findMotivoByIdTipo(@Param("idTipo") int idTipo);
 }
