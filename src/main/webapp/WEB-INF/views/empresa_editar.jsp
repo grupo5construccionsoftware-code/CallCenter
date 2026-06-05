@@ -13,17 +13,17 @@
     <article class="card">
       <h2>Editar empresa</h2>
       <form action="/empresa/actualizar" method="post">
-        <input type="hidden" name="id" value="${empresa.id}">
+        <input type="hidden" name="id" value="${empresa.id_empresa}">
         <label>Nombre</label>
-        <input type="text" name="nombre" value="${empresa.nombre}" required>
+        <input type="text" name="nombre" value="${empresa.nombre_empresa}" required>
         <label>Teléfono</label>
-        <input type="text" name="telefono" value="${empresa.telefono}" required pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
+        <input type="text" name="telefono" value="${empresa.telefono_empresa}" required pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
         <label>Correo</label>
-        <input type="email" name="correo" value="${empresa.correo}" required>
+        <input type="email" name="correo" value="${empresa.correo_empresa}" required>
         <label>Estado</label>
         <select name="estado" required>
-          <option value="activo" ${empresa.estado == 'activo' ? 'selected' : ''}>Activo</option>
-          <option value="suspendido" ${empresa.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
+          <option value="ACTIVO" ${empresa.estado_empresa == 'activo' ? 'selected' : ''}>Activo</option>
+          <option value="INACTIVO" ${empresa.estado_empresa == 'inactivo' ? 'selected' : ''}>Inactivo</option>
         </select>
         <div class="actions" style="margin-top:16px;">
           <button type="submit">Guardar cambios</button>

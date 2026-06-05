@@ -20,13 +20,13 @@ public class EmpresaServiceImpl implements EmpresaService {
     public List<Empresa> listarEmpresas() { return empresaDAO.listarEmpresas(); }
 
     @Override
-    public Empresa obtenerEmpresaPorId(int id) { return empresaDAO.obtenerEmpresaPorId(id); }
+    public Empresa obtenerEmpresaPorId(int id_empresa) { return empresaDAO.obtenerEmpresaPorId(id_empresa); }
 
     @Override
     public void actualizarEmpresa(Empresa empresa) { empresaDAO.actualizarEmpresa(empresa); }
 
     @Override
-    public void eliminarEmpresa(int id) { empresaDAO.eliminarEmpresa(id); }
+    public void eliminarEmpresa(int id_empresa) { empresaDAO.eliminarEmpresa(id_empresa); }
 
     @Override
     public Empresa obtenerPorCredenciales(String usuario, String contrasenia) {

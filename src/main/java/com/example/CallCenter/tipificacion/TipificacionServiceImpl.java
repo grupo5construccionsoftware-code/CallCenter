@@ -13,20 +13,27 @@ public class TipificacionServiceImpl implements TipificacionService {
     }
 
     @Override
-    public List<Tipificacion> listarTipificaciones() { return tipificacionDAO.listarTipificaciones(); }
+    public List<Tipificacion> listarTodas() { return tipificacionDAO.listarTodas(); }
 
     @Override
-    public List<String> listarTiposLlamada() { return tipificacionDAO.listarTiposLlamada(); }
+    public List<Tipificacion> listarPorEmpresa(int id_empresa) { return tipificacionDAO.listarPorEmpresa(id_empresa); }
+
+    @Override
+    public List<Tipificacion> listarActivasPorEmpresa(int id_empresa) { return tipificacionDAO.listarActivasPorEmpresa(id_empresa);
+    }
+
+    @Override
+    public List<String> listarMotivosPorEmpresa(int id_empresa) { return tipificacionDAO.listarMotivosPorEmpresa(id_empresa); }
 
     @Override
     public Tipificacion obtenerTipificacionPorId(int id_tipo) { return tipificacionDAO.obtenerTipificacionPorId(id_tipo); }
 
     @Override
-    public void crearTipificacion(Tipificacion tipificacion) { tipificacionDAO.crearTipificacion(tipificacion); }
+    public void crearTipificacion(Tipificacion tipificacion, int id_empresa) { tipificacionDAO.crearTipificacion(tipificacion, id_empresa); }
 
     @Override
-    public void actualizarTipificacion(Tipificacion tipificacion) { tipificacionDAO.actualizarTipificacion(tipificacion); }
+    public void cambiarEstadoAsignacion(int id_tipo, int id_empresa, String estado) { tipificacionDAO.cambiarEstadoAsignacion(id_tipo, id_empresa, estado); }
 
     @Override
-    public void eliminarTipificacion(int id_tipo) { tipificacionDAO.eliminarTipificacion(id_tipo); }
+    public void asignarTipificacionesBase(int id_empresa) { tipificacionDAO.asignarTipificacionesBase(id_empresa); }
 }

@@ -18,38 +18,37 @@
       <p>Empresas registradas que utilizan el sistema de call center</p>
     </div>
 
-    <%-- Formulario de edición inline --%>
     <c:choose>
       <c:when test="${empresaEditar != null}">
         <article class="card">
           <div class="section-title">
-            <h2><i class="fas fa-edit"></i> Editando empresa: ${empresaEditar.nombre}</h2>
+            <h2><i class="fas fa-edit"></i> Editando empresa: ${empresaEditar.nombre_empresa}</h2>
           </div>
           <form action="/empresa/actualizar" method="post">
-            <input type="hidden" name="id" value="${empresaEditar.id}">
+            <input type="hidden" name="id_empresa" value="${empresaEditar.id_empresa}">
             <div class="form-grid">
               <div>
                 <label for="edit-nombre">Nombre</label>
-                <input type="text" id="edit-nombre" name="nombre"
-                       value="${empresaEditar.nombre}" required>
+                <input type="text" id="edit-nombre" name="nombre_empresa"
+                       value="${empresaEditar.nombre_empresa}" required>
               </div>
               <div>
                 <label for="edit-telefono">Teléfono</label>
-                <input type="text" id="edit-telefono" name="telefono"
-                       value="${empresaEditar.telefono}" required
+                <input type="text" id="edit-telefono" name="telefono_empresa"
+                       value="${empresaEditar.telefono_empresa}" required
                        pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
               </div>
               <div>
                 <label for="edit-correo">Correo</label>
-                <input type="email" id="edit-correo" name="correo"
-                       value="${empresaEditar.correo}" required>
+                <input type="email" id="edit-correo" name="correo_empresa"
+                       value="${empresaEditar.correo_empresa}" required>
               </div>
               <div>
                 <label for="edit-estado">Estado</label>
-                <select id="edit-estado" name="estado">
-                  <option value="activo"     ${empresaEditar.estado == 'activo'     ? 'selected' : ''}>Activo</option>
-                  <option value="suspendido" ${empresaEditar.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
-                  <option value="borrado"    ${empresaEditar.estado == 'borrado'    ? 'selected' : ''}>Borrado</option>
+                <select id="edit-estado" name="estado_empresa">
+                  <option value="ACTIVO"     ${empresaEditar.estado_empresa == 'activo'     ? 'selected' : ''}>Activo</option>
+                  <option value="INACTIVO" ${empresaEditar.estado_empresa == 'inactivo' ? 'selected' : ''}>Inactivo</option>
+                  <option value="ELIMINADO"    ${empresaEditar.estado_empresa == 'eliminado'    ? 'selected' : ''}>Eliminado</option>
                 </select>
               </div>
             </div>
@@ -101,18 +100,18 @@
               <c:otherwise>
                 <c:forEach var="empresa" items="${empresas}">
                   <tr>
-                    <td>${empresa.id}</td>
-                    <td>${empresa.nombre}</td>
-                    <td>${empresa.telefono}</td>
-                    <td>${empresa.correo}</td>
-                    <td>${empresa.usuario}</td>
-                    <td>${empresa.estado}</td>
+                    <td>${empresa.id_empresa}</td>
+                    <td>${empresa.nombre_empresa}</td>
+                    <td>${empresa.telefono_empresa}</td>
+                    <td>${empresa.correo_empresa}</td>
+                    <td>${empresa.usuario_empresa}</td>
+                    <td>${empresa.estado_empresa}</td>
                     <td>
-                      <a class="button" href="/empresa/editar?id=${empresa.id}">
+                      <a class="button" href="/empresa/editar?id=${empresa.id_empresa}">
                         <i class="fas fa-edit"></i> Editar
                       </a>
-                      <a class="button secondary" href="/empresa/eliminar?id=${empresa.id}"
-                         onclick="return confirm('¿Eliminar empresa ${empresa.nombre}?')">
+                      <a class="button secondary" href="/empresa/eliminar?id=${empresa.id_empresa}"
+                         onclick="return confirm('¿Eliminar empresa ${empresa.nombre_empresa}?')">
                         <i class="fas fa-trash"></i> Eliminar
                       </a>
                     </td>

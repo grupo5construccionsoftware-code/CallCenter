@@ -120,11 +120,11 @@ public class LlamadaRepository implements LlamadaDAO {
     // ── Datos iniciales ────────────────────────────────────────────────────────
 
     private void cargarLlamadasIniciales() {
-        llamadas.add(crearLlamadaInicial(1, "Maria Lopez",   "987654321", "2026-05-01", "09:10", "09:20", "10 min", "El cliente consulta sobre su factura",     1, 1, "Inactivo", "Consulta"));
-        llamadas.add(crearLlamadaInicial(2, "Carlos Perez",  "923456781", "2026-05-02", "10:25", "10:40", "15 min", "El cliente presenta una queja por cobro",   1, 2, "Inactivo", "Reclamo"));
-        llamadas.add(crearLlamadaInicial(3, "Ana Torres",    "934567812", "2026-05-03", "11:40", "11:55", "15 min", "El cliente adquiere el plan básico",        1, 3, "Inactivo", "Venta"));
-        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez",  "945678123", "2026-05-04", "13:15", "13:30", "15 min", "El cliente necesita ayuda con la app",      1, 4, "Inactivo", "Soporte"));
-        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia",   "956781234", "2026-05-05", "15:05", "15:12", "7 min",  "Consulta general",                         1, 5, "Inactivo", "Otros"));
+        llamadas.add(crearLlamadaInicial(1, "Maria Lopez",   "987654321", "2026-05-01", "09:10", "09:20", "10 min", "El cliente consulta sobre su factura",     1, 1, "Activo", "Consulta"));
+        llamadas.add(crearLlamadaInicial(2, "Carlos Perez",  "923456781", "2026-05-02", "10:25", "10:40", "15 min", "El cliente presenta una queja por cobro",   1, 2, "Activo", "Reclamo"));
+        llamadas.add(crearLlamadaInicial(3, "Ana Torres",    "934567812", "2026-05-03", "11:40", "11:55", "15 min", "El cliente adquiere el plan básico",        1, 3, "Activo", "Venta"));
+        llamadas.add(crearLlamadaInicial(4, "Luis Ramirez",  "945678123", "2026-05-04", "13:15", "13:30", "15 min", "El cliente necesita ayuda con la app",      1, 4, "Activo", "Soporte"));
+        llamadas.add(crearLlamadaInicial(5, "Rosa Garcia",   "956781234", "2026-05-05", "15:05", "15:12", "7 min",  "Consulta general",                         1, 5, "Activo", "Otros"));
     }
 
     private Llamada crearLlamadaInicial(int id, String cliente, String telefono,

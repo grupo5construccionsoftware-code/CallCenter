@@ -35,7 +35,6 @@ public class NavegacionController {
         this.agenteService = agenteService;
     }
 
-    // ─── Páginas públicas ──────────────────────────────────────────────────────
 
     @GetMapping("/")
     public String home() { return "main"; }
@@ -132,7 +131,7 @@ public class NavegacionController {
             return "redirect:/login";
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("mostrarTabla", false);
-        model.addAttribute("tiposLlamada", tipificacionService.listarTipificaciones());
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdEmpresaSesion(session)));
         return "llamadas";
     }
 
@@ -141,7 +140,7 @@ public class NavegacionController {
         String rol = (String) session.getAttribute("rol");
         if (!"empresa".equals(rol) && !"superadmin".equals(rol)) return "redirect:/login";
         model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
-        model.addAttribute("tiposLlamada", tipificacionService.listarTiposLlamada());
+        model.addAttribute("tiposLlamada", tipificacionService.listarPorEmpresa(obtenerIdEmpresaSesion(session)));
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";
     }
@@ -176,7 +175,8 @@ public class NavegacionController {
 
         List<String> motivosBase = Arrays.asList("Consulta", "Reclamo", "Venta", "Soporte", "Otros");
         List<String> motivosDisponibles = new ArrayList<>(motivosBase);
-        tipificacionService.listarTiposLlamada().stream()
+        tipificacionService.listarTodas().stream()
+                .map(t -> t.getMotivo_tipo())
                 .filter(m -> m != null && !m.trim().isEmpty())
                 .map(String::trim)
                 .filter(m -> motivosBase.stream().noneMatch(b -> b.equalsIgnoreCase(m)))
@@ -198,7 +198,6 @@ public class NavegacionController {
     @GetMapping("/adicional5")
     public String adicional5() { return "adicional5"; }
 
-    // ─── Helpers de sesión ─────────────────────────────────────────────────────
 
     private List<Agente> obtenerAgentesVisibles(String rol, int idEmpresa) {
         if ("superadmin".equals(rol)) return agenteService.listarAgentes();

@@ -45,10 +45,10 @@
             </div>
             <div>
               <label for="edit-estado">Estado</label>
-              <select id="edit-estado" name="estado">
-                <option value="activo"     ${agenteEditar.estado == 'activo'     ? 'selected' : ''}>Activo</option>
-                <option value="suspendido" ${agenteEditar.estado == 'suspendido' ? 'selected' : ''}>Suspendido</option>
-                <option value="borrado"    ${agenteEditar.estado == 'borrado'    ? 'selected' : ''}>Borrado</option>
+              <select id="edit-estado" name="estado_agente">
+                <option value="ACTIVO"     ${agenteEditar.estado_agente == 'ACTIVO'     ? 'selected' : ''}>Activo</option>
+                <option value="INACTIVO" ${agenteEditar.estado_agente == 'INACTIVO' ? 'selected' : ''}>Inactivo</option>
+                <option value="ELIMINADO"    ${agenteEditar.estado_agente == 'ELIMINADO'    ? 'selected' : ''}>Eliminado</option>
               </select>
             </div>
           </div>
@@ -91,7 +91,7 @@
 
         <c:if test="${error != null}">
           <div class="notice-box">
-            <h3><i class="fas fa-exclamation-circle" style="color:#c0392b;"></i> No se pudo guardar el agente</h3>
+            <h3><i class="fas fa-exclamation-circle"></i> No se pudo guardar el agente</h3>
             <p>${error}</p>
           </div>
         </c:if>
@@ -135,7 +135,7 @@
                 <td>${ag.nombre_agente}</td>
                 <td>${ag.telefono_agente}</td>
                 <td>${ag.usuario_agente}</td>
-                <td>${ag.estado}</td>
+                <td>${ag.estado_agente}</td>
                 <td>
                   <a class="button" href="/agente/editar?id=${ag.id_agente}">
                     <i class="fas fa-edit"></i> Editar

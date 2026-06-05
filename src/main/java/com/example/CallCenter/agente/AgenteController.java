@@ -43,7 +43,6 @@ public class AgenteController {
         return "usuarios";
     }
 
-    // ─── Edición inline: carga el agente en agenteEditar y devuelve usuarios.jsp ──
     @GetMapping("/editar")
     public String mostrarFormularioEditar(@RequestParam("id") int id_agente,
                                           HttpSession session, Model model) {
@@ -87,12 +86,8 @@ public class AgenteController {
         return "redirect:/agente/list";
     }
 
-    // ─── Helpers ───────────────────────────────────────────────────────────────
 
     private List<Agente> filtrarAgentesPorSesion(HttpSession session) {
-        if ("superadmin".equals(session.getAttribute("rol"))) {
-            return agenteService.listarAgentes();
-        }
         int idEmpresa = obtenerIdEmpresaSesion(session);
         return agenteService.listarAgentes().stream()
                 .filter(a -> a.getId_empresa() == idEmpresa)
@@ -100,8 +95,8 @@ public class AgenteController {
     }
 
     private boolean puedeGestionarAgente(HttpSession session, Agente agente) {
-        return "superadmin".equals(session.getAttribute("rol"))
-                || agente.getId_empresa() == obtenerIdEmpresaSesion(session);
+        return "empresa".equals(session.getAttribute("rol"))
+                && agente.getId_empresa() == obtenerIdEmpresaSesion(session);
     }
 
     private int obtenerIdEmpresaSesion(HttpSession session) {

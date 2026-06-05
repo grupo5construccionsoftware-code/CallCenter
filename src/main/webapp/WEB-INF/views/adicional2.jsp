@@ -44,29 +44,23 @@
 
     <article class="card">
 
-      <c:if test="${registrado}">
-        <div class="mensaje-exito">
-           Tu solicitud se envió correctamente
-        </div>
-      </c:if>
-
       <form id="formEmpresa" action="${modoAdmin ? '/empresa/registrar' : '/adicional2/registrar'}" method="post">
 
         <div class="form-grid">
           <div>
             <label for="nombre">Nombre de la empresa</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ej: Corporacion XYZ S.A.C." required>
+            <input type="text" id="nombre" name="nombre_empresa" placeholder="Ej: Corporacion XYZ S.A.C." required>
           </div>
           <div>
             <label for="telefono">Telefono del gerente</label>
-            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 123456789" required pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
+            <input type="tel" id="telefono" name="telefono_empresa" placeholder="Ej: 123456789" required pattern="[0-9]{9}" maxlength="9" title="Ingrese exactamente 9 dígitos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
           </div>
         </div>
 
         <div class="form-grid">
           <div>
             <label for="correo">Correo de contacto</label>
-            <input type="email" id="correo" name="correo" placeholder="Ej: empresa@correo.com" required>
+            <input type="email" id="correo" name="correo_empresa" placeholder="Ej: empresa@correo.com" required>
           </div>
         </div>
 
@@ -84,12 +78,12 @@
       <c:if test="${empresaRegistrada != null}">
         <div class="notice-box">
           <h3><i class="fas fa-check-circle"></i> Empresa registrada exitosamente</h3>
-          <p><strong>Código:</strong> ${empresaRegistrada.id}</p>
-          <p><strong>Nombre:</strong> ${empresaRegistrada.nombre}</p>
-          <p><strong>Teléfono:</strong> ${empresaRegistrada.telefono}</p>
-          <p><strong>Correo:</strong> ${empresaRegistrada.correo}</p>
-          <p><strong>Usuario:</strong> ${empresaRegistrada.usuario}</p>
-          <p><strong>Contraseña:</strong> ${empresaRegistrada.contrasenia}</p>
+          <p><strong>Código:</strong> ${empresaRegistrada.id_empresa}</p>
+          <p><strong>Nombre:</strong> ${empresaRegistrada.nombre_empresa}</p>
+          <p><strong>Teléfono:</strong> ${empresaRegistrada.telefono_empresa}</p>
+          <p><strong>Correo:</strong> ${empresaRegistrada.correo_empresa}</p>
+          <p><strong>Usuario:</strong> ${empresaRegistrada.usuario_empresa}</p>
+          <p><strong>Contraseña:</strong> ${empresaRegistrada.contrasenia_empresa}</p>
           <p>Guarda estos datos, no se volverán a mostrar.</p>
           <div class="actions">
             <a class="button" href="${modoAdmin ? '/empresas' : '/contacto'}">

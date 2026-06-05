@@ -40,9 +40,9 @@
           <select id="filtro-empresa" name="id_empresa">
             <option value="">Todas las empresas</option>
             <c:forEach var="empresa" items="${empresas}">
-              <option value="${empresa.id}"
-                      <c:if test="${empresa.id == empresaSeleccionada}">selected</c:if>>
-                  ${empresa.nombre}
+              <option value="${empresa.id_empresa}"
+                      <c:if test="${empresa.id_empresa == empresaSeleccionada}">selected</c:if>>
+                  ${empresa.nombre_empresa}
               </option>
             </c:forEach>
           </select>
