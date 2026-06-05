@@ -32,4 +32,8 @@ public interface AgenteRepository extends JpaRepository<Agente, Integer> {
             """)
     boolean existsByTelefono_agenteAndId_agenteNot(@Param("telefono") String telefono_agente,
                                                    @Param("idAgente") int id_agente);
+
+    // ── NUEVO: cuenta agentes por empresa para el correlativo ──
+    @Query("SELECT COUNT(a) FROM Agente a WHERE a.id_empresa = :idEmpresa")
+    int countByIdEmpresa(@Param("idEmpresa") int idEmpresa);
 }

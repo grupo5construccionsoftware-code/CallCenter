@@ -127,7 +127,7 @@
                         placeholder="Ej: El cliente consulta sobre su factura"/>
           </div>
         </div>
-        <%-- Campos ocultos para hora y estado --%>
+        <%-- Campos ocultos --%>
         <form:hidden path="hora_inicio" id="hora_inicio"/>
         <form:hidden path="hora_fin"    id="hora_fin"/>
         <form:hidden path="duracion"    id="duracion"/>
@@ -194,7 +194,7 @@
                 <td>${ll.hora_inicio}</td>
                 <td>${ll.duracion}</td>
                 <td>${ll.descripcion_tipo}</td>
-                <td>${ll.id_agente}</td>
+                <td>${agenteMap[ll.id_agente]}</td>
                 <td>${ll.estado_llamada}</td>
                 <td>
                   <div class="actions" style="margin-top:0; flex-wrap:nowrap; width:fit-content; margin-left:auto; margin-right:auto;">
@@ -230,7 +230,7 @@
 
   function horaActual() {
     const d = new Date();
-    return [d.getHours(), d.getMinutes(), d.getSeconds()]
+    return [d.getHours(), d.getMinutes()]
             .map(v => String(v).padStart(2,'0')).join(':');
   }
 
