@@ -8,6 +8,10 @@ INSERT INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) VALUES (5, 'Otros',
 -- ── EMPRESA ───────────────────────────────────────────────────────────────────
 INSERT INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
 VALUES (1, 'Empresa Demo', '900000001', 'demo@empresa.com', 'Emp1', 'Emp1', 'ACTIVO');
+INSERT INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
+VALUES (2, 'Andes Telecom', '900000002', 'contacto@andestelecom.com', 'Emp2', 'Emp2', 'ACTIVO');
+INSERT INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
+VALUES (3, 'Servicios Norte', '900000003', 'soporte@serviciosnorte.com', 'Emp3', 'Emp3', 'ACTIVO');
 
 -- ── EMPRESA_TIPO (tipificaciones base asignadas a Empresa Demo) ───────────────
 INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 1, 'ACTIVO');
@@ -41,7 +45,7 @@ INSERT INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada
 VALUES (5, 'Rosa Garcia',   '956781234', '2026-05-05', '15:05', '15:12', '7 min',  'Consulta general',                        1, 5, 'Activo', 'Otros');
 -- ── REINICIAR SECUENCIAS ──────────────────────────────────────────────────────
 ALTER TABLE tipificacion ALTER COLUMN id_tipo RESTART WITH 6;
-ALTER TABLE empresa ALTER COLUMN id_empresa RESTART WITH 2;
+ALTER TABLE empresa ALTER COLUMN id_empresa RESTART WITH 4;
 ALTER TABLE agente ALTER COLUMN id_agente RESTART WITH 6;
 ALTER TABLE llamada ALTER COLUMN id_llamada RESTART WITH 6;
 ALTER TABLE empresa_tipo ALTER COLUMN id RESTART WITH 6;
