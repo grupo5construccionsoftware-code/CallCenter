@@ -39,3 +39,9 @@ INSERT INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada
 VALUES (4, 'Luis Ramirez',  '945678123', '2026-05-04', '13:15', '13:30', '15 min', 'El cliente necesita ayuda con la app',     1, 4, 'Activo', 'Soporte');
 INSERT INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo)
 VALUES (5, 'Rosa Garcia',   '956781234', '2026-05-05', '15:05', '15:12', '7 min',  'Consulta general',                        1, 5, 'Activo', 'Otros');
+-- ── REINICIAR SECUENCIAS ──────────────────────────────────────────────────────
+ALTER TABLE tipificacion ALTER COLUMN id_tipo RESTART WITH 6;
+ALTER TABLE empresa ALTER COLUMN id_empresa RESTART WITH 2;
+ALTER TABLE agente ALTER COLUMN id_agente RESTART WITH 6;
+ALTER TABLE llamada ALTER COLUMN id_llamada RESTART WITH 6;
+ALTER TABLE empresa_tipo ALTER COLUMN id RESTART WITH 6;
