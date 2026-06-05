@@ -33,12 +33,26 @@ public class LoginController {
             HttpSession session,
             Model model) {
 
+        // 1° DUEÑO - Superadmin siempre primero
         if ("Sa01".equals(usuario) && "Sa01".equals(contrasena)) {
             session.setAttribute("rol", "superadmin");
             session.setAttribute("usuario", usuario);
             return "redirect:/dashboard/superadmin";
         }
 
+        // 2° EMPRESA - Busca en BD segundo
+        Empresa empresa = empresaService.obtenerPorCredenciales(usuario, contrasena);
+        if (empresa != null) {
+            if (empresaPuedeAcceder(empresa, model)) {
+                session.setAttribute("rol", "empresa");
+                session.setAttribute("usuario", empresa.getUsuario_empresa());
+                session.setAttribute("id_empresa", empresa.getId_empresa());
+                return "redirect:/dashboard/empresa";
+            }
+            return "login";
+        }
+
+        // 3° AGENTE - Busca en BD tercero
         Agente agente = agenteService.obtenerPorCredenciales(usuario, contrasena);
         if (agente != null) {
             if (!"ACTIVO".equals(agente.getEstado_agente())) {
@@ -56,17 +70,7 @@ public class LoginController {
             return "login";
         }
 
-        Empresa empresa = empresaService.obtenerPorCredenciales(usuario, contrasena);
-        if (empresa != null) {
-            if (empresaPuedeAcceder(empresa, model)) {
-                session.setAttribute("rol", "empresa");
-                session.setAttribute("usuario", empresa.getUsuario_empresa());
-                session.setAttribute("id_empresa", empresa.getId_empresa());
-                return "redirect:/dashboard/empresa";
-            }
-            return "login";
-        }
-
+        // 4° NADIE - Error
         model.addAttribute("error", true);
         return "login";
     }
