@@ -86,8 +86,12 @@ public class NavegacionController {
     }
 
     @GetMapping("/metricas")
-    public String metricas(HttpSession session) {
+    public String metricas(HttpSession session, Model model) {
         if (session.getAttribute("rol") == null) return "redirect:/login";
+        model.addAttribute("endpointMetricas",
+                "empresa".equals(session.getAttribute("rol"))
+                        ? "/api/metricas/empresa"
+                        : "/api/metricas/agente");
         return "metricas";
     }
 

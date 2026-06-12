@@ -28,12 +28,13 @@ public class LlamadaController {
 
     @GetMapping("/list")
     public String listarLlamadas(HttpSession session, Model model) {
+        int idEmpresa = obtenerIdEmpresaSesion(session);
         List<Llamada> llamadas = "agente".equals(session.getAttribute("rol"))
                 ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
                 : llamadaService.listarLlamadas();
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("llamada", new Llamada());
-        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(idEmpresa));
         model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("mostrarTabla", true);
         return "llamadas";
@@ -46,7 +47,7 @@ public class LlamadaController {
         llamadaService.crearLlamada(llamada);
         model.addAttribute("llamada", new Llamada());
         model.addAttribute("mostrarTabla", false);
-        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdEmpresaSesion(session)));
         model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("llamadaCreada", llamada);
         return "llamadas";
@@ -64,7 +65,7 @@ public class LlamadaController {
 
         model.addAttribute("llamadaEditar", llamada);
         model.addAttribute("llamada", new Llamada());
-        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdAgenteSesion(session)));
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdEmpresaSesion(session)));
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("mostrarTabla", true);
@@ -86,6 +87,11 @@ public class LlamadaController {
 
     private int obtenerIdAgenteSesion(HttpSession session) {
         Object id = session.getAttribute("id_agente");
+        return id instanceof Integer ? (Integer) id : 1;
+    }
+
+    private int obtenerIdEmpresaSesion(HttpSession session) {
+        Object id = session.getAttribute("id_empresa");
         return id instanceof Integer ? (Integer) id : 1;
     }
 

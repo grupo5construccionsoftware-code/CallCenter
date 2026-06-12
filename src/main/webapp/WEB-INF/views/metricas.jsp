@@ -62,6 +62,7 @@
 <script>
 (function () {
   const PALETTE = ['#4f8ef7','#f76f4f','#4fcf70','#f7c94f','#a04ff7','#4fcfcf'];
+  const ENDPOINT_METRICAS = '${endpointMetricas}';
   let chartMotivos = null, chartFechas = null;
 
   function renderKpis(d) {
@@ -113,7 +114,7 @@
   }
 
   function cargarMetricas() {
-    fetch('/api/metricas/agente')
+    fetch(ENDPOINT_METRICAS || '/api/metricas/agente')
       .then(r => r.json())
       .then(d => {
         renderKpis(d);
