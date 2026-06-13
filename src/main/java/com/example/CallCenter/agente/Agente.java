@@ -16,6 +16,7 @@ public class Agente {
     private String contrasenia_agente;
     private int id_empresa;
     private String estado_agente;
+    private String codigo_agente;
 
     public Agente() {}
 
@@ -50,4 +51,7 @@ public class Agente {
 
     public String getEstado_agente() { return estado_agente; }
     public void setEstado_agente(String estado) { this.estado_agente = estado; }
+
+    public String getCodigo_agente() { return codigo_agente; }
+    public void setCodigo_agente(String codigo_agente) { this.codigo_agente = codigo_agente; }
 }

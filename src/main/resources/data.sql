@@ -21,16 +21,16 @@ INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 4, 
 INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 5, 'ACTIVO');
 
 -- ── AGENTE ────────────────────────────────────────────────────────────────────
-INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, id_empresa, estado_agente)
-VALUES (1, 'Carlos García',  '987654321', 'Age1E1', 'Age1E1', 1, 'ACTIVO');
-INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, id_empresa, estado_agente)
-VALUES (2, 'Ana Mendoza',    '912345678', 'Age2E1', 'Age2E1', 1, 'ACTIVO');
-INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, id_empresa, estado_agente)
-VALUES (3, 'Luis Quispe',    '923456789', 'Age3E1', 'Age3E1', 1, 'ACTIVO');
-INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, id_empresa, estado_agente)
-VALUES (4, 'María Flores',   '934567890', 'Age4E1', 'Age4E1', 1, 'ACTIVO');
-INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, id_empresa, estado_agente)
-VALUES (5, 'Roberto Vargas', '945678901', 'Age5E1', 'Age5E1', 1, 'ACTIVO');
+INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
+VALUES (1, 'Carlos García',  '987654321', 'Age1E1', 'Age1E1', 'Age1E1', 1, 'ACTIVO');
+INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
+VALUES (2, 'Ana Mendoza',    '912345678', 'Age2E1', 'Age2E1', 'Age2E1', 1, 'ACTIVO');
+INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
+VALUES (3, 'Luis Quispe',    '923456789', 'Age3E1', 'Age3E1', 'Age3E1', 1, 'ACTIVO');
+INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
+VALUES (4, 'María Flores',   '934567890', 'Age4E1', 'Age4E1', 'Age4E1', 1, 'ACTIVO');
+INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
+VALUES (5, 'Roberto Vargas', '945678901', 'Age5E1', 'Age5E1', 'Age5E1', 1, 'ACTIVO');
 
 -- ── LLAMADA ───────────────────────────────────────────────────────────────────
 INSERT INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo)
