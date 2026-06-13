@@ -42,12 +42,15 @@ public class AgenteServiceImpl implements AgenteService {
         int idEmpresa = agente.getId_empresa() > 0 ? agente.getId_empresa() : 1;
         agente.setEstado_agente("ACTIVO");
 
-        int totalAgentes = agenteRepository.countByIdEmpresa(idEmpresa);
-        int correlativo = totalAgentes + 1;
-
         Agente guardado = agenteRepository.save(agente);
-        guardado.setUsuario_agente("Age" + correlativo + "E" + idEmpresa);
-        guardado.setContrasenia_agente("Age" + correlativo + "E" + idEmpresa);
+
+        int numeroEnEmpresa = agenteRepository.contarAgentesHastaId(idEmpresa, guardado.getId_agente());
+
+
+        String codigo = "Age" + numeroEnEmpresa + "E" + idEmpresa;
+        guardado.setCodigo_agente(codigo);
+        guardado.setUsuario_agente(codigo);
+        guardado.setContrasenia_agente(codigo);
         agenteRepository.save(guardado);
     }
 

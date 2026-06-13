@@ -44,7 +44,7 @@
         <div class="form-grid">
           <div>
             <label>Código de agente</label>
-            <input type="text" value="${agente.id_agente}" readonly>
+            <input type="text" value="${agente.codigo_agente}" readonly>
           </div>
           <div>
             <label for="nombre_agente">Nombre del agente</label>

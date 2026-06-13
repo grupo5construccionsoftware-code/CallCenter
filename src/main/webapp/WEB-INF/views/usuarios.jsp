@@ -99,7 +99,7 @@
         <c:if test="${agenteCreado != null}">
           <div class="notice-box">
             <h3><i class="fas fa-check-circle"></i> Agente registrado exitosamente</h3>
-            <p><strong>Código:</strong> ${agenteCreado.id_agente}</p>
+            <p><strong>Código:</strong> ${agenteCreado.codigo_agente}</p>
             <p><strong>Nombre:</strong> ${agenteCreado.nombre_agente}</p>
             <p><strong>Teléfono:</strong> ${agenteCreado.telefono_agente}</p>
             <p><strong>Usuario:</strong> ${agenteCreado.usuario_agente}</p>
@@ -131,7 +131,7 @@
             <tbody>
             <c:forEach items="${agentes}" var="ag">
               <tr>
-                <td>${ag.id_agente}</td>
+                <td>${ag.codigo_agente}</td>
                 <td>${ag.nombre_agente}</td>
                 <td>${ag.telefono_agente}</td>
                 <td>${ag.usuario_agente}</td>
