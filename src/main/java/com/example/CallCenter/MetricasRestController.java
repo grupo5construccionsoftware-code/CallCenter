@@ -141,11 +141,21 @@ public class MetricasRestController {
 
     private int obtenerIdEmpresa(HttpSession session) {
         Object id = session.getAttribute("id_empresa");
-        return id instanceof Integer ? (Integer) id : 1;
+        if (id instanceof Integer) return (Integer) id;
+        if (id instanceof Long) return ((Long) id).intValue();
+        if (id instanceof String) {
+            try { return Integer.parseInt((String) id); } catch (NumberFormatException e) { }
+        }
+        return 1;
     }
 
     private int obtenerIdAgente(HttpSession session) {
         Object id = session.getAttribute("id_agente");
-        return id instanceof Integer ? (Integer) id : 1;
+        if (id instanceof Integer) return (Integer) id;
+        if (id instanceof Long) return ((Long) id).intValue();
+        if (id instanceof String) {
+            try { return Integer.parseInt((String) id); } catch (NumberFormatException e) { }
+        }
+        return 1;
     }
 }
