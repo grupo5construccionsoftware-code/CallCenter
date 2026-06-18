@@ -20,6 +20,20 @@ INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 3, 
 INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 4, 'ACTIVO');
 INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (1, 5, 'ACTIVO');
 
+-- Empresa 2 - Andes Telecom
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (2, 1, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (2, 2, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (2, 3, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (2, 4, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (2, 5, 'ACTIVO');
+
+-- Empresa 3 - Servicios Norte
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (3, 1, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (3, 2, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (3, 3, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (3, 4, 'ACTIVO');
+INSERT INTO empresa_tipo (id_empresa, id_tipo, estado_asignacion) VALUES (3, 5, 'ACTIVO');
+
 -- ── AGENTE ────────────────────────────────────────────────────────────────────
 INSERT INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente)
 VALUES (1, 'Carlos García',  '987654321', 'Age1E1', 'Age1E1', 'Age1E1', 1, 'ACTIVO');
