@@ -11,21 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación Agente">
-      <a href="/dashboard/agente" class="active">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/llamadas">Llamadas</a>
-      <a href="/metricas">Métricas</a>
-      <a href="/adicional1">Historial de llamadas</a>
-      <a href="/login/salir" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 <div class="container">
   <section class="hero">
     <div class="hero-inner">
@@ -63,3 +49,4 @@
 <div class="footer">Sistema de Call Center - Panel Agente</div>
 </body>
 </html>
+

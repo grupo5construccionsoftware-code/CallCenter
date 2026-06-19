@@ -24,6 +24,12 @@
     <div class="topbar-inner">
         <div class="brand">
             <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
+            <c:if test="${not empty sessionScope.nombreSesion}">
+                <span class="brand-text">
+                    <strong>${sessionScope.nombreSesion}</strong>
+                    <span>${rolSesion == 'empresa' ? 'Empresa' : rolSesion == 'agente' ? 'Agente' : 'Superadmin'}</span>
+                </span>
+            </c:if>
         </div>
         <nav class="menu" aria-label="Navegación privada">
 

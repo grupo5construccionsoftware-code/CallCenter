@@ -11,20 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img src="/logo.png" alt="Logo Sistema CallCenter" class="brand-logo">
-    </div>
-    <nav class="menu" aria-label="Navegación SuperAdmin">
-      <a href="/dashboard/superadmin">Inicio</a>
-      <a href="/gestion">Gestión</a>
-      <a href="/empresas">Lista de Empresas</a>
-      <a href="/metricas/superadmin" class="active">Métricas</a>
-      <a href="/login/salir" class="session">Salir</a>
-    </nav>
-  </div>
-</header>
+<%@ include file="fragments/nav_privado.jsp" %>
 
 <div class="container">
   <section class="section">

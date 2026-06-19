@@ -21,6 +21,7 @@ public class Llamada {
     private int id_tipo;
     private String estado_llamada;
     private String motivo_tipo;
+    private String codigo_llamada;
 
     public Llamada() {}
 
@@ -86,4 +87,7 @@ public class Llamada {
 
     public String getMotivo_tipo() { return motivo_tipo; }
     public void setMotivo_tipo(String motivo_tipo) { this.motivo_tipo = motivo_tipo; }
+
+    public String getCodigo_llamada() { return codigo_llamada; }
+    public void setCodigo_llamada(String codigo_llamada) { this.codigo_llamada = codigo_llamada; }
 }

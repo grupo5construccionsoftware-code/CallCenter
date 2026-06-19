@@ -1,5 +1,7 @@
 package com.example.CallCenter.llamada;
 
+import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.AgenteRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Duration;
@@ -13,12 +15,14 @@ import org.springframework.stereotype.Service;
 public class LlamadaServiceImpl implements LlamadaService {
 
     private final LlamadaRepository llamadaRepository;
+    private final AgenteRepository agenteRepository;
 
     private static final DateTimeFormatter FORMATO_HORA        = DateTimeFormatter.ofPattern("HH:mm[:ss]");
     private static final DateTimeFormatter FORMATO_HORA_SIMPLE = DateTimeFormatter.ofPattern("HH:mm");
 
-    public LlamadaServiceImpl(LlamadaRepository llamadaRepository) {
+    public LlamadaServiceImpl(LlamadaRepository llamadaRepository, AgenteRepository agenteRepository) {
         this.llamadaRepository = llamadaRepository;
+        this.agenteRepository = agenteRepository;
     }
 
     @Override
@@ -71,7 +75,18 @@ public class LlamadaServiceImpl implements LlamadaService {
         // 6. Motivo tipificación
         asignarMotivo(llamada);
 
-        llamadaRepository.save(llamada);
+        Llamada guardada = llamadaRepository.save(llamada);
+
+        // 7. Código de llamada: Lla{numeroParaEseAgente}{codigoDelAgente}
+        // Ej: agente con codigo "Age1E4" -> su 1ra llamada es "Lla1Age1E4"
+        int numeroParaAgente = llamadaRepository.contarLlamadasHastaId(
+                guardada.getId_agente(), guardada.getId_llamada());
+        Agente agente = agenteRepository.findById(guardada.getId_agente()).orElse(null);
+        String codigoAgente = (agente != null && agente.getCodigo_agente() != null)
+                ? agente.getCodigo_agente()
+                : "Age" + guardada.getId_agente();
+        guardada.setCodigo_llamada("Lla" + numeroParaAgente + codigoAgente);
+        llamadaRepository.save(guardada);
     }
 
     @Override
@@ -82,6 +97,7 @@ public class LlamadaServiceImpl implements LlamadaService {
         // Preservar campos que no se editan
         llamada.setFecha_llamada(actual.getFecha_llamada());
         llamada.setId_agente(actual.getId_agente());
+        llamada.setCodigo_llamada(actual.getCodigo_llamada());
 
         if (llamada.getHora_inicio() == null || llamada.getHora_inicio().isBlank())
             llamada.setHora_inicio(actual.getHora_inicio());

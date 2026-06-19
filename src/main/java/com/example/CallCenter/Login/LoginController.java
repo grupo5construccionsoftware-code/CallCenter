@@ -37,6 +37,7 @@ public class LoginController {
         if ("Sa01".equals(usuario) && "Sa01".equals(contrasena)) {
             session.setAttribute("rol", "superadmin");
             session.setAttribute("usuario", usuario);
+            session.setAttribute("nombreSesion", "Superadmin");
             return "redirect:/dashboard/superadmin";
         }
 
@@ -47,6 +48,7 @@ public class LoginController {
                 session.setAttribute("rol", "empresa");
                 session.setAttribute("usuario", empresa.getUsuario_empresa());
                 session.setAttribute("id_empresa", empresa.getId_empresa());
+                session.setAttribute("nombreSesion", empresa.getNombre_empresa());
                 return "redirect:/dashboard/empresa";
             }
             return "login";
@@ -65,6 +67,7 @@ public class LoginController {
                 session.setAttribute("usuario", agente.getUsuario_agente());
                 session.setAttribute("id_agente", agente.getId_agente());
                 session.setAttribute("id_empresa", agente.getId_empresa());
+                session.setAttribute("nombreSesion", agente.getNombre_agente());
                 return "redirect:/dashboard/agente";
             }
             return "login";

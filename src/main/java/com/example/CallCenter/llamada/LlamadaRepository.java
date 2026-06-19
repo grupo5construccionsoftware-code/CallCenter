@@ -19,4 +19,12 @@ public interface LlamadaRepository extends JpaRepository<Llamada, Integer> {
 
     @Query("SELECT t.motivo_tipo FROM Tipificacion t WHERE t.id_tipo = :idTipo")
     String findMotivoByIdTipo(@Param("idTipo") int idTipo);
+
+    @Query("""
+            SELECT COUNT(l) FROM Llamada l
+            WHERE l.id_agente = :idAgente
+              AND l.id_llamada <= :idLlamada
+            """)
+    int contarLlamadasHastaId(@Param("idAgente") int idAgente,
+                              @Param("idLlamada") int idLlamada);
 }
