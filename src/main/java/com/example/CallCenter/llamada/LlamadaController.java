@@ -28,13 +28,25 @@ public class LlamadaController {
 
     @GetMapping("/list")
     public String listarLlamadas(HttpSession session, Model model) {
-        int idEmpresa = obtenerIdEmpresaSesion(session);
-        List<Llamada> llamadas = "agente".equals(session.getAttribute("rol"))
-                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
-                : llamadaService.listarLlamadas();
+        List<Llamada> llamadas;
+        String rol = (String) session.getAttribute("rol");
+        if ("agente".equals(rol)) {
+            llamadas = llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session));
+        } else if ("empresa".equals(rol)) {
+            List<Integer> ids = agenteService.listarAgentes().stream()
+                    .filter(a -> a.getId_empresa() == obtenerIdEmpresaSesion(session))
+                    .map(com.example.CallCenter.agente.Agente::getId_agente)
+                    .collect(java.util.stream.Collectors.toList());
+            llamadas = ids.isEmpty()
+                    ? java.util.Collections.emptyList()
+                    : llamadaService.listarLlamadasPorAgentes(ids);
+        } else {
+            llamadas = llamadaService.listarLlamadas();
+        }
+
         model.addAttribute("llamadas", llamadas);
         model.addAttribute("llamada", new Llamada());
-        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(idEmpresa));
+        model.addAttribute("tiposLlamada", tipificacionService.listarActivasPorEmpresa(obtenerIdEmpresaSesion(session)));
         model.addAttribute("agenteMap", construirAgenteMap());
         model.addAttribute("mostrarTabla", true);
         return "llamadas";
@@ -59,9 +71,21 @@ public class LlamadaController {
         Llamada llamada = llamadaService.obtenerLlamadaPorId(id_llamada);
         if (llamada == null) return "redirect:/llamada/list";
 
-        List<Llamada> llamadas = "agente".equals(session.getAttribute("rol"))
-                ? llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session))
-                : llamadaService.listarLlamadas();
+        List<Llamada> llamadas;
+        String rol2 = (String) session.getAttribute("rol");
+        if ("agente".equals(rol2)) {
+            llamadas = llamadaService.listarLlamadasPorAgente(obtenerIdAgenteSesion(session));
+        } else if ("empresa".equals(rol2)) {
+            List<Integer> ids = agenteService.listarAgentes().stream()
+                    .filter(a -> a.getId_empresa() == obtenerIdEmpresaSesion(session))
+                    .map(com.example.CallCenter.agente.Agente::getId_agente)
+                    .collect(java.util.stream.Collectors.toList());
+            llamadas = ids.isEmpty()
+                    ? java.util.Collections.emptyList()
+                    : llamadaService.listarLlamadasPorAgentes(ids);
+        } else {
+            llamadas = llamadaService.listarLlamadas();
+        }
 
         model.addAttribute("llamadaEditar", llamada);
         model.addAttribute("llamada", new Llamada());
