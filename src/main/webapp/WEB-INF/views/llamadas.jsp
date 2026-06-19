@@ -23,7 +23,7 @@
     <c:if test="${llamadaEditar != null}">
       <article class="card">
         <div class="section-title">
-          <h2><i class="fas fa-edit"></i> Editando llamada: LL${llamadaEditar.id_llamada}</h2>
+          <h2><i class="fas fa-edit"></i> Editando llamada: ${llamadaEditar.codigo_llamada}</h2>
         </div>
         <form action="/llamada/actualizar" method="post">
           <input type="hidden" name="id_llamada"    value="${llamadaEditar.id_llamada}">
@@ -147,7 +147,7 @@
       <c:if test="${llamadaCreada != null}">
         <div class="notice-box">
           <h3><i class="fas fa-check-circle"></i> Llamada registrada exitosamente</h3>
-          <p><strong>Código:</strong> LL${llamadaCreada.id_llamada}</p>
+          <p><strong>Código:</strong> ${llamadaCreada.codigo_llamada}</p>
           <p><strong>Cliente:</strong> ${llamadaCreada.nombre_cliente}</p>
           <p><strong>Fecha:</strong> ${llamadaCreada.fecha_llamada}</p>
           <p><strong>Hora inicio:</strong> ${llamadaCreada.hora_inicio}</p>
@@ -186,7 +186,7 @@
             <tbody>
             <c:forEach items="${llamadas}" var="ll">
               <tr>
-                <td>LL${ll.id_llamada}</td>
+                <td>${ll.codigo_llamada}</td>
                 <td>${ll.nombre_cliente}</td>
                 <td>${ll.telefono_cliente}</td>
                 <td>${ll.motivo_tipo}</td>
@@ -202,7 +202,7 @@
                       <i class="fas fa-edit"></i> Editar
                     </a>
                     <a class="button secondary" href="/llamada/eliminar?id=${ll.id_llamada}"
-                       onclick="return confirm('¿Eliminar llamada LL${ll.id_llamada}?')">
+                       onclick="return confirm('¿Eliminar llamada ${ll.codigo_llamada}?')">
                       <i class="fas fa-trash"></i> Eliminar
                     </a>
                   </div>
@@ -265,6 +265,5 @@
 </script>
 </body>
 </html>
-
 
 

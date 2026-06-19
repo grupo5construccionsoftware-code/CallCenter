@@ -70,7 +70,7 @@
                 data-agente="${agenteFila != null ? agenteFila.nombre_agente : ''} ${agenteFila != null ? agenteFila.usuario_agente : ''} ${llamada.id_agente} agente ${llamada.id_agente}"
                 data-agente-nombre="${agenteFila != null ? agenteFila.nombre_agente : 'Agente'}"
                 data-agente-codigo="${agenteFila != null ? agenteFila.usuario_agente : llamada.id_agente}">
-              <td>LL${llamada.id_llamada}</td>
+              <td>${llamada.codigo_llamada}</td>
               <td>${llamada.nombre_cliente}</td>
               <td>${llamada.telefono_cliente}</td>
               <td>${llamada.fecha_llamada}</td>
@@ -168,3 +168,4 @@
 </script>
 </body>
 </html>
+

@@ -28,7 +28,6 @@ public class TipificacionServiceImpl implements TipificacionService {
     @Override
     public List<Tipificacion> listarPorEmpresa(int id_empresa) {
         return empresaTipoRepository.findByEmpresa(id_empresa).stream()
-                .filter(asignacion -> !ESTADO_ELIMINADO.equalsIgnoreCase(asignacion.getEstado_asignacion()))
                 .map(this::obtenerTipificacionConEstadoAsignacion)
                 .filter(Objects::nonNull)
                 .toList();
