@@ -1,5 +1,6 @@
 package com.example.CallCenter.tipificacion;
 
+import com.example.CallCenter.tipificacion.model.Tipificacion;
 import java.util.List;
 
 public interface TipificacionService {

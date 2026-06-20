@@ -1,5 +1,6 @@
 package com.example.CallCenter.llamada;
 
+import com.example.CallCenter.llamada.model.Llamada;
 import java.util.Collection;
 import java.util.List;
 

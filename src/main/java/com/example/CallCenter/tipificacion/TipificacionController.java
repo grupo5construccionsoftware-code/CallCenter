@@ -1,5 +1,6 @@
 package com.example.CallCenter.tipificacion;
 
+import com.example.CallCenter.tipificacion.model.Tipificacion;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

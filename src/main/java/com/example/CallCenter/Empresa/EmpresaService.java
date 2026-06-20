@@ -1,5 +1,6 @@
 package com.example.CallCenter.Empresa;
 
+import com.example.CallCenter.Empresa.model.Empresa;
 import java.util.List;
 
 public interface EmpresaService {

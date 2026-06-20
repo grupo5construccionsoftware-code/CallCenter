@@ -1,5 +1,8 @@
 package com.example.CallCenter.agente;
 
+import com.example.CallCenter.agente.adapter.AgenteAdapter;
+import com.example.CallCenter.agente.entity.AgenteEntity;
+import com.example.CallCenter.agente.model.Agente;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -7,19 +10,25 @@ import java.util.List;
 public class AgenteServiceImpl implements AgenteService {
 
     private final AgenteRepository agenteRepository;
+    private final AgenteAdapter agenteAdapter;
 
-    public AgenteServiceImpl(AgenteRepository agenteRepository) {
+    public AgenteServiceImpl(AgenteRepository agenteRepository, AgenteAdapter agenteAdapter) {
         this.agenteRepository = agenteRepository;
+        this.agenteAdapter = agenteAdapter;
     }
 
     @Override
     public List<Agente> listarAgentes() {
-        return agenteRepository.findAll();
+        return agenteRepository.findAll().stream()
+                .map(agenteAdapter::toModel)
+                .toList();
     }
 
     @Override
     public Agente obtenerAgentePorId(int id_agente) {
-        return agenteRepository.findById(id_agente).orElse(null);
+        return agenteRepository.findById(id_agente)
+                .map(agenteAdapter::toModel)
+                .orElse(null);
     }
 
     @Override
@@ -27,6 +36,7 @@ public class AgenteServiceImpl implements AgenteService {
         return agenteRepository
                 .findByUsuario_agenteAndContrasenia_agenteAndEstado_agente(
                         usuario, contrasenia, "ACTIVO")
+                .map(agenteAdapter::toModel)
                 .orElse(null);
     }
 
@@ -42,38 +52,47 @@ public class AgenteServiceImpl implements AgenteService {
         int idEmpresa = agente.getId_empresa() > 0 ? agente.getId_empresa() : 1;
         agente.setEstado_agente("ACTIVO");
 
-        Agente guardado = agenteRepository.save(agente);
+        AgenteEntity entity = agenteAdapter.toEntity(agente);
+        AgenteEntity guardado = agenteRepository.save(entity);
 
         int numeroEnEmpresa = agenteRepository.contarAgentesHastaId(idEmpresa, guardado.getId_agente());
-
 
         String codigo = "Age" + numeroEnEmpresa + "E" + idEmpresa;
         guardado.setCodigo_agente(codigo);
         guardado.setUsuario_agente(codigo);
         guardado.setContrasenia_agente(codigo);
-        agenteRepository.save(guardado);
+        guardado = agenteRepository.save(guardado);
+
+        agente.setId_agente(guardado.getId_agente());
+        agente.setCodigo_agente(guardado.getCodigo_agente());
+        agente.setUsuario_agente(guardado.getUsuario_agente());
+        agente.setContrasenia_agente(guardado.getContrasenia_agente());
     }
 
     @Override
     public void actualizarAgente(Agente agente) {
         validarAgente(agente, agente.getId_agente());
-        Agente actual = agenteRepository.findById(agente.getId_agente()).orElse(null);
+        AgenteEntity actual = agenteRepository.findById(agente.getId_agente()).orElse(null);
         if (actual == null) return;
+
         agente.setUsuario_agente(actual.getUsuario_agente());
         agente.setContrasenia_agente(actual.getContrasenia_agente());
         agente.setId_empresa(actual.getId_empresa());
+        agente.setCodigo_agente(actual.getCodigo_agente());
         if (agente.getEstado_agente() == null || agente.getEstado_agente().isBlank()) {
             agente.setEstado_agente(actual.getEstado_agente());
         }
-        agenteRepository.save(agente);
+
+        AgenteEntity entity = agenteAdapter.toEntity(agente);
+        agenteRepository.save(entity);
     }
 
     @Override
     public void eliminarAgente(int id_agente) {
-        Agente agente = agenteRepository.findById(id_agente).orElse(null);
-        if (agente != null) {
-            agente.setEstado_agente("ELIMINADO");
-            agenteRepository.save(agente);
+        AgenteEntity entity = agenteRepository.findById(id_agente).orElse(null);
+        if (entity != null) {
+            entity.setEstado_agente("ELIMINADO");
+            agenteRepository.save(entity);
         }
     }
 

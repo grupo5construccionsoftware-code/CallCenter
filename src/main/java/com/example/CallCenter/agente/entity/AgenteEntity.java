@@ -1,10 +1,10 @@
-package com.example.CallCenter.agente;
+package com.example.CallCenter.agente.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "agente")
-public class Agente {
+public class AgenteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,18 +18,7 @@ public class Agente {
     private String estado_agente;
     private String codigo_agente;
 
-    public Agente() {}
-
-    public Agente(int id_agente, String nombre_agente, String telefono_agente,
-                  String usuario_agente, String contrasenia_agente, int id_empresa) {
-        this.id_agente = id_agente;
-        this.nombre_agente = nombre_agente;
-        this.telefono_agente = telefono_agente;
-        this.usuario_agente = usuario_agente;
-        this.contrasenia_agente = contrasenia_agente;
-        this.id_empresa = id_empresa;
-        this.estado_agente = "ACTIVO";
-    }
+    public AgenteEntity() {}
 
     public int getId_agente() { return id_agente; }
     public void setId_agente(int id_agente) { this.id_agente = id_agente; }
@@ -50,7 +39,7 @@ public class Agente {
     public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }
 
     public String getEstado_agente() { return estado_agente; }
-    public void setEstado_agente(String estado) { this.estado_agente = estado; }
+    public void setEstado_agente(String estado_agente) { this.estado_agente = estado_agente; }
 
     public String getCodigo_agente() { return codigo_agente; }
     public void setCodigo_agente(String codigo_agente) { this.codigo_agente = codigo_agente; }

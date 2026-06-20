@@ -1,5 +1,6 @@
 package com.example.CallCenter.agente;
 
+import com.example.CallCenter.agente.model.Agente;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
