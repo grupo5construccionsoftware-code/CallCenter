@@ -1,6 +1,8 @@
 package com.example.CallCenter.llamada;
 
 import com.example.CallCenter.agente.AgenteService;
+import com.example.CallCenter.agente.model.Agente;
+import com.example.CallCenter.llamada.model.Llamada;
 import com.example.CallCenter.tipificacion.TipificacionService;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,7 @@ public class LlamadaController {
         } else if ("empresa".equals(rol)) {
             List<Integer> ids = agenteService.listarAgentes().stream()
                     .filter(a -> a.getId_empresa() == obtenerIdEmpresaSesion(session))
-                    .map(com.example.CallCenter.agente.Agente::getId_agente)
+                    .map(Agente::getId_agente)
                     .collect(java.util.stream.Collectors.toList());
             llamadas = ids.isEmpty()
                     ? java.util.Collections.emptyList()
@@ -78,7 +80,7 @@ public class LlamadaController {
         } else if ("empresa".equals(rol2)) {
             List<Integer> ids = agenteService.listarAgentes().stream()
                     .filter(a -> a.getId_empresa() == obtenerIdEmpresaSesion(session))
-                    .map(com.example.CallCenter.agente.Agente::getId_agente)
+                    .map(Agente::getId_agente)
                     .collect(java.util.stream.Collectors.toList());
             llamadas = ids.isEmpty()
                     ? java.util.Collections.emptyList()

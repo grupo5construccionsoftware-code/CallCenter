@@ -1,8 +1,8 @@
 package com.example.CallCenter.Login;
 
-import com.example.CallCenter.Empresa.Empresa;
+import com.example.CallCenter.Empresa.model.Empresa;
 import com.example.CallCenter.Empresa.EmpresaService;
-import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.model.Agente;
 import com.example.CallCenter.agente.AgenteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

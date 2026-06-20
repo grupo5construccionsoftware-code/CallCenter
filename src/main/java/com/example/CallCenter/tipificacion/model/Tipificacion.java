@@ -1,15 +1,8 @@
-package com.example.CallCenter.tipificacion;
+package com.example.CallCenter.tipificacion.model;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "tipificacion")
 public class Tipificacion {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_tipo;
-
     private String motivo_tipo;
     private String estado_tipo;
 

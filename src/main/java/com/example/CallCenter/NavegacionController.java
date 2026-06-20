@@ -1,5 +1,6 @@
 package com.example.CallCenter;
 
+import com.example.CallCenter.tipificacion.model.Tipificacion;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,11 +11,11 @@ import java.util.Map;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import com.example.CallCenter.llamada.Llamada;
+import com.example.CallCenter.llamada.model.Llamada;
 import com.example.CallCenter.llamada.LlamadaService;
 import com.example.CallCenter.tipificacion.TipificacionService;
 import com.example.CallCenter.Empresa.EmpresaService;
-import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.model.Agente;
 import com.example.CallCenter.agente.AgenteService;
 
 @Controller
@@ -143,7 +144,7 @@ public class NavegacionController {
     public String tipificaciones(HttpSession session, Model model) {
         String rol = (String) session.getAttribute("rol");
         if (!"empresa".equals(rol) && !"superadmin".equals(rol)) return "redirect:/login";
-        model.addAttribute("tipificacion", new com.example.CallCenter.tipificacion.Tipificacion());
+        model.addAttribute("tipificacion", new Tipificacion());
         model.addAttribute("tiposLlamada", tipificacionService.listarPorEmpresa(obtenerIdEmpresaSesion(session)));
         model.addAttribute("mostrarTabla", false);
         return "tipificaciones";

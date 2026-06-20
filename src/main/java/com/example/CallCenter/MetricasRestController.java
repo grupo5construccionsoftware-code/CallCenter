@@ -1,8 +1,8 @@
 package com.example.CallCenter;
 
-import com.example.CallCenter.agente.Agente;
+import com.example.CallCenter.agente.model.Agente;
 import com.example.CallCenter.agente.AgenteService;
-import com.example.CallCenter.llamada.Llamada;
+import com.example.CallCenter.llamada.model.Llamada;
 import com.example.CallCenter.llamada.LlamadaService;
 import com.example.CallCenter.Empresa.EmpresaService;
 import com.example.CallCenter.tipificacion.TipificacionService;

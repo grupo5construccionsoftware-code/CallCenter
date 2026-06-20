@@ -1,15 +1,8 @@
-package com.example.CallCenter.llamada;
+package com.example.CallCenter.llamada.model;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "llamada")
 public class Llamada {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_llamada;
-
     private String nombre_cliente;
     private String telefono_cliente;
     private String fecha_llamada;
@@ -18,7 +11,7 @@ public class Llamada {
     private String duracion;
     private String descripcion_tipo;
     private int id_agente;
-    private int id_tipo;
+    private Integer id_tipo;
     private String estado_llamada;
     private String motivo_tipo;
     private String codigo_llamada;

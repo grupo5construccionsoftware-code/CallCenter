@@ -1,10 +1,10 @@
-package com.example.CallCenter.Empresa;
+package com.example.CallCenter.Empresa.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "empresa")
-public class Empresa {
+public class EmpresaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +17,7 @@ public class Empresa {
     private String contrasenia_empresa;
     private String estado_empresa;
 
-    public Empresa() {}
-
-    public Empresa(int id_empresa, String nombre_empresa, String telefono_empresa, String correo_empresa) {
-        this.id_empresa = id_empresa;
-        this.nombre_empresa = nombre_empresa;
-        this.telefono_empresa = telefono_empresa;
-        this.correo_empresa = correo_empresa;
-        this.estado_empresa = "ACTIVO";
-    }
+    public EmpresaEntity() {}
 
     public int getId_empresa() { return id_empresa; }
     public void setId_empresa(int id_empresa) { this.id_empresa = id_empresa; }

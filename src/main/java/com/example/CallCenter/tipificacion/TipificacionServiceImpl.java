@@ -1,5 +1,12 @@
 package com.example.CallCenter.tipificacion;
 
+import com.example.CallCenter.tipificacion.adapter.EmpresaTipoAdapter;
+import com.example.CallCenter.tipificacion.adapter.TipificacionAdapter;
+import com.example.CallCenter.tipificacion.entity.EmpresaTipoEntity;
+import com.example.CallCenter.tipificacion.entity.TipificacionEntity;
+import com.example.CallCenter.tipificacion.model.EmpresaTipo;
+import com.example.CallCenter.tipificacion.model.Tipificacion;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -9,25 +16,33 @@ import org.springframework.stereotype.Service;
 public class TipificacionServiceImpl implements TipificacionService {
 
     private static final String ESTADO_ACTIVO = "ACTIVO";
-    private static final String ESTADO_ELIMINADO = "ELIMINADO";
 
     private final TipificacionRepository tipificacionRepository;
     private final EmpresaTipoRepository empresaTipoRepository;
+    private final TipificacionAdapter tipificacionAdapter;
+    private final EmpresaTipoAdapter empresaTipoAdapter;
 
     public TipificacionServiceImpl(TipificacionRepository tipificacionRepository,
-                                   EmpresaTipoRepository empresaTipoRepository) {
+                                   EmpresaTipoRepository empresaTipoRepository,
+                                   TipificacionAdapter tipificacionAdapter,
+                                   EmpresaTipoAdapter empresaTipoAdapter) {
         this.tipificacionRepository = tipificacionRepository;
         this.empresaTipoRepository = empresaTipoRepository;
+        this.tipificacionAdapter = tipificacionAdapter;
+        this.empresaTipoAdapter = empresaTipoAdapter;
     }
 
     @Override
     public List<Tipificacion> listarTodas() {
-        return tipificacionRepository.findAll();
+        return tipificacionRepository.findAll().stream()
+                .map(tipificacionAdapter::toModel)
+                .toList();
     }
 
     @Override
     public List<Tipificacion> listarPorEmpresa(int id_empresa) {
         return empresaTipoRepository.findByEmpresa(id_empresa).stream()
+                .map(empresaTipoAdapter::toModel)
                 .map(this::obtenerTipificacionConEstadoAsignacion)
                 .filter(Objects::nonNull)
                 .toList();
@@ -36,6 +51,7 @@ public class TipificacionServiceImpl implements TipificacionService {
     @Override
     public List<Tipificacion> listarActivasPorEmpresa(int id_empresa) {
         return empresaTipoRepository.findByEmpresaAndEstado(id_empresa, ESTADO_ACTIVO).stream()
+                .map(empresaTipoAdapter::toModel)
                 .map(this::obtenerTipificacionConEstadoAsignacion)
                 .filter(tipificacion -> tipificacion != null
                         && ESTADO_ACTIVO.equalsIgnoreCase(tipificacion.getEstado_tipo()))
@@ -51,7 +67,9 @@ public class TipificacionServiceImpl implements TipificacionService {
 
     @Override
     public Tipificacion obtenerTipificacionPorId(int id_tipo) {
-        return tipificacionRepository.findById(id_tipo).orElse(null);
+        return tipificacionRepository.findById(id_tipo)
+                .map(tipificacionAdapter::toModel)
+                .orElse(null);
     }
 
     @Override
@@ -59,7 +77,7 @@ public class TipificacionServiceImpl implements TipificacionService {
         validarMotivo(tipificacion);
         tipificacion.setMotivo_tipo(tipificacion.getMotivo_tipo().trim());
 
-        Tipificacion tipificacionGuardada = tipificacionRepository
+        TipificacionEntity tipificacionGuardada = tipificacionRepository
                 .findByMotivoTipoIgnoreCase(tipificacion.getMotivo_tipo())
                 .orElseGet(() -> guardarNuevaTipificacion(tipificacion));
 
@@ -76,18 +94,19 @@ public class TipificacionServiceImpl implements TipificacionService {
 
     @Override
     public void asignarTipificacionesBase(int id_empresa) {
-        tipificacionRepository.findByEstado(ESTADO_ACTIVO).forEach(tipificacion ->
-                asignarTipificacionAEmpresa(id_empresa, tipificacion.getId_tipo(), ESTADO_ACTIVO)
+        tipificacionRepository.findByEstado(ESTADO_ACTIVO).forEach(entity ->
+                asignarTipificacionAEmpresa(id_empresa, entity.getId_tipo(), ESTADO_ACTIVO)
         );
     }
 
-    private Tipificacion guardarNuevaTipificacion(Tipificacion tipificacion) {
+    private TipificacionEntity guardarNuevaTipificacion(Tipificacion tipificacion) {
         if (tipificacion.getEstado_tipo() == null || tipificacion.getEstado_tipo().isBlank()) {
             tipificacion.setEstado_tipo(ESTADO_ACTIVO);
         } else {
             tipificacion.setEstado_tipo(tipificacion.getEstado_tipo().trim().toUpperCase());
         }
-        return tipificacionRepository.save(tipificacion);
+        TipificacionEntity entity = tipificacionAdapter.toEntity(tipificacion);
+        return tipificacionRepository.save(entity);
     }
 
     private void asignarTipificacionAEmpresa(int id_empresa, int id_tipo, String estado) {
@@ -96,16 +115,19 @@ public class TipificacionServiceImpl implements TipificacionService {
         }
 
         EmpresaTipo asignacion = empresaTipoRepository.findByEmpresaAndTipo(id_empresa, id_tipo)
+                .map(empresaTipoAdapter::toModel)
                 .orElseGet(() -> new EmpresaTipo(id_empresa, id_tipo));
         asignacion.setEstado_asignacion(estado);
-        empresaTipoRepository.save(asignacion);
+
+        EmpresaTipoEntity entity = empresaTipoAdapter.toEntity(asignacion);
+        empresaTipoRepository.save(entity);
     }
 
     private Tipificacion obtenerTipificacionConEstadoAsignacion(EmpresaTipo asignacion) {
         return tipificacionRepository.findById(asignacion.getId_tipo())
-                .map(tipificacion -> new Tipificacion(
-                        tipificacion.getId_tipo(),
-                        tipificacion.getMotivo_tipo(),
+                .map(entity -> new Tipificacion(
+                        entity.getId_tipo(),
+                        entity.getMotivo_tipo(),
                         asignacion.getEstado_asignacion()))
                 .orElse(null);
     }

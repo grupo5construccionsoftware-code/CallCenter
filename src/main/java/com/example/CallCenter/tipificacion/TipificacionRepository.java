@@ -1,5 +1,6 @@
 package com.example.CallCenter.tipificacion;
 
+import com.example.CallCenter.tipificacion.entity.TipificacionEntity;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,13 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface TipificacionRepository extends JpaRepository<Tipificacion, Integer> {
+public interface TipificacionRepository extends JpaRepository<TipificacionEntity, Integer> {
 
-    @Query("SELECT t FROM Tipificacion t WHERE UPPER(t.estado_tipo) = UPPER(:estadoTipo)")
-    List<Tipificacion> findByEstado(@Param("estadoTipo") String estadoTipo);
+    @Query("SELECT t FROM TipificacionEntity t WHERE UPPER(t.estado_tipo) = UPPER(:estadoTipo)")
+    List<TipificacionEntity> findByEstado(@Param("estadoTipo") String estadoTipo);
 
-    @Query("SELECT t FROM Tipificacion t WHERE UPPER(t.motivo_tipo) = UPPER(:motivoTipo)")
-    Optional<Tipificacion> findByMotivoTipoIgnoreCase(@Param("motivoTipo") String motivoTipo);
+    @Query("SELECT t FROM TipificacionEntity t WHERE UPPER(t.motivo_tipo) = UPPER(:motivoTipo)")
+    Optional<TipificacionEntity> findByMotivoTipoIgnoreCase(@Param("motivoTipo") String motivoTipo);
 }

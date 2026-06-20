@@ -1,5 +1,6 @@
 package com.example.CallCenter.llamada;
 
+import com.example.CallCenter.llamada.model.Llamada;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

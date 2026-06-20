@@ -1,5 +1,6 @@
 package com.example.CallCenter.Empresa;
 
+import com.example.CallCenter.Empresa.model.Empresa;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
