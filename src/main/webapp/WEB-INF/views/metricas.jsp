@@ -16,25 +16,29 @@
   <section class="section">
     <div class="hero-copy">
       <h1>Métricas</h1>
-      <p>Indicadores de los servicios realizados</p>
+      <p>Indicadores de tiempo de las llamadas registradas</p>
     </div>
 
-    <div class="grid">
-      <article class="card metric">
-        <strong><i class="fas fa-phone"></i> Llamadas atendidas</strong>
-        <span class="value" id="kpi-total">—</span>
-      </article>
-      <article class="card metric">
-        <strong><i class="fas fa-users"></i> Clientes frecuentes</strong>
-        <span class="value" id="kpi-frecuentes">—</span>
-      </article>
+    <div class="grid metric-grid">
       <article class="card metric">
         <strong><i class="fas fa-stopwatch"></i> Tiempo promedio</strong>
-        <span class="value" id="kpi-duracion">—</span>
+        <span class="value" id="kpi-duracion">-</span>
       </article>
       <article class="card metric">
-        <strong><i class="fas fa-tags"></i> Tipificación más común</strong>
-        <span class="value" id="kpi-tipificacion">—</span>
+        <strong><i class="fas fa-hourglass-half"></i> Tiempo total</strong>
+        <span class="value" id="kpi-tiempo-total">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-arrow-up"></i> Llamada más larga</strong>
+        <span class="value" id="kpi-mas-larga">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-arrow-down"></i> Llamada más corta</strong>
+        <span class="value" id="kpi-mas-corta">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-clock"></i> Hora pico</strong>
+        <span class="value" id="kpi-hora-pico">-</span>
       </article>
     </div>
 
@@ -46,12 +50,12 @@
 
     <div class="charts-grid">
       <div class="chart-card">
-        <h3><i class="fas fa-chart-pie"></i> Distribución por tipificación</h3>
-        <canvas id="chart-motivos"></canvas>
+        <h3><i class="fas fa-chart-bar"></i> Llamadas por hora</h3>
+        <canvas id="chart-horas"></canvas>
       </div>
       <div class="chart-card">
-        <h3><i class="fas fa-chart-line"></i> Llamadas por fecha</h3>
-        <canvas id="chart-fechas"></canvas>
+        <h3><i class="fas fa-chart-line"></i> Tiempo acumulado por fecha</h3>
+        <canvas id="chart-tiempo-fechas"></canvas>
       </div>
     </div>
 
@@ -63,40 +67,42 @@
 (function () {
   const PALETTE = ['#4f8ef7','#f76f4f','#4fcf70','#f7c94f','#a04ff7','#4fcfcf'];
   const ENDPOINT_METRICAS = '${endpointMetricas}';
-  let chartMotivos = null, chartFechas = null;
+  let chartHoras = null, chartTiempoFechas = null;
 
   function renderKpis(d) {
-    document.getElementById('kpi-total').textContent        = d.totalLlamadas ?? 0;
-    document.getElementById('kpi-frecuentes').textContent   = d.clientesFrecuentes ?? 0;
     document.getElementById('kpi-duracion').textContent     = d.duracionPromedio ?? '-';
-    document.getElementById('kpi-tipificacion').textContent = d.tipificacionComun ?? '-';
+    document.getElementById('kpi-tiempo-total').textContent = d.tiempoTotal ?? '-';
+    document.getElementById('kpi-mas-larga').textContent    = d.llamadaMasLarga ?? '-';
+    document.getElementById('kpi-mas-corta').textContent    = d.llamadaMasCorta ?? '-';
+    document.getElementById('kpi-hora-pico').textContent    = d.horaPico ?? '-';
   }
 
-  function renderMotivos(motivos) {
-    const ctx = document.getElementById('chart-motivos').getContext('2d');
-    if (chartMotivos) chartMotivos.destroy();
-    chartMotivos = new Chart(ctx, {
-      type: 'doughnut',
+  function renderHoras(horas) {
+    const ctx = document.getElementById('chart-horas').getContext('2d');
+    if (chartHoras) chartHoras.destroy();
+    chartHoras = new Chart(ctx, {
+      type: 'bar',
       data: {
-        labels: Object.keys(motivos),
-        datasets: [{ data: Object.values(motivos), backgroundColor: PALETTE, borderWidth: 2 }]
+        labels: Object.keys(horas),
+        datasets: [{ label: 'Llamadas', data: Object.values(horas), backgroundColor: PALETTE, borderRadius: 6 }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } } }
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+        plugins: { legend: { display: false } }
       }
     });
   }
 
-  function renderFechas(fechas) {
-    const ctx = document.getElementById('chart-fechas').getContext('2d');
-    if (chartFechas) chartFechas.destroy();
-    chartFechas = new Chart(ctx, {
+  function renderTiempoFechas(fechas) {
+    const ctx = document.getElementById('chart-tiempo-fechas').getContext('2d');
+    if (chartTiempoFechas) chartTiempoFechas.destroy();
+    chartTiempoFechas = new Chart(ctx, {
       type: 'line',
       data: {
         labels: Object.keys(fechas),
         datasets: [{
-          label: 'Llamadas',
+          label: 'Minutos',
           data: Object.values(fechas),
           fill: true, tension: 0.35,
           borderColor: '#4f8ef7',
@@ -118,10 +124,10 @@
       .then(r => r.json())
       .then(d => {
         renderKpis(d);
-        if (d.llamadasPorMotivo && Object.keys(d.llamadasPorMotivo).length)
-          renderMotivos(d.llamadasPorMotivo);
-        if (d.llamadasPorFecha && Object.keys(d.llamadasPorFecha).length)
-          renderFechas(d.llamadasPorFecha);
+        if (d.llamadasPorHora && Object.keys(d.llamadasPorHora).length)
+          renderHoras(d.llamadasPorHora);
+        if (d.tiempoPorFecha && Object.keys(d.tiempoPorFecha).length)
+          renderTiempoFechas(d.tiempoPorFecha);
       });
   }
 
