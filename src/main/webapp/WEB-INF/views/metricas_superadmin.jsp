@@ -17,7 +17,7 @@
   <section class="section">
     <div class="hero-copy">
       <h1>Métricas globales</h1>
-      <p>Indicadores del sistema filtrados por empresa</p>
+      <p>Indicadores de tiempo filtrados por empresa</p>
     </div>
 
     <article class="card">
@@ -47,39 +47,35 @@
 
     <div class="grid metric-grid">
       <article class="card metric">
-        <strong><i class="fas fa-building"></i> Empresas registradas</strong>
-        <span class="value" id="kpi-empresas">—</span>
-      </article>
-      <article class="card metric">
-        <strong><i class="fas fa-phone"></i> Llamadas atendidas</strong>
-        <span class="value" id="kpi-llamadas">—</span>
-      </article>
-      <article class="card metric">
-        <strong><i class="fas fa-users"></i> Agentes activos</strong>
-        <span class="value" id="kpi-agentes">—</span>
-      </article>
-      <article class="card metric">
         <strong><i class="fas fa-stopwatch"></i> Tiempo promedio</strong>
-        <span class="value" id="kpi-duracion">—</span>
+        <span class="value" id="kpi-duracion">-</span>
       </article>
       <article class="card metric">
-        <strong><i class="fas fa-tags"></i> Tipificación más común</strong>
-        <span class="value" id="kpi-tipificacion">—</span>
+        <strong><i class="fas fa-hourglass-half"></i> Tiempo total</strong>
+        <span class="value" id="kpi-tiempo-total">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-arrow-up"></i> Llamada más larga</strong>
+        <span class="value" id="kpi-mas-larga">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-arrow-down"></i> Llamada más corta</strong>
+        <span class="value" id="kpi-mas-corta">-</span>
+      </article>
+      <article class="card metric">
+        <strong><i class="fas fa-clock"></i> Hora pico</strong>
+        <span class="value" id="kpi-hora-pico">-</span>
       </article>
     </div>
 
     <div class="charts-grid">
       <div class="chart-card">
-        <h3><i class="fas fa-chart-pie"></i> Distribución por tipificación</h3>
-        <canvas id="chart-motivos"></canvas>
+        <h3><i class="fas fa-chart-bar"></i> Llamadas por hora</h3>
+        <canvas id="chart-horas"></canvas>
       </div>
       <div class="chart-card">
-        <h3><i class="fas fa-chart-line"></i> Llamadas por fecha</h3>
-        <canvas id="chart-fechas"></canvas>
-      </div>
-      <div class="chart-card full">
-        <h3><i class="fas fa-chart-bar"></i> Llamadas por empresa</h3>
-        <canvas id="chart-empresas"></canvas>
+        <h3><i class="fas fa-chart-line"></i> Tiempo acumulado por fecha</h3>
+        <canvas id="chart-tiempo-fechas"></canvas>
       </div>
     </div>
 
@@ -90,46 +86,25 @@
 <script>
 (function () {
   const PALETTE = ['#4f8ef7','#f76f4f','#4fcf70','#f7c94f','#a04ff7','#4fcfcf','#f74fa8'];
-  let chartMotivos = null, chartFechas = null, chartEmpresas = null;
+  let chartHoras = null, chartTiempoFechas = null;
   let empresaActual = '${empresaSeleccionada}';
 
   function renderKpis(d) {
-    if (d.totalEmpresas != null) document.getElementById('kpi-empresas').textContent = d.totalEmpresas;
-    if (d.totalAgentes  != null) document.getElementById('kpi-agentes').textContent  = d.totalAgentes;
-    document.getElementById('kpi-llamadas').textContent    = d.totalLlamadas ?? 0;
-    document.getElementById('kpi-duracion').textContent    = d.duracionPromedio ?? '-';
-    document.getElementById('kpi-tipificacion').textContent = d.tipificacionComun ?? '-';
+    document.getElementById('kpi-duracion').textContent     = d.duracionPromedio ?? '-';
+    document.getElementById('kpi-tiempo-total').textContent = d.tiempoTotal ?? '-';
+    document.getElementById('kpi-mas-larga').textContent    = d.llamadaMasLarga ?? '-';
+    document.getElementById('kpi-mas-corta').textContent    = d.llamadaMasCorta ?? '-';
+    document.getElementById('kpi-hora-pico').textContent    = d.horaPico ?? '-';
   }
 
-  function renderMotivos(motivos) {
-    const ctx = document.getElementById('chart-motivos').getContext('2d');
-    if (chartMotivos) chartMotivos.destroy();
-    chartMotivos = new Chart(ctx, {
-      type: 'doughnut',
+  function renderHoras(horas) {
+    const ctx = document.getElementById('chart-horas').getContext('2d');
+    if (chartHoras) chartHoras.destroy();
+    chartHoras = new Chart(ctx, {
+      type: 'bar',
       data: {
-        labels: Object.keys(motivos),
-        datasets: [{ data: Object.values(motivos), backgroundColor: PALETTE, borderWidth: 2 }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } } }
-      }
-    });
-  }
-
-  function renderFechas(fechas) {
-    const ctx = document.getElementById('chart-fechas').getContext('2d');
-    if (chartFechas) chartFechas.destroy();
-    chartFechas = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: Object.keys(fechas),
-        datasets: [{
-          label: 'Llamadas', data: Object.values(fechas),
-          fill: true, tension: 0.35,
-          borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,.15)',
-          pointBackgroundColor: '#4f8ef7', pointRadius: 5
-        }]
+        labels: Object.keys(horas),
+        datasets: [{ label: 'Llamadas', data: Object.values(horas), backgroundColor: PALETTE, borderRadius: 6 }]
       },
       options: {
         responsive: true,
@@ -139,17 +114,18 @@
     });
   }
 
-  function renderEmpresas(lista) {
-    if (!lista || !lista.length) return;
-    const ctx = document.getElementById('chart-empresas').getContext('2d');
-    if (chartEmpresas) chartEmpresas.destroy();
-    chartEmpresas = new Chart(ctx, {
-      type: 'bar',
+  function renderTiempoFechas(fechas) {
+    const ctx = document.getElementById('chart-tiempo-fechas').getContext('2d');
+    if (chartTiempoFechas) chartTiempoFechas.destroy();
+    chartTiempoFechas = new Chart(ctx, {
+      type: 'line',
       data: {
-        labels: lista.map(e => e.nombre),
+        labels: Object.keys(fechas),
         datasets: [{
-          label: 'Llamadas', data: lista.map(e => e.totalLlamadas),
-          backgroundColor: PALETTE, borderRadius: 6
+          label: 'Minutos', data: Object.values(fechas),
+          fill: true, tension: 0.35,
+          borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,.15)',
+          pointBackgroundColor: '#4f8ef7', pointRadius: 5
         }]
       },
       options: {
@@ -167,12 +143,10 @@
       .then(r => r.json())
       .then(d => {
         renderKpis(d);
-        if (d.llamadasPorMotivo && Object.keys(d.llamadasPorMotivo).length)
-          renderMotivos(d.llamadasPorMotivo);
-        if (d.llamadasPorFecha && Object.keys(d.llamadasPorFecha).length)
-          renderFechas(d.llamadasPorFecha);
-        if (d.llamadasPorEmpresa)
-          renderEmpresas(d.llamadasPorEmpresa);
+        if (d.llamadasPorHora && Object.keys(d.llamadasPorHora).length)
+          renderHoras(d.llamadasPorHora);
+        if (d.tiempoPorFecha && Object.keys(d.tiempoPorFecha).length)
+          renderTiempoFechas(d.tiempoPorFecha);
       });
   }
 
