@@ -48,15 +48,34 @@
       </button>
     </div>
 
+    <!-- ANTES: 2 graficas. AHORA: 5 series de tiempo -->
     <div class="charts-grid">
+
       <div class="chart-card">
-        <h3><i class="fas fa-chart-bar"></i> Llamadas por hora</h3>
-        <canvas id="chart-horas"></canvas>
+        <h3><i class="fas fa-chart-line"></i> Llamadas por día</h3>
+        <canvas id="chart-llamadas-fecha"></canvas>
       </div>
+
       <div class="chart-card">
-        <h3><i class="fas fa-chart-line"></i> Tiempo acumulado por fecha</h3>
-        <canvas id="chart-tiempo-fechas"></canvas>
+        <h3><i class="fas fa-chart-line"></i> Duración promedio por día (min)</h3>
+        <canvas id="chart-promedio-fecha"></canvas>
       </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Llamadas por hora (08:00–22:00)</h3>
+        <canvas id="chart-llamadas-hora"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Duración promedio por hora (min)</h3>
+        <canvas id="chart-promedio-hora"></canvas>
+      </div>
+
+      <div class="chart-card full">
+        <h3><i class="fas fa-calendar-week"></i> Llamadas por día de semana</h3>
+        <canvas id="chart-dia-semana"></canvas>
+      </div>
+
     </div>
 
   </section>
@@ -67,7 +86,7 @@
 (function () {
   const PALETTE = ['#4f8ef7','#f76f4f','#4fcf70','#f7c94f','#a04ff7','#4fcfcf'];
   const ENDPOINT_METRICAS = '${endpointMetricas}';
-  let chartHoras = null, chartTiempoFechas = null;
+  const g = {};
 
   function renderKpis(d) {
     document.getElementById('kpi-duracion').textContent     = d.duracionPromedio ?? '-';
@@ -77,14 +96,21 @@
     document.getElementById('kpi-hora-pico').textContent    = d.horaPico ?? '-';
   }
 
-  function renderHoras(horas) {
-    const ctx = document.getElementById('chart-horas').getContext('2d');
-    if (chartHoras) chartHoras.destroy();
-    chartHoras = new Chart(ctx, {
-      type: 'bar',
+  function linea(id, labels, datos, label, color) {
+    const ctx = document.getElementById(id).getContext('2d');
+    if (g[id]) g[id].destroy();
+    g[id] = new Chart(ctx, {
+      type: 'line',
       data: {
-        labels: Object.keys(horas),
-        datasets: [{ label: 'Llamadas', data: Object.values(horas), backgroundColor: PALETTE, borderRadius: 6 }]
+        labels: labels,
+        datasets: [{
+          label: label, data: datos,
+          fill: true, tension: 0.35,
+          borderColor: color,
+          backgroundColor: color + '26',
+          pointBackgroundColor: color,
+          pointRadius: 5
+        }]
       },
       options: {
         responsive: true,
@@ -94,22 +120,14 @@
     });
   }
 
-  function renderTiempoFechas(fechas) {
-    const ctx = document.getElementById('chart-tiempo-fechas').getContext('2d');
-    if (chartTiempoFechas) chartTiempoFechas.destroy();
-    chartTiempoFechas = new Chart(ctx, {
-      type: 'line',
+  function barras(id, labels, datos, label, colores) {
+    const ctx = document.getElementById(id).getContext('2d');
+    if (g[id]) g[id].destroy();
+    g[id] = new Chart(ctx, {
+      type: 'bar',
       data: {
-        labels: Object.keys(fechas),
-        datasets: [{
-          label: 'Minutos',
-          data: Object.values(fechas),
-          fill: true, tension: 0.35,
-          borderColor: '#4f8ef7',
-          backgroundColor: 'rgba(79,142,247,.15)',
-          pointBackgroundColor: '#4f8ef7',
-          pointRadius: 5
-        }]
+        labels: labels,
+        datasets: [{ label: label, data: datos, backgroundColor: colores, borderRadius: 6 }]
       },
       options: {
         responsive: true,
@@ -124,10 +142,21 @@
       .then(r => r.json())
       .then(d => {
         renderKpis(d);
+
+        if (d.llamadasPorFecha && Object.keys(d.llamadasPorFecha).length)
+          linea('chart-llamadas-fecha', Object.keys(d.llamadasPorFecha), Object.values(d.llamadasPorFecha), 'Llamadas', '#4f8ef7');
+
+        if (d.promedioPorFecha && Object.keys(d.promedioPorFecha).length)
+          linea('chart-promedio-fecha', Object.keys(d.promedioPorFecha), Object.values(d.promedioPorFecha), 'Minutos', '#4fcf70');
+
         if (d.llamadasPorHora && Object.keys(d.llamadasPorHora).length)
-          renderHoras(d.llamadasPorHora);
-        if (d.tiempoPorFecha && Object.keys(d.tiempoPorFecha).length)
-          renderTiempoFechas(d.tiempoPorFecha);
+          barras('chart-llamadas-hora', Object.keys(d.llamadasPorHora), Object.values(d.llamadasPorHora), 'Llamadas', PALETTE);
+
+        if (d.promedioPorHora && Object.keys(d.promedioPorHora).length)
+          barras('chart-promedio-hora', Object.keys(d.promedioPorHora), Object.values(d.promedioPorHora), 'Minutos', '#ff8a00');
+
+        if (d.llamadasPorDiaSemana && Object.keys(d.llamadasPorDiaSemana).length)
+          barras('chart-dia-semana', Object.keys(d.llamadasPorDiaSemana), Object.values(d.llamadasPorDiaSemana), 'Llamadas', PALETTE);
       });
   }
 

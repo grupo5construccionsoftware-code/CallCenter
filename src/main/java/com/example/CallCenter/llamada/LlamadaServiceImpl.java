@@ -160,7 +160,8 @@ public class LlamadaServiceImpl implements LlamadaService {
             List<String> partes = new ArrayList<>();
             if (horas    > 0) partes.add(horas    + " h");
             if (minutos  > 0) partes.add(minutos  + " min");
-            if (segundos > 0 || partes.isEmpty()) partes.add(segundos + " seg");
+            if (segundos > 0) partes.add(segundos + " seg");
+            if (partes.isEmpty()) partes.add("0 seg");
             return String.join(" ", partes);
         } catch (Exception e) {
             return "0 seg";
