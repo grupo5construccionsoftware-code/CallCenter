@@ -51,8 +51,8 @@ public class AgenteController {
         if (agente == null || !puedeGestionarAgente(session, agente)) {
             return "redirect:/agente/list";
         }
-        model.addAttribute("agenteEditar", agente);           // activa el bloque de edición
-        model.addAttribute("agente", new Agente());           // necesario para el form:form
+        model.addAttribute("agenteEditar", agente);
+        model.addAttribute("agente", new Agente());
         model.addAttribute("agentes", filtrarAgentesPorSesion(session));
         model.addAttribute("mostrarTabla", true);
         return "usuarios";

@@ -31,7 +31,7 @@
       <h2>Ingreso al sistema</h2>
       <p>El acceso interno habilita los modulos operativos, las metricas y el resto de pantallas privadas.</p>
 
-      <%-- Formulario apunta al controller POST /login/ingresar --%>
+
       <form action="/login/ingresar" method="post">
         <div class="form-grid">
           <div>

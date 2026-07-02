@@ -76,7 +76,7 @@
       </c:otherwise>
     </c:choose>
 
-    <%-- Tabla de empresas --%>
+
     <c:if test="${mostrarEmpresas}">
       <article class="card">
         <div class="table-wrap">

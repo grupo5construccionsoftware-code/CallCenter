@@ -19,7 +19,7 @@
       <p>Registro y gestión de los tipos de llamada del sistema</p>
     </div>
 
-    <%-- Formulario de edición inline --%>
+
     <c:if test="${tipificacionEditar != null}">
       <article class="card">
         <div class="section-title">
@@ -52,7 +52,7 @@
       </article>
     </c:if>
 
-    <%-- Formulario de crear (se oculta mientras se edita) --%>
+
     <c:if test="${tipificacionEditar == null}">
       <article class="card">
         <form:form action="/tipificacion/crear" method="post" modelAttribute="tipificacion">
@@ -84,7 +84,7 @@
       </article>
     </c:if>
 
-    <%-- Tabla de tipificaciones --%>
+
     <c:if test="${mostrarTabla}">
       <article class="card">
         <div class="table-wrap">
