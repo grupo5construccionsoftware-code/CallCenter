@@ -164,7 +164,7 @@
         </div>
       </c:if>
 
-      <%-- Tabla de llamadas --%>
+
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>

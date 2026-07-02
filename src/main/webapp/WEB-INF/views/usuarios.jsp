@@ -19,7 +19,7 @@
       <p>Registro de los agentes que operan el call center y su número telefónico</p>
     </div>
 
-    <%-- Formulario de edición inline (se muestra cuando agenteEditar != null) --%>
+
     <c:if test="${agenteEditar != null}">
       <article class="card">
         <div class="section-title">
@@ -62,7 +62,7 @@
       </article>
     </c:if>
 
-    <%-- Formulario de crear (se oculta mientras se edita) --%>
+
     <c:if test="${agenteEditar == null}">
       <article class="card">
         <form:form action="/agente/crear" method="post" modelAttribute="agente">
@@ -113,7 +113,7 @@
       </article>
     </c:if>
 
-    <%-- Tabla de agentes --%>
+
     <c:if test="${mostrarTabla}">
       <article class="card">
         <div class="table-wrap">
