@@ -49,7 +49,6 @@ public class NavegacionController {
     @GetMapping("/contacto")
     public String contacto() { return "contacto"; }
 
-    // ─── Dashboard por rol ─────────────────────────────────────────────────────
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session) {
@@ -78,7 +77,7 @@ public class NavegacionController {
         return "dashboard_agente";
     }
 
-    // ─── Páginas privadas comunes ──────────────────────────────────────────────
+
 
     @GetMapping("/gestion")
     public String gestion(HttpSession session) {
@@ -96,7 +95,7 @@ public class NavegacionController {
         return "metricas";
     }
 
-    // ─── SuperAdmin exclusivo ──────────────────────────────────────────────────
+
 
     @GetMapping("/empresas")
     public String empresas(
@@ -127,7 +126,7 @@ public class NavegacionController {
         return "metricas_superadmin";
     }
 
-    // ─── Empresa y Agente ──────────────────────────────────────────────────────
+
 
     @GetMapping("/llamadas")
     public String llamadas(HttpSession session, Model model) {
