@@ -90,11 +90,22 @@ public class MetricasRestController {
                     .filter(a -> a.getId_empresa() == emp.getId_empresa())
                     .map(Agente::getId_agente)
                     .collect(Collectors.toList());
-            long total = agIds.isEmpty() ? 0
-                    : llamadaService.listarLlamadasPorAgentes(agIds).size();
+            List<Llamada> llamadasEmpresa = agIds.isEmpty()
+                    ? Collections.emptyList()
+                    : llamadaService.listarLlamadasPorAgentes(agIds);
+
+            long total = llamadasEmpresa.size();
+            List<Long> duraciones = llamadasEmpresa.stream()
+                    .map(this::obtenerDuracionSegundos)
+                    .filter(s -> s > 0)
+                    .toList();
+            long promedioSeg = duraciones.isEmpty() ? 0
+                    : duraciones.stream().mapToLong(Long::longValue).sum() / duraciones.size();
+
             Map<String, Object> entry = new LinkedHashMap<>();
             entry.put("nombre", emp.getNombre_empresa());
             entry.put("totalLlamadas", total);
+            entry.put("duracionPromedioSegundos", promedioSeg);
             porEmpresa.add(entry);
         });
         result.put("llamadasPorEmpresa", porEmpresa);
@@ -130,14 +141,23 @@ public class MetricasRestController {
         );
         data.put("llamadasPorFecha", llamadasPorFecha);
 
-        // SERIE 2: Duración promedio por fecha (en minutos)
+        // SERIE 2: Duración promedio por fecha (en SEGUNDOS reales)
         Map<String, Long> promedioPorFecha = new TreeMap<>();
         llamadas.stream()
                 .filter(l -> l.getFecha_llamada() != null && !l.getFecha_llamada().isBlank())
                 .collect(Collectors.groupingBy(Llamada::getFecha_llamada,
                         Collectors.averagingLong(this::obtenerDuracionSegundos)))
-                .forEach((fecha, prom) -> promedioPorFecha.put(fecha, Math.round(prom / 60.0)));
+                .forEach((fecha, prom) -> promedioPorFecha.put(fecha, Math.round(prom)));
         data.put("promedioPorFecha", promedioPorFecha);
+
+// SERIE 2b: Duración TOTAL acumulada por fecha (en SEGUNDOS)
+        Map<String, Long> tiempoTotalPorFecha = new TreeMap<>(
+                llamadas.stream()
+                        .filter(l -> l.getFecha_llamada() != null && !l.getFecha_llamada().isBlank())
+                        .collect(Collectors.groupingBy(Llamada::getFecha_llamada,
+                                Collectors.summingLong(this::obtenerDuracionSegundos)))
+        );
+        data.put("tiempoTotalPorFecha", tiempoTotalPorFecha);
 
         // SERIE 3: Llamadas por hora del dia (solo horario laboral 08:00-22:00)
         Map<String, Long> llamadasPorHora = new TreeMap<>();
@@ -165,7 +185,7 @@ public class MetricasRestController {
                 .collect(Collectors.groupingBy(
                         l -> String.format("%02d:00", obtenerHora(l.getHora_inicio()).getHour()),
                         Collectors.averagingLong(this::obtenerDuracionSegundos)))
-                .forEach((hora, prom) -> promedioPorHora.put(hora, Math.round(prom / 60.0)));
+                .forEach((hora, prom) -> promedioPorHora.put(hora, Math.round(prom)));
         data.put("promedioPorHora", promedioPorHora);
 
         // SERIE 5: Llamadas por dia de semana (Lunes a Domingo)
@@ -184,6 +204,18 @@ public class MetricasRestController {
                     } catch (Exception ignored) {}
                 });
         data.put("llamadasPorDiaSemana", porDiaSemana);
+
+// SERIE 6: Tendencia de tipificaciones registradas
+        Map<String, Long> porTipificacion = new LinkedHashMap<>(
+                llamadas.stream()
+                        .filter(l -> l.getMotivo_tipo() != null && !l.getMotivo_tipo().isBlank())
+                        .collect(Collectors.groupingBy(Llamada::getMotivo_tipo, LinkedHashMap::new, Collectors.counting()))
+        );
+        Map<String, Long> tipificacionesOrdenadas = new LinkedHashMap<>();
+        porTipificacion.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .forEach(e -> tipificacionesOrdenadas.put(e.getKey(), e.getValue()));
+        data.put("llamadasPorTipificacion", tipificacionesOrdenadas);
 
         return data;
     }

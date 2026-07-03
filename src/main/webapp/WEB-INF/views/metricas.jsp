@@ -72,9 +72,9 @@
       </div>
 
       <div class="chart-card full">
-        <h3><i class="fas fa-calendar-week"></i> Llamadas por día de semana</h3>
-        <canvas id="chart-dia-semana"></canvas>
-      </div>
+              <h3><i class="fas fa-tags"></i> Tipificaciones por período</h3>
+              <canvas id="chart-dia-semana"></canvas>
+            </div>
 
     </div>
 
@@ -96,46 +96,63 @@
     document.getElementById('kpi-hora-pico').textContent    = d.horaPico ?? '-';
   }
 
-  function linea(id, labels, datos, label, color) {
-    const ctx = document.getElementById(id).getContext('2d');
-    if (g[id]) g[id].destroy();
-    g[id] = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: label, data: datos,
-          fill: true, tension: 0.35,
-          borderColor: color,
-          backgroundColor: color + '26',
-          pointBackgroundColor: color,
-          pointRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-        plugins: { legend: { display: false } }
+       function segundosAFormato(seg) {
+        seg = Math.round(seg);
+        const m = Math.floor(seg / 60);
+        const s = seg % 60;
+        return m > 0 ? (m + 'm ' + s + 's') : (s + 's');
       }
-    });
-  }
 
-  function barras(id, labels, datos, label, colores) {
-    const ctx = document.getElementById(id).getContext('2d');
-    if (g[id]) g[id].destroy();
-    g[id] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{ label: label, data: datos, backgroundColor: colores, borderRadius: 6 }]
-      },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-        plugins: { legend: { display: false } }
+      function linea(id, labels, datos, label, color, formatoSegundos) {
+        const ctx = document.getElementById(id).getContext('2d');
+        if (g[id]) g[id].destroy();
+        const opciones = {
+          responsive: true,
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+          plugins: { legend: { display: false } }
+        };
+        if (formatoSegundos) {
+          opciones.scales.y.ticks.callback = (valor) => segundosAFormato(valor);
+          opciones.plugins.tooltip = { callbacks: { label: (c) => segundosAFormato(c.parsed.y) } };
+        }
+        g[id] = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: label, data: datos,
+              fill: true, tension: 0.35,
+              borderColor: color,
+              backgroundColor: color + '26',
+              pointBackgroundColor: color,
+              pointRadius: 5
+            }]
+          },
+          options: opciones
+        });
       }
-    });
-  }
+
+   function barras(id, labels, datos, label, colores, formatoSegundos) {
+       const ctx = document.getElementById(id).getContext('2d');
+       if (g[id]) g[id].destroy();
+       const opciones = {
+         responsive: true,
+         scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+         plugins: { legend: { display: false } }
+       };
+       if (formatoSegundos) {
+         opciones.scales.y.ticks.callback = (valor) => segundosAFormato(valor);
+         opciones.plugins.tooltip = { callbacks: { label: (c) => segundosAFormato(c.parsed.y) } };
+       }
+       g[id] = new Chart(ctx, {
+         type: 'bar',
+         data: {
+           labels: labels,
+           datasets: [{ label: label, data: datos, backgroundColor: colores, borderRadius: 6 }]
+         },
+         options: opciones
+       });
+     }
 
   function cargarMetricas() {
     fetch(ENDPOINT_METRICAS || '/api/metricas/agente')
@@ -146,17 +163,17 @@
         if (d.llamadasPorFecha && Object.keys(d.llamadasPorFecha).length)
           linea('chart-llamadas-fecha', Object.keys(d.llamadasPorFecha), Object.values(d.llamadasPorFecha), 'Llamadas', '#4f8ef7');
 
-        if (d.promedioPorFecha && Object.keys(d.promedioPorFecha).length)
-          linea('chart-promedio-fecha', Object.keys(d.promedioPorFecha), Object.values(d.promedioPorFecha), 'Minutos', '#4fcf70');
+       if (d.promedioPorFecha && Object.keys(d.promedioPorFecha).length)
+         linea('chart-promedio-fecha', Object.keys(d.promedioPorFecha), Object.values(d.promedioPorFecha), 'Duración', '#4fcf70', true);
 
         if (d.llamadasPorHora && Object.keys(d.llamadasPorHora).length)
           barras('chart-llamadas-hora', Object.keys(d.llamadasPorHora), Object.values(d.llamadasPorHora), 'Llamadas', PALETTE);
 
         if (d.promedioPorHora && Object.keys(d.promedioPorHora).length)
-          barras('chart-promedio-hora', Object.keys(d.promedioPorHora), Object.values(d.promedioPorHora), 'Minutos', '#ff8a00');
+          barras('chart-promedio-hora', Object.keys(d.promedioPorHora), Object.values(d.promedioPorHora), 'Duración', '#ff8a00', true);
 
-        if (d.llamadasPorDiaSemana && Object.keys(d.llamadasPorDiaSemana).length)
-          barras('chart-dia-semana', Object.keys(d.llamadasPorDiaSemana), Object.values(d.llamadasPorDiaSemana), 'Llamadas', PALETTE);
+        if (d.llamadasPorTipificacion && Object.keys(d.llamadasPorTipificacion).length)
+                  barras('chart-dia-semana', Object.keys(d.llamadasPorTipificacion), Object.values(d.llamadasPorTipificacion), 'Llamadas', PALETTE);
       });
   }
 

@@ -137,18 +137,62 @@
   }
 
   function cargarMetricas(idEmpresa) {
-    const url = '/api/metricas/superadmin' +
-                (idEmpresa ? '?id_empresa=' + encodeURIComponent(idEmpresa) : '');
-    fetch(url)
-      .then(r => r.json())
-      .then(d => {
-        renderKpis(d);
-        if (d.llamadasPorHora && Object.keys(d.llamadasPorHora).length)
-          renderHoras(d.llamadasPorHora);
-        if (d.tiempoPorFecha && Object.keys(d.tiempoPorFecha).length)
-          renderTiempoFechas(d.tiempoPorFecha);
-      });
-  }
+      const url = '/api/metricas/superadmin' +
+                  (idEmpresa ? '?id_empresa=' + encodeURIComponent(idEmpresa) : '');
+      fetch(url)
+        .then(r => r.json())
+        .then(d => {
+          renderKpis(d);
+
+          if (d.llamadasPorFecha && Object.keys(d.llamadasPorFecha).length)
+            renderHoras(d.llamadasPorFecha);
+
+          if (d.promedioPorFecha && Object.keys(d.promedioPorFecha).length)
+            renderTiempoFechas(d.promedioPorFecha);
+
+          if (d.llamadasPorTipificacion && Object.keys(d.llamadasPorTipificacion).length) {
+            const ctx3 = document.getElementById('chart-tipificaciones').getContext('2d');
+            if (window.chartTips) window.chartTips.destroy();
+            window.chartTips = new Chart(ctx3, {
+              type: 'bar',
+              data: {
+                labels: Object.keys(d.llamadasPorTipificacion),
+                datasets: [{ label: 'Llamadas', data: Object.values(d.llamadasPorTipificacion),
+                  backgroundColor: PALETTE, borderRadius: 6 }]
+              },
+              options: { responsive: true, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+            });
+          }
+
+          if (d.llamadasPorEmpresa && d.llamadasPorEmpresa.length) {
+            const nombres = d.llamadasPorEmpresa.map(e => e.nombre);
+            const totales = d.llamadasPorEmpresa.map(e => e.totalLlamadas);
+            const tiempos = d.llamadasPorEmpresa.map(e => e.tiempoPromedio ?? 0);
+
+            const ctxV = document.getElementById('chart-empresas-volumen').getContext('2d');
+            if (window.chartEmpV) window.chartEmpV.destroy();
+            window.chartEmpV = new Chart(ctxV, {
+              type: 'bar',
+              data: {
+                labels: nombres,
+                datasets: [{ label: 'Llamadas', data: totales, backgroundColor: PALETTE, borderRadius: 6 }]
+              },
+              options: { responsive: true, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+            });
+
+            const ctxT = document.getElementById('chart-empresas-tiempo').getContext('2d');
+            if (window.chartEmpT) window.chartEmpT.destroy();
+            window.chartEmpT = new Chart(ctxT, {
+              type: 'bar',
+              data: {
+                labels: nombres,
+                datasets: [{ label: 'Minutos', data: tiempos, backgroundColor: PALETTE, borderRadius: 6 }]
+              },
+              options: { responsive: true, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+            });
+          }
+        });
+    }
 
   document.getElementById('btn-filtrar').addEventListener('click', function () {
     empresaActual = document.getElementById('filtro-empresa').value;
