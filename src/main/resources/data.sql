@@ -87,6 +87,21 @@ MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (32
 MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (33, 11);
 MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (34, 14);
 MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (35, 11);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (36, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (37, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (38, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (39, 3);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (40, 6);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (41, 9);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (42, 7);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (43, 8);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (44, 11);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (45, 14);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (46, 12);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (47, 13);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (48, 5);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (49, 10);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (50, 15);
 
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
 VALUES (1, 'Maria Lopez',   '987654321', '2026-05-01', '09:10', '09:20', '10 min', 'El cliente consulta sobre su factura',    1, 1, 'Activo', 'Consulta', 'Lla1Age1E1');
@@ -158,11 +173,41 @@ MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada,
 VALUES (34, 'Silvia Roca', '987444888', '2026-05-08', '15:10', '15:47', '37 min', 'Soporte por corte de linea', 9, 4, 'Activo', 'Soporte', 'Lla34Age2E3');
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
 VALUES (35, 'Gustavo Herrera', '987444999', '2026-05-08', '18:40', '18:49', '9 min', 'Consulta final del dia', 10, 1, 'Activo', 'Consulta', 'Lla35Age3E3');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (36, 'Renzo Aguilar', '987555111', '2026-05-09', '07:55', '08:04', '9 min', 'Consulta temprana de servicio', 1, 1, 'Activo', 'Consulta', 'Lla36Age1E1');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (37, 'Natalia Bravo', '987555222', '2026-05-09', '09:20', '09:44', '24 min', 'Soporte por equipo sin conexion', 2, 4, 'Activo', 'Soporte', 'Lla37Age2E1');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (38, 'Cesar Ibarra', '987555333', '2026-05-09', '10:03', '10:18', '15 min', 'Reclamo por cobro pendiente', 3, 2, 'Activo', 'Reclamo', 'Lla38Age3E1');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (39, 'Fiorella Tapia', '987555444', '2026-05-09', '10:12', '10:20', '8 min', 'Venta de promocion por llamada', 4, 3, 'Activo', 'Venta', 'Lla39Age4E1');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (40, 'Esteban Cueva', '987555555', '2026-05-09', '10:23', '10:58', '35 min', 'Consulta sobre cobertura empresarial', 6, 1, 'Activo', 'Consulta', 'Lla40Age1E2');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (41, 'Monica Casas', '987555666', '2026-05-09', '11:08', '11:19', '11 min', 'Soporte por reinicio de router', 7, 4, 'Activo', 'Soporte', 'Lla41Age2E2');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (42, 'Daniel Ormeño', '987555777', '2026-05-09', '12:30', '12:43', '13 min', 'Reclamo por atencion previa', 6, 2, 'Activo', 'Reclamo', 'Lla42Age1E2');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (43, 'Karina Montes', '987555888', '2026-05-09', '14:05', '14:14', '9 min', 'Venta de plan adicional', 7, 3, 'Activo', 'Venta', 'Lla43Age2E2');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (44, 'Emilio Rivas', '987666111', '2026-05-09', '15:00', '15:17', '17 min', 'Consulta por cambio de titular', 8, 1, 'Activo', 'Consulta', 'Lla44Age1E3');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (45, 'Milagros Vera', '987666222', '2026-05-09', '15:07', '15:46', '39 min', 'Soporte por interrupcion prolongada', 9, 4, 'Activo', 'Soporte', 'Lla45Age2E3');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (46, 'Tomas Alarcon', '987666333', '2026-05-09', '15:19', '15:31', '12 min', 'Reclamo por descuento no aplicado', 10, 2, 'Activo', 'Reclamo', 'Lla46Age3E3');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (47, 'Luz Alva', '987666444', '2026-05-09', '16:35', '16:42', '7 min', 'Venta de servicio complementario', 8, 3, 'Activo', 'Venta', 'Lla47Age1E3');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (48, 'Mario Salazar', '987666555', '2026-05-09', '17:25', '17:38', '13 min', 'Otros datos de contacto', 5, 5, 'Activo', 'Otros', 'Lla48Age5E1');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (49, 'Paula Benites', '987666666', '2026-05-09', '18:12', '18:30', '18 min', 'Otros motivos administrativos', 6, 5, 'Activo', 'Otros', 'Lla49Age1E2');
+MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
+VALUES (50, 'Hector Lozano', '987666777', '2026-05-09', '19:05', '19:16', '11 min', 'Otros cierre de jornada', 10, 5, 'Activo', 'Otros', 'Lla50Age3E3');
 -- ── REINICIAR SECUENCIAS ──────────────────────────────────────────────────────
 
 
 ALTER TABLE tipificacion ALTER COLUMN id_tipo RESTART WITH 6;
 ALTER TABLE empresa ALTER COLUMN id_empresa RESTART WITH 4;
 ALTER TABLE agente ALTER COLUMN id_agente RESTART WITH 11;
-ALTER TABLE llamada ALTER COLUMN id_llamada RESTART WITH 36;
+ALTER TABLE llamada ALTER COLUMN id_llamada RESTART WITH 51;
 ALTER TABLE empresa_tipo ALTER COLUMN id RESTART WITH 16;
