@@ -1,11 +1,11 @@
--- ── TIPIFICACION ──────────────────────────────────────────────────────────────
+
 MERGE INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) KEY(id_tipo) VALUES (1, 'Consulta', 'ACTIVO');
 MERGE INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) KEY(id_tipo) VALUES (2, 'Reclamo',  'ACTIVO');
 MERGE INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) KEY(id_tipo) VALUES (3, 'Venta',    'ACTIVO');
 MERGE INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) KEY(id_tipo) VALUES (4, 'Soporte',  'ACTIVO');
 MERGE INTO tipificacion (id_tipo, motivo_tipo, estado_tipo) KEY(id_tipo) VALUES (5, 'Otros',    'ACTIVO');
 
--- ── EMPRESA ───────────────────────────────────────────────────────────────────
+
 MERGE INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
 KEY(id_empresa) VALUES (1, 'Empresa Demo', '900000001', 'demo@empresa.com', 'Emp1', 'Emp1', 'ACTIVO');
 MERGE INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
@@ -13,7 +13,7 @@ KEY(id_empresa) VALUES (2, 'Andes Telecom', '900000002', 'contacto@andestelecom.
 MERGE INTO empresa (id_empresa, nombre_empresa, telefono_empresa, correo_empresa, usuario_empresa, contrasenia_empresa, estado_empresa)
 KEY(id_empresa) VALUES (3, 'Servicios Norte', '900000003', 'soporte@serviciosnorte.com', 'Emp3', 'Emp3', 'ACTIVO');
 
--- ── EMPRESA_TIPO (tipificaciones base asignadas a Empresa Demo) ───────────────
+
 MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VALUES (1, 1, 1, 'ACTIVO');
 MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VALUES (2, 1, 2, 'ACTIVO');
 MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VALUES (3, 1, 3, 'ACTIVO');
@@ -30,7 +30,7 @@ MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VAL
 MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VALUES (14, 3, 4, 'ACTIVO');
 MERGE INTO empresa_tipo (id, id_empresa, id_tipo, estado_asignacion) KEY(id) VALUES (15, 3, 5, 'ACTIVO');
 
--- ── AGENTE ────────────────────────────────────────────────────────────────────
+
 MERGE INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente) KEY(id_agente)
 VALUES (1, 'Carlos García',  '987654321', 'Age1E1', 'Age1E1', 'Age1E1', 1, 'ACTIVO');
 MERGE INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente) KEY(id_agente)
@@ -52,7 +52,42 @@ VALUES (9, 'Jorge Medina', '956777888', 'Age2E3', 'Age2E3', 'Age2E3', 3, 'ACTIVO
 MERGE INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente) KEY(id_agente)
 VALUES (10, 'Paola Ruiz', '956999000', 'Age3E3', 'Age3E3', 'Age3E3', 3, 'ACTIVO');
 
--- ── LLAMADA ───────────────────────────────────────────────────────────────────
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (1, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (2, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (3, 3);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (4, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (5, 5);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (6, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (7, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (8, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (9, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (10, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (11, 3);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (12, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (13, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (14, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (15, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (16, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (17, 5);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (18, 3);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (19, 6);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (20, 9);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (21, 6);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (22, 7);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (23, 10);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (24, 9);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (25, 8);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (26, 7);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (27, 11);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (28, 14);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (29, 11);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (30, 12);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (31, 15);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (32, 13);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (33, 11);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (34, 14);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (35, 11);
+
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
 VALUES (1, 'Maria Lopez',   '987654321', '2026-05-01', '09:10', '09:20', '10 min', 'El cliente consulta sobre su factura',    1, 1, 'Activo', 'Consulta', 'Lla1Age1E1');
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
@@ -124,6 +159,8 @@ VALUES (34, 'Silvia Roca', '987444888', '2026-05-08', '15:10', '15:47', '37 min'
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
 VALUES (35, 'Gustavo Herrera', '987444999', '2026-05-08', '18:40', '18:49', '9 min', 'Consulta final del dia', 10, 1, 'Activo', 'Consulta', 'Lla35Age3E3');
 -- ── REINICIAR SECUENCIAS ──────────────────────────────────────────────────────
+
+
 ALTER TABLE tipificacion ALTER COLUMN id_tipo RESTART WITH 6;
 ALTER TABLE empresa ALTER COLUMN id_empresa RESTART WITH 4;
 ALTER TABLE agente ALTER COLUMN id_agente RESTART WITH 11;

@@ -98,7 +98,8 @@
       <form:form action="/llamada/crear" method="post" modelAttribute="llamada"
                  id="form-llamada" style="display:none;">
         <div class="notice-box" style="background:#e8f4fd; border-left:4px solid var(--color-primario); margin-bottom:14px;">
-          <p><i class="fas fa-clock"></i> <strong>Registro iniciado</strong> — Complete los datos y presione "Finalizar registro".</p>
+          <p><i class="fas fa-clock"></i> <strong>Registro iniciado</strong> — Complete los datos y presione "Finalizar registro".
+          Duración: <strong id="cronometro">00:00</strong></p>
         </div>
         <div class="form-grid">
           <div>
@@ -164,7 +165,7 @@
         </div>
       </c:if>
 
-      <%-- Tabla de llamadas --%>
+
       <c:if test="${mostrarTabla}">
         <div class="table-wrap">
           <table>
@@ -227,15 +228,40 @@
   const horaFin       = document.getElementById('hora_fin');
   const duracion      = document.getElementById('duracion');
   const estadoLlamada = document.getElementById('estado_llamada');
+  const cronometroEl  = document.getElementById('cronometro');
+
+  // Marca de tiempo exacta (ms) del inicio del registro y el intervalo del cronómetro
+  let inicioTimestamp = null;
+  let intervaloCronometro = null;
 
   function horaActual() {
     const d = new Date();
-    return [d.getHours(), d.getMinutes()]
+    return [d.getHours(), d.getMinutes(), d.getSeconds()]
             .map(v => String(v).padStart(2,'0')).join(':');
+  }
+
+  function formatearDuracion(totalSegundos) {
+    const horas   = Math.floor(totalSegundos / 3600);
+    const minutos = Math.floor((totalSegundos % 3600) / 60);
+    const segs    = totalSegundos % 60;
+    let resultado = '';
+    if (horas   > 0) resultado += horas   + ' h ';
+    if (minutos > 0) resultado += minutos + ' min ';
+    if (segs    > 0 || resultado === '') resultado += segs + ' seg';
+    return resultado.trim();
+  }
+
+  function actualizarCronometro() {
+    if (!cronometroEl || inicioTimestamp === null) return;
+    const segundos = Math.floor((Date.now() - inicioTimestamp) / 1000);
+    const mm = String(Math.floor(segundos / 60)).padStart(2, '0');
+    const ss = String(segundos % 60).padStart(2, '0');
+    cronometroEl.textContent = mm + ':' + ss;
   }
 
   if (btnIniciar) {
     btnIniciar.addEventListener('click', function () {
+      inicioTimestamp     = Date.now();
       horaInicio.value    = horaActual();
       horaFin.value       = '';
       duracion.value      = '';
@@ -243,11 +269,17 @@
       btnIniciar.closest('.actions').style.display = 'none';
       formLlamada.style.display = '';
       document.getElementById('nombre_cliente').focus();
+
+      if (cronometroEl) cronometroEl.textContent = '00:00';
+      clearInterval(intervaloCronometro);
+      intervaloCronometro = setInterval(actualizarCronometro, 1000);
     });
   }
 
   if (btnCancelar) {
     btnCancelar.addEventListener('click', function () {
+      clearInterval(intervaloCronometro);
+      inicioTimestamp = null;
       formLlamada.reset();
       formLlamada.style.display = 'none';
       const accionesBtn = document.querySelector('.actions');
@@ -256,12 +288,22 @@
   }
 
   if (formLlamada) {
-    formLlamada.addEventListener('submit', function () {
-      if (!horaInicio.value) horaInicio.value = horaActual();
-      horaFin.value       = horaActual();
-      estadoLlamada.value = 'Activo';
-    });
-  }
+      formLlamada.addEventListener('submit', function () {
+        clearInterval(intervaloCronometro);
+
+        horaFin.value       = horaActual();
+        estadoLlamada.value = 'Activo';
+
+        let totalSegundos;
+        if (inicioTimestamp !== null) {
+          totalSegundos = Math.max(0, Math.round((Date.now() - inicioTimestamp) / 1000));
+        } else {
+          totalSegundos = 0;
+        }
+
+        duracion.value = formatearDuracion(totalSegundos);
+      });
+    }
 </script>
 </body>
 </html>

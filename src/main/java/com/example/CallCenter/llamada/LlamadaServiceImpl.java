@@ -1,11 +1,13 @@
 package com.example.CallCenter.llamada;
 
-import com.example.CallCenter.agente.model.Agente;
 import com.example.CallCenter.agente.AgenteRepository;
 import com.example.CallCenter.agente.entity.AgenteEntity;
 import com.example.CallCenter.llamada.adapter.LlamadaAdapter;
 import com.example.CallCenter.llamada.entity.LlamadaEntity;
 import com.example.CallCenter.llamada.model.Llamada;
+import com.example.CallCenter.llamada.model.LlamadaTipo;
+import com.example.CallCenter.llamada.adapter.LlamadaTipoAdapter;
+import com.example.CallCenter.tipificacion.EmpresaTipoRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Duration;
@@ -13,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,16 +24,25 @@ public class LlamadaServiceImpl implements LlamadaService {
     private final LlamadaRepository llamadaRepository;
     private final AgenteRepository agenteRepository;
     private final LlamadaAdapter llamadaAdapter;
+    private final LlamadaTipoAdapter llamadaTipoAdapter;
+    private final LlamadaTipoRepository llamadaTipoRepository;
+    private final EmpresaTipoRepository empresaTipoRepository;
 
     private static final DateTimeFormatter FORMATO_HORA        = DateTimeFormatter.ofPattern("HH:mm[:ss]");
     private static final DateTimeFormatter FORMATO_HORA_SIMPLE = DateTimeFormatter.ofPattern("HH:mm");
 
     public LlamadaServiceImpl(LlamadaRepository llamadaRepository,
                               AgenteRepository agenteRepository,
-                              LlamadaAdapter llamadaAdapter) {
+                              LlamadaAdapter llamadaAdapter,
+                              LlamadaTipoAdapter llamadaTipoAdapter,
+                              LlamadaTipoRepository llamadaTipoRepository,
+                              EmpresaTipoRepository empresaTipoRepository) {
         this.llamadaRepository = llamadaRepository;
         this.agenteRepository = agenteRepository;
         this.llamadaAdapter = llamadaAdapter;
+        this.llamadaTipoAdapter = llamadaTipoAdapter;
+        this.llamadaTipoRepository = llamadaTipoRepository;
+        this.empresaTipoRepository = empresaTipoRepository;
     }
 
     @Override
@@ -97,6 +109,19 @@ public class LlamadaServiceImpl implements LlamadaService {
         guardada.setCodigo_llamada("Lla" + numeroParaAgente + codigoAgente);
         guardada = llamadaRepository.save(guardada);
 
+        final LlamadaEntity llamadaFinal = guardada;
+
+        if (llamada.getId_tipo() != null && llamada.getId_tipo() > 0) {
+            empresaTipoRepository.findByEmpresaAndTipo(
+                            agenteRepository.findById(guardada.getId_agente())
+                                    .map(a -> a.getId_empresa()).orElse(0),
+                            llamada.getId_tipo())
+                    .ifPresent(et -> {
+                        LlamadaTipo lt = new LlamadaTipo(llamadaFinal.getId_llamada(), et.getId());
+                        llamadaTipoRepository.save(llamadaTipoAdapter.toEntity(lt));
+                    });
+        }
+
         llamada.setId_llamada(guardada.getId_llamada());
         llamada.setCodigo_llamada(guardada.getCodigo_llamada());
     }
@@ -160,7 +185,8 @@ public class LlamadaServiceImpl implements LlamadaService {
             List<String> partes = new ArrayList<>();
             if (horas    > 0) partes.add(horas    + " h");
             if (minutos  > 0) partes.add(minutos  + " min");
-            if (segundos > 0 || partes.isEmpty()) partes.add(segundos + " seg");
+            if (segundos > 0) partes.add(segundos + " seg");
+            if (partes.isEmpty()) partes.add("0 seg");
             return String.join(" ", partes);
         } catch (Exception e) {
             return "0 seg";

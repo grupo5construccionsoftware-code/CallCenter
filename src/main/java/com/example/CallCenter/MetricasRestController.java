@@ -25,6 +25,9 @@ public class MetricasRestController {
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm[:ss]");
     private static final Pattern PATRON_DURACION = Pattern.compile("(\\d+)\\s*(h|min|seg)", Pattern.CASE_INSENSITIVE);
 
+    private static final int HORA_INICIO_LABORAL = 8;
+    private static final int HORA_FIN_LABORAL    = 22;
+
     private final LlamadaService llamadaService;
     private final AgenteService agenteService;
     private final EmpresaService empresaService;
@@ -119,40 +122,68 @@ public class MetricasRestController {
         data.put("llamadaMasCorta", formatearDuracion(minimaDuracion));
         data.put("horaPico", obtenerHoraPico(llamadas));
 
-        Map<String, Long> porFechaOrdenado = new TreeMap<>(
+        // SERIE 1: Llamadas por fecha (ordenado por fecha)
+        Map<String, Long> llamadasPorFecha = new TreeMap<>(
                 llamadas.stream()
-                        .filter(l -> l.getFecha_llamada() != null)
+                        .filter(l -> l.getFecha_llamada() != null && !l.getFecha_llamada().isBlank())
                         .collect(Collectors.groupingBy(Llamada::getFecha_llamada, Collectors.counting()))
         );
-        data.put("llamadasPorFecha", porFechaOrdenado);
+        data.put("llamadasPorFecha", llamadasPorFecha);
 
-        Map<String, Long> porHoraOrdenado = new TreeMap<>(
-                llamadas.stream()
-                        .map(this::obtenerHoraInicio)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.groupingBy(hora -> String.format("%02d:00", hora.getHour()), Collectors.counting()))
-        );
-        data.put("llamadasPorHora", porHoraOrdenado);
-
-        Map<String, Long> tiempoPorFecha = llamadas.stream()
+        // SERIE 2: Duración promedio por fecha (en minutos)
+        Map<String, Long> promedioPorFecha = new TreeMap<>();
+        llamadas.stream()
                 .filter(l -> l.getFecha_llamada() != null && !l.getFecha_llamada().isBlank())
-                .collect(Collectors.groupingBy(
-                        Llamada::getFecha_llamada,
-                        TreeMap::new,
-                        Collectors.summingLong(this::obtenerDuracionSegundos)
-                ));
-        Map<String, Long> tiempoPorFechaMinutos = tiempoPorFecha.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> Math.round(entry.getValue() / 60.0),
-                        (a, b) -> a,
-                        TreeMap::new
-                ));
-        data.put("tiempoPorFecha", tiempoPorFechaMinutos);
+                .collect(Collectors.groupingBy(Llamada::getFecha_llamada,
+                        Collectors.averagingLong(this::obtenerDuracionSegundos)))
+                .forEach((fecha, prom) -> promedioPorFecha.put(fecha, Math.round(prom / 60.0)));
+        data.put("promedioPorFecha", promedioPorFecha);
 
-        Map<Integer, Long> porAgenteId = llamadas.stream()
-                .collect(Collectors.groupingBy(Llamada::getId_agente, Collectors.counting()));
-        data.put("llamadasPorAgenteId", porAgenteId);
+        // SERIE 3: Llamadas por hora del dia (solo horario laboral 08:00-22:00)
+        Map<String, Long> llamadasPorHora = new TreeMap<>();
+        for (int h = HORA_INICIO_LABORAL; h <= HORA_FIN_LABORAL; h++) {
+            llamadasPorHora.put(String.format("%02d:00", h), 0L);
+        }
+        llamadas.stream()
+                .map(this::obtenerHoraInicio)
+                .filter(Objects::nonNull)
+                .filter(h -> h.getHour() >= HORA_INICIO_LABORAL && h.getHour() <= HORA_FIN_LABORAL)
+                .collect(Collectors.groupingBy(h -> String.format("%02d:00", h.getHour()), Collectors.counting()))
+                .forEach(llamadasPorHora::put);
+        data.put("llamadasPorHora", llamadasPorHora);
+
+        // SERIE 4: Duracion promedio por hora (en minutos, horario laboral)
+        Map<String, Long> promedioPorHora = new TreeMap<>();
+        for (int h = HORA_INICIO_LABORAL; h <= HORA_FIN_LABORAL; h++) {
+            promedioPorHora.put(String.format("%02d:00", h), 0L);
+        }
+        llamadas.stream()
+                .filter(l -> {
+                    LocalTime t = obtenerHora(l.getHora_inicio());
+                    return t != null && t.getHour() >= HORA_INICIO_LABORAL && t.getHour() <= HORA_FIN_LABORAL;
+                })
+                .collect(Collectors.groupingBy(
+                        l -> String.format("%02d:00", obtenerHora(l.getHora_inicio()).getHour()),
+                        Collectors.averagingLong(this::obtenerDuracionSegundos)))
+                .forEach((hora, prom) -> promedioPorHora.put(hora, Math.round(prom / 60.0)));
+        data.put("promedioPorHora", promedioPorHora);
+
+        // SERIE 5: Llamadas por dia de semana (Lunes a Domingo)
+        String[] diasOrden = {"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"};
+        String[] diasEsp   = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
+        Map<String, Long> porDiaSemana = new LinkedHashMap<>();
+        for (String d : diasEsp) porDiaSemana.put(d, 0L);
+
+        llamadas.stream()
+                .filter(l -> l.getFecha_llamada() != null && !l.getFecha_llamada().isBlank())
+                .forEach(l -> {
+                    try {
+                        java.time.LocalDate fecha = java.time.LocalDate.parse(l.getFecha_llamada());
+                        String diaNombre = diasEsp[fecha.getDayOfWeek().ordinal()];
+                        porDiaSemana.put(diaNombre, porDiaSemana.get(diaNombre) + 1);
+                    } catch (Exception ignored) {}
+                });
+        data.put("llamadasPorDiaSemana", porDiaSemana);
 
         return data;
     }
@@ -229,9 +260,10 @@ public class MetricasRestController {
         long segundos = totalSegundos % 60;
 
         List<String> partes = new ArrayList<>();
-        if (horas > 0) partes.add(horas + " h");
-        if (minutos > 0) partes.add(minutos + " min");
-        if (segundos > 0 || partes.isEmpty()) partes.add(segundos + " seg");
+        if (horas    > 0) partes.add(horas    + " h");
+        if (minutos  > 0) partes.add(minutos  + " min");
+        if (segundos > 0) partes.add(segundos + " seg");
+        if (partes.isEmpty()) partes.add("0 seg");
         return String.join(" ", partes);
     }
 
