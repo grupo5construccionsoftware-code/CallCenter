@@ -42,6 +42,11 @@ VALUES (4, 'María Flores',   '934567890', 'Age4E1', 'Age4E1', 'Age4E1', 1, 'ACT
 MERGE INTO agente (id_agente, nombre_agente, telefono_agente, usuario_agente, contrasenia_agente, codigo_agente, id_empresa, estado_agente) KEY(id_agente)
 VALUES (5, 'Roberto Vargas', '945678901', 'Age5E1', 'Age5E1', 'Age5E1', 1, 'ACTIVO');
 
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (1, 1);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (2, 2);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (3, 3);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (4, 4);
+MERGE INTO llamada_tipo (id_llamada, id_empresa_tipo) KEY(id_llamada) VALUES (5, 5);
 
 MERGE INTO llamada (id_llamada, nombre_cliente, telefono_cliente, fecha_llamada, hora_inicio, hora_fin, duracion, descripcion_tipo, id_agente, id_tipo, estado_llamada, motivo_tipo, codigo_llamada) KEY(id_llamada)
 VALUES (1, 'Maria Lopez',   '987654321', '2026-05-01', '09:10', '09:20', '10 min', 'El cliente consulta sobre su factura',    1, 1, 'Activo', 'Consulta', 'Lla1Age1E1');
